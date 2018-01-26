@@ -1,10 +1,11 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
         background_scripts: './background_scripts/index.js',
         detect_recipe: './content_scripts/detect_recipe.js',
-        view_recipe: './content_scripts/view_recipe.js'
+        view_recipe: './views/js/recipe.js'
     },
 
     output: {
@@ -23,5 +24,11 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+
+    plugins: [
+        new CopyWebpackPlugin([
+            {from: 'views/*.html', to: path.resolve(__dirname, 'addon', 'build')}
+        ])
+    ]
 };

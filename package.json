@@ -8,6 +8,8 @@
     "@babel/preset-env": "^7.0.0-beta.38",
     "babel": "^6.23.0",
     "babel-loader": "^8.0.0-beta.0",
+    "copy-webpack-plugin": "^4.3.1",
+    "hyperapp": "^1.0.2",
     "web-auto-extractor": "^1.0.17",
     "webpack": "^3.10.0"
   },
