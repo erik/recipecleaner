@@ -7,6 +7,7 @@
   <meta charset="utf-8">
 
   <style>
+
    * {
        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
        color: #222;
@@ -14,12 +15,57 @@
    }
    body { background-color: white; }
    main {
-       margin: 0 auto;
-       max-width: 70ch;
+       margin: 2em auto;
+       max-width: 100ch;
    }
-   h1 { text-align: center; }
 
-   .instruction {}
+   ul, ol {
+       padding-left: 0;
+   }
+
+   h1, h2, h3, h4 {
+       font-weight: normal;
+       font-variant: all-small-caps;
+   }
+
+   .grid {
+       display: grid;
+       grid-template-columns: repeat(2, 1fr);
+       grid-gap: 2em;
+   }
+
+   .column {
+       grid-column: auto;
+       min-width: 40ch;
+   }
+
+   @media (max-width: 150ch) {
+       .grid {
+           display: block;
+       }
+       ul, ol { padding-left: 2ch; }
+   }
+
+   @media print {
+       * {
+           font-size: 12px;
+       }
+
+       ul, ol { padding-left: 2ch; }
+   }
+
+   .instruction {
+       margin-bottom: 1em;
+   }
+
+   .instruction:hover {
+       border-left: 5px solid #00ffe4;
+       padding-left: 1em;
+       transition: padding-left ease-in 0.1s;
+       list-style: none;
+   }
+
+   #description { font-style: italic; }
   </style>
 </head>
 

@@ -5,15 +5,23 @@ const actions = {};
 function view(recipe) {
     return h('main', {}, [
         h('section', {}, viewMeta(recipe)),
-        h('section', {}, viewIngredients(recipe)),
-        h('section', {}, viewInstructions(recipe))
+        h('div', {className: 'grid'}, [
+            h('section', {className: 'column'}, [
+                h('h2', {}, 'Ingredients'),
+                viewIngredients(recipe)
+            ]),
+            h('section', {className: 'column'}, [
+                h('h2', {}, 'Instructions'),
+                viewInstructions(recipe)
+            ])
+        ])
     ]);
 }
 
 function viewMeta(recipe) {
     return h('header', {}, [
         h('h1', {}, recipe.name),
-        h('span', {}, recipe.description)
+        h('span', {id: 'description'}, recipe.description)
     ]);
 }
 
