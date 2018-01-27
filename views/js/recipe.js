@@ -1,18 +1,42 @@
 import { h, app } from 'hyperapp';
 
-const state = {
-    count: 0
-};
+const actions = {};
 
-const actions = {
-    down: () => state => ({ count: state.count - 1 }),
-    up: () => state => ({ count: state.count + 1 })
-};
+function view(recipe) {
+    return h('main', {}, [
+        h('section', {}, viewMeta(recipe)),
+        h('section', {}, viewIngredients(recipe)),
+        h('section', {}, viewInstructions(recipe))
+    ]);
+}
 
-const view = (state, actions) =>
-          h('main', {}, [
-              h('h1', {}, [state.count]),
-              h('div', {}, 'YOU DID IT')
-          ]);
+function viewMeta(recipe) {
+    return h('header', {}, [
+        h('h1', {}, recipe.name),
+        h('span', {}, recipe.description)
+    ]);
+}
 
-const main = app(state, actions, view, document.body);
+function viewIngredients(recipe) {
+    const ingredients = (recipe.recipeIngredient || recipe.ingredients);
+    return h('ul', {}, ingredients.map(i => {
+        return h('li', {}, i);
+    }));
+}
+
+function viewInstructions(recipe) {
+    if (typeof recipe.recipeInstructions === 'string') {
+        return h('p', {}, recipe.recipeInstructions);
+    }
+
+    return h('ol', {}, (recipe.recipeInstructions || []).map(i => {
+        return h('li', {className: 'instructions'}, i);
+    }));
+}
+
+
+browser.runtime.sendMessage({kind: 'request-recipe'})
+    .then(recipe => {
+        console.log('Recipe -> ', recipe);
+        const main = app(recipe, actions, view, document.body);
+    });

@@ -4,8 +4,9 @@ const TAB_RECIPE_MAP = {};
 
 
 browser.pageAction.onClicked.addListener((e) => {
-    browser.tabs.executeScript({file: 'build/view_recipe.js'})
-        .catch(e => {
+    browser.tabs.update({
+        url: 'build/views/recipe.html'
+    }).catch(e => {
             console.error('FAILED to inject script:', e);
         });
 });
@@ -16,6 +17,11 @@ browser.tabs.onRemoved.addListener((tabId) => {
 
 browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     console.log('sender.tab->', sender.tab);
+
+    function setRecipeData(data) {
+        TAB_RECIPE_MAP[sender.tab.id] = data;
+        browser.pageAction.show(sender.tab.id);
+    }
 
     switch (msg.kind) {
     case 'try-extract-recipe':
@@ -40,14 +46,12 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             break;
         }
 
-        msg.data = [result];
         console.log('GOT RECIPE', result);
-        // fall through here
+        setRecipeData(result);
+        break;
 
     case 'recipe-detected':
-        TAB_RECIPE_MAP[sender.tab.id] = msg.data[0];
-
-        browser.pageAction.show(sender.tab.id);
+        setRecipeData(msg.data[0]);
         break;
 
     case 'request-recipe':
