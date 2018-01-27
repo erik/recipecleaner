@@ -77,12 +77,8 @@ function normalizeRecipe(recipe) {
             // Sometimes the instruction list includes a number
             // prefix, strip that out.
 
-            return inst.replace(/^(\d+)\.?\s*/, (match, num) => {
-                if (num === idx + 1)
-                    return '';
-
-                return match;
-            });
+            return inst.replace(/^(\d+)\.?\s*/, (orig, n) =>
+                                +n === idx + 1 ? '' : orig);
         });
     }
 
