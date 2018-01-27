@@ -46,6 +46,16 @@ function sanitizeString(str) {
 function normalizeRecipe(recipe) {
     console.log('recipe dirty', recipe);
 
+    // Deprecated, redundant, and still used :(
+    if (recipe['@context'].includes('data-vocabulary.org')) {
+        recipe = {
+            name: recipe.name,
+            ingredients: recipe.ingredient,
+            description: recipe.summary,
+            recipeInstructions: recipe.instructions,
+        };
+    }
+
     let clean = {
         name: recipe.name || 'An untitled recipe',
         description: recipe.description,
@@ -68,7 +78,8 @@ function normalizeRecipe(recipe) {
             // prefix, strip that out.
 
             return inst.replace(/^(\d+)\.?\s*/, (match, num) => {
-                if (num === idx + 1) return '';
+                if (num === idx + 1)
+                    return '';
 
                 return match;
             });

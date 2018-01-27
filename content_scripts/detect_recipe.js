@@ -5,7 +5,7 @@
 const JSON_LD_SEL = 'script[type="application/ld+json"]';
 
 // Recipe microdata
-const MICRODATA_SEL = '*[itemtype="http://schema.org/Recipe"]';
+const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
 
 
 function detectRecipeMicrodata() {
