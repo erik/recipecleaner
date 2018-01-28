@@ -3,53 +3,69 @@ import { h, app } from 'hyperapp';
 const actions = {};
 
 function view(recipe) {
-    return h('main', {}, [
-        h('section', {}, viewMeta(recipe)),
-        h('div', {className: 'grid'}, [
-            h('section', {className: 'column'}, [
-                h('h2', {}, 'Ingredients'),
-                viewIngredients(recipe)
-            ]),
-            h('section', {className: 'column'}, [
-                h('h2', {}, 'Instructions'),
-                viewInstructions(recipe)
-            ])
-        ])
-    ]);
+    return (
+        <main>
+          <section>
+            { viewMeta(recipe) }
+          </section>
+
+          <div className="grid">
+            <section className="column">
+              <h2>Ingredients</h2>
+              { viewIngredients(recipe) }
+            </section>
+
+            <section className="column">
+              <h2>Instructions</h2>
+              { viewInstructions(recipe) }
+            </section>
+          </div>
+        </main>
+    );
 }
 
 function viewMeta(recipe) {
-    let image = recipe.image ? h('img', {src: recipe.image}) : null;
+    let image = recipe.image ? <img src={recipe.image} /> : null;
 
-    return h('header', {}, [
-        h('h1', {}, recipe.name),
-        h('section', {id: 'meta'}, [
-            image,
-            h('span', {id: 'description'}, [
-                recipe.description,
-            ]),
-        ])
-    ]);
+    return (
+        <header>
+          <h1>{ recipe.name }</h1>
+          <section id="meta">
+            { image }
+            <span id="description"> { recipe.description } </span>
+          </section>
+        </header>
+    );
 }
 
 function viewIngredients(recipe) {
-    return h('ul', {}, recipe.ingredients.map(i => {
-        return h('li', {}, i);
-    }));
+    let ingredients = recipe.ingredients.map(i => <li> { i } </li>);
+
+    return (
+        <ul> { ingredients } </ul>
+    );
 }
 
 function viewInstructions(recipe) {
     if (recipe.instructionText) {
-        return h('p', {}, recipe.instructionText);
+        return <p> { recipe.instructionText } </p>;
     }
 
     if (recipe.instructionList) {
-        return h('ol', {}, recipe.instructionList.map(i => {
-            return h('li', {className: 'instruction'}, i);
-        }));
+        let instructions = recipe.instructionList.map(i => (
+            <li className="instruction"> { i } </li>
+        ));
+
+        return (
+            <ol> { instructions } </ol>
+        );
     }
 
-    return h('p', {}, 'This recipe didn\'t include any instructions :(');
+    return (
+        <p>
+          This recipe didn't include any instructions :(
+        </p>
+    );
 }
 
 
@@ -60,8 +76,7 @@ browser.runtime.sendMessage({kind: 'request-recipe'})
             document.title = `${resp.recipe.name} :: Recipe Thing`;
             const main = app(resp.recipe, actions, view, document.body);
         } else {
-            const main = app({}, {}, () => {
-                return h('h1', {}, 'Sorry, I couldn\'t find that recipe');
-            }, document.body);
+            const main = app({}, {}, () => (<h1>Sorry, I couldn't find that recipe</h1>),
+    document.body);
         }
     });
