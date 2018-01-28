@@ -76,7 +76,13 @@ function normalizeRecipe(recipe) {
     };
 
     if (typeof recipe.recipeInstructions === 'string') {
-        clean.instructionText = recipe.recipeInstructions;
+        clean.instructionText = recipe.recipeInstructions.trim();
+
+        // Sometimes the text block is actually a list in disguise.
+        if (clean.instructionText.startsWith('1. ')) {
+            clean.instructionList = clean.instructionText.split(/\d+\./);
+            clean.instructionText = null;
+        }
     }
 
     if (Array.isArray(recipe.recipeInstructions)) {
