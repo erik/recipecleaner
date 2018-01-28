@@ -13,6 +13,9 @@ const FRACT_MAP = {
     // TODO: Finish this list later...
 };
 
+const KEYS_TO_CLEAN = 'name description ingredients instructionText instructionList'.split(' ');
+
+
 browser.pageAction.onClicked.addListener((e) => {
     browser.tabs.update({
         url: 'build/views/recipe.html'
@@ -39,6 +42,9 @@ function sanitizeString(str) {
     // to the FRACTION character (U+2044).
     str = str.replace(/(\d+)\/(\d+)/g, (m, n, d) => FRACT_MAP[m] || `${n}⁄${d}`);
 
+    // Clean up temperatures
+    str = str.replace(/(\d+) degree(?:s)? ([CF])/g, (_, n, d) => `${n}° ${d}`);
+
     return str;
 }
 
@@ -56,40 +62,46 @@ function normalizeRecipe(recipe) {
         };
     }
 
+    let image = recipe.image;
+    if (image && image.url) {
+        image = image.url;
+    }
+
     let clean = {
         name: recipe.name || 'An untitled recipe',
         description: recipe.description,
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
-        full: recipe
+        image: image,
+        full: recipe,
     };
-
-    // Seems relatively common to have blank items in the list;
-    clean.ingredients = clean.ingredients
-        .map(i => i.trim())
-        .filter(i => i !== "");
 
     if (typeof recipe.recipeInstructions === 'string') {
         clean.instructionText = recipe.recipeInstructions;
     }
 
     if (Array.isArray(recipe.recipeInstructions)) {
-        clean.instructionList = recipe.recipeInstructions.map((inst, idx) => {
-            // Sometimes the instruction list includes a number
-            // prefix, strip that out.
-
-            return inst.replace(/^(\d+)\.?\s*/, (orig, n) =>
-                                +n === idx + 1 ? '' : orig);
-        });
+        clean.instructionList = recipe.recipeInstructions
+            .map((inst, idx) => {
+                // Sometimes the instruction list includes a number
+                // prefix, strip that out.
+                return inst.replace(/^(\d+)\.?\s*/, (orig, num) => {
+                    return +num === idx + 1 ? '' : orig;
+                });
+            });
     }
 
     // Remove the junk from the strings.
-    Object.keys(clean).forEach(k => {
-        if (typeof clean[k] === 'string') {
-            clean[k] = sanitizeString(clean[k]);
-        } else if (Array.isArray(clean[k])) {
-            clean[k] = clean[k].map(v => sanitizeString(v));
-        }
-    });
+    KEYS_TO_CLEAN.forEach(k => {
+            if (typeof clean[k] === 'string') {
+                clean[k] = sanitizeString(clean[k]);
+            } else if (Array.isArray(clean[k])) {
+                // Seems relatively common to have blank items in the list
+                clean[k] = clean[k]
+                    .map(v => sanitizeString(v))
+                    .map(i => i.trim())
+                    .filter(i => i !== "");
+            }
+        });
 
     console.log('recipe cleaned:', clean);
 
@@ -139,7 +151,9 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case 'request-recipe':
         const recipe = TAB_RECIPE_MAP[sender.tab.id];
         if (recipe !== null) {
-            sendResponse(recipe);
+            sendResponse({recipe});
+        } else {
+            sendResponse({});
         }
 
         break;

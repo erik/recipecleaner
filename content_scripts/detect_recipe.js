@@ -1,6 +1,5 @@
 /* Detect whether recipe is present on page */
 
-
 // JSON LD blocks
 const JSON_LD_SEL = 'script[type="application/ld+json"]';
 

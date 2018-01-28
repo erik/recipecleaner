@@ -19,9 +19,16 @@ function view(recipe) {
 }
 
 function viewMeta(recipe) {
+    let image = recipe.image ? h('img', {src: recipe.image}) : null;
+
     return h('header', {}, [
         h('h1', {}, recipe.name),
-        h('span', {id: 'description'}, recipe.description)
+        h('section', {id: 'meta'}, [
+            image,
+            h('span', {id: 'description'}, [
+                recipe.description,
+            ]),
+        ])
     ]);
 }
 
@@ -47,8 +54,14 @@ function viewInstructions(recipe) {
 
 
 browser.runtime.sendMessage({kind: 'request-recipe'})
-    .then(recipe => {
-        console.log('Recipe -> ', recipe);
-        document.title = `${recipe.name} :: Recipe Thing`;
-        const main = app(recipe, actions, view, document.body);
+    .then(resp => {
+        if (resp.recipe) {
+            console.log('Recipe -> ', resp.recipe);
+            document.title = `${resp.recipe.name} :: Recipe Thing`;
+            const main = app(resp.recipe, actions, view, document.body);
+        } else {
+            const main = app({}, {}, () => {
+                return h('h1', {}, 'Sorry, I couldn\'t find that recipe');
+            }, document.body);
+        }
     });
