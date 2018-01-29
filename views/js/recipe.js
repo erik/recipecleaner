@@ -4,42 +4,51 @@ const actions = {};
 
 function view(recipe) {
     return (
-        <main>
-          <section>
-            { viewMeta(recipe) }
-          </section>
+        <div id="wrapper">
+          { viewHeader(recipe) }
 
-          <div className="grid">
-            <section className="column">
-              <h2>Ingredients</h2>
-              { viewIngredients(recipe) }
-            </section>
+          <main>
+            <div className="grid">
+              <section id="ingredients">
+                <h2>Ingredients</h2>
+                { viewIngredients(recipe) }
+              </section>
 
-            <section className="column">
-              <h2>Instructions</h2>
-              { viewInstructions(recipe) }
-            </section>
-          </div>
-        </main>
+              <section id="instructions">
+                <h2>Instructions</h2>
+                { viewInstructions(recipe) }
+              </section>
+            </div>
+          </main>
+        </div>
     );
 }
 
-function viewMeta(recipe) {
+function viewHeader(recipe) {
     let image = recipe.image ? <img src={recipe.image} /> : null;
+    let author = recipe.author ? <small> by { recipe.author } </small> : null;
 
     return (
         <header>
-          <h1>{ recipe.name }</h1>
+          <h1>{ recipe.name } { author }</h1>
           <section id="meta">
             { image }
-            <span id="description"> { recipe.description } </span>
+            <p id="description">
+              { recipe.description }
+            </p>
           </section>
         </header>
     );
 }
 
 function viewIngredients(recipe) {
-    let ingredients = recipe.ingredients.map(i => <li> { i } </li>);
+    let ingredients = recipe.ingredients.map(i => {
+        let quantity = i.quantity ?
+                <b className="quantity">{ i.quantity } { i.unit || '' }</b>
+                : null;
+
+        return <li> { quantity } { i.ingredient } </li>;
+    });
 
     return (
         <ul> { ingredients } </ul>
