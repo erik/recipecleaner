@@ -28,7 +28,7 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin([
-            {from: 'views/*.html', to: path.resolve(__dirname, 'addon', 'build')}
+            {from: 'views/*.html', to: path.resolve(__dirname, 'addon')}
         ])
     ]
 };

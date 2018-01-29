@@ -6,11 +6,6 @@
     "icons": {
         "32": "icons/icon-32.png"
     },
-    "browser_action": {
-        "default_icon": "icons/icon-32.png",
-        "default_title": "Recipe Thing",
-        "browser_style": true
-    },
     "page_action": {
         "browser_style": true,
         "default_icon": "icons/icon-32.png",
@@ -24,6 +19,8 @@
         "scripts": ["build/background_scripts.js"]
     },
     "permissions": [
-        "*://*/*"
+        "*://*/*",
+        "storage",
+        "tabs"
     ]
 }

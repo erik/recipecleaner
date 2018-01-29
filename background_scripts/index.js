@@ -1,7 +1,12 @@
 import WAE from 'web-auto-extractor';
 import he from 'he';
 
+
+// Mapping of tab id -> recipe id
 const TAB_RECIPE_MAP = {};
+// Mapping of tab id -> recipe that is not persisted to storage.
+const EPHEMERAL_TAB_MAP = {};
+
 
 // Mapping of ASCII encoded fraction to unicode.
 // TODO: Missing some fractions still, but who uses 5/6
@@ -51,17 +56,25 @@ const RECIPE_QUANTITY_RE = new RegExp([
 const KEYS_TO_CLEAN = 'name description ingredients instructionText instructionList'.split(' ');
 
 
-browser.pageAction.onClicked.addListener((e) => {
-    browser.tabs.update({
-        url: 'build/views/recipe.html'
-    }).catch(e => {
-        console.error('FAILED to inject script:', e);
+browser.pageAction.onClicked.addListener((tab) => {
+    const recipe = EPHEMERAL_TAB_MAP[tab.id];
+
+    // We delay storing the recipe until the user actually wants it.
+    saveToStorage(recipe).then(recipeId => {
+        TAB_RECIPE_MAP[tab.id] = recipeId;
+
+        browser.tabs.update({
+            url: `views/recipe.html?recipeId=${encodeURI(recipeId)}`
+        }).catch(e => {
+            console.error('FAILED to inject script:', e);
+        });
     });
 });
 
 
-// TODO: should we persist data rather than making everything ephemeral?
+// Clean up after ourselves.
 browser.tabs.onRemoved.addListener((tabId) => {
+    delete EPHEMERAL_TAB_MAP[tabId];
     delete TAB_RECIPE_MAP[tabId];
 });
 
@@ -87,7 +100,7 @@ function sanitizeString(str) {
 }
 
 
-function normalizeRecipe(recipe) {
+function normalizeRecipe(tab, recipe) {
     console.log('recipe dirty', recipe);
 
     // Deprecated, redundant, and still used :(
@@ -117,6 +130,7 @@ function normalizeRecipe(recipe) {
         image: image,
         author: author,
         full: recipe,
+        url: tab.url,
     };
 
     if (typeof recipe.recipeInstructions === 'string') {
@@ -178,11 +192,21 @@ function normalizeRecipe(recipe) {
 }
 
 
-browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    console.log('sender.tab->', sender.tab);
+// TODO: Clean up old recipes after a while.
+function saveToStorage(recipe) {
+    let id = `${Date.now()}-${recipe.name}`;
 
+    console.log('Saving recipe as', id);
+
+    return browser.storage.local.set({[id]: recipe}).then(() => id);
+}
+
+
+browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     function setRecipeData(data) {
-        TAB_RECIPE_MAP[sender.tab.id] = normalizeRecipe(data);
+        let recipe = normalizeRecipe(sender.tab, data);
+
+        EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
         browser.pageAction.show(sender.tab.id);
     }
 
@@ -209,22 +233,11 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             break;
         }
 
-        console.log('GOT RECIPE', result);
         setRecipeData(result);
         break;
 
     case 'recipe-detected':
         setRecipeData(msg.data[0]);
-        break;
-
-    case 'request-recipe':
-        const recipe = TAB_RECIPE_MAP[sender.tab.id];
-        if (recipe !== null) {
-            sendResponse({recipe});
-        } else {
-            sendResponse({});
-        }
-
         break;
 
     default:

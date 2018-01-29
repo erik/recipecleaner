@@ -25,7 +25,7 @@ function view(recipe) {
 }
 
 function viewHeader(recipe) {
-    let image = recipe.image ? <img src={recipe.image} /> : null;
+    let image = recipe.image ? <img src={recipe.image}></img> : null;
     let author = recipe.author ? <small> by { recipe.author } </small> : null;
 
     return (
@@ -72,20 +72,23 @@ function viewInstructions(recipe) {
 
     return (
         <p>
-          This recipe didn't include any instructions :(
+          This recipe did not include any instructions :(
         </p>
     );
 }
 
+const params = new URLSearchParams(window.location.search);
+const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
-browser.runtime.sendMessage({kind: 'request-recipe'})
-    .then(resp => {
-        if (resp.recipe) {
-            console.log('Recipe -> ', resp.recipe);
-            document.title = `${resp.recipe.name} :: Recipe Thing`;
-            const main = app(resp.recipe, actions, view, document.body);
-        } else {
-            const main = app({}, {}, () => (<h1>Sorry, I couldn't find that recipe</h1>),
+browser.storage.local.get(recipeId).then(recipes => {
+    const recipe = recipes[recipeId];
+
+    if (recipe !== null) {
+        console.log('Recipe -> ', recipe);
+        document.title = `${recipe.name} :: Recipe Thing`;
+        app(recipe, actions, view, document.body);
+    } else {
+        app({}, {}, () => (<h1>Sorry, I couldn't find that recipe</h1>),
     document.body);
-        }
-    });
+    }
+});
