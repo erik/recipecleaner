@@ -119,6 +119,13 @@ function normalizeRecipe(tab, recipe) {
     }
 
     let author = recipe.author;
+
+    // NOTE: This isn't to spec but apparently sometimes author is
+    // NOTE: returned as a list
+    if (Array.isArray(author)) {
+        author = author.length > 0 ? author[0] : null;
+    }
+
     if (author && author.name) {
         author = author.name;
     }
