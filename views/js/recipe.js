@@ -25,7 +25,8 @@ function view(recipe) {
 }
 
 function viewHeader(recipe) {
-    let image = recipe.image ? <img src={recipe.image}></img> : null;
+    let image = recipe.image ? <img src={recipe.image} /> : null;
+
     let author = recipe.author ? <small> by { recipe.author } </small> : null;
 
     return (
@@ -88,7 +89,6 @@ browser.storage.local.get(recipeId).then(recipes => {
         document.title = `${recipe.name} :: Recipe Thing`;
         app(recipe, actions, view, document.body);
     } else {
-        app({}, {}, () => (<h1>Sorry, I couldn't find that recipe</h1>),
-    document.body);
+        app({}, {}, () => (<h1>Sorry, I could not find that recipe!</h1>), document.body);
     }
 });

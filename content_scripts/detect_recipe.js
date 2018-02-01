@@ -31,7 +31,7 @@ function detectRecipeMicrodata() {
 
             browser.runtime.sendMessage({
                 kind: 'try-extract-recipe',
-                data: node.outerHTML,
+                data: node.outerHTML
             });
         });
 

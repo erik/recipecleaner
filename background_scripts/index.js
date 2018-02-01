@@ -48,14 +48,20 @@ const RECIPE_QUANTITY_RE = new RegExp([
     `^`,
     `((?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)`,
     `\\s*`,
-    `(${QUANTITIES.join('|')})?`,
+    `(${QUANTITIES.join('|')})?\\.?`,
     `\\s*`,
     `(.*)`,
     `$`
 ].join(''), 'i');
 
-const KEYS_TO_CLEAN = 'name description ingredients instructionText instructionList'.split(' ');
-
+// Keys that should have `sanitizeString` run against them.
+const KEYS_TO_CLEAN = [
+    'name',
+    'description',
+    'ingredients',
+    'instructionText',
+    'instructionList',
+];
 
 browser.pageAction.onClicked.addListener((tab) => {
     const recipe = EPHEMERAL_TAB_MAP[tab.id];
@@ -84,8 +90,14 @@ function sanitizeString(str) {
     // Strip out HTML entities
     str = he.decode(str);
 
-    // Sometimes HTML tags end up in the text.
-    str = str.replace(/<(\/)?(p|div|span|b|i|em)>/g, '');
+    // Sometimes HTML tags end up in the text. This is a quick way to parse
+    // them out.
+    // TODO: What happens if it's bad HTML?
+    if (/<\/(a|p|ol|li|ul|div|span|b|i|em)>/.test(str)) {
+        const div = document.createElement('div');
+        div.innerHTML = str;
+        str = div.innerText;
+    }
 
     // Convert fractions into their unicode equivalent, falling back
     // to the FRACTION character (U+2044).
@@ -115,14 +127,15 @@ function normalizeRecipe(tab, recipe) {
     }
 
     let image = recipe.image;
+    if (Array.isArray(image)) {
+        image = image.length > 0 ? image[0] : null;
+    }
+
     if (image && image.url) {
         image = image.url;
     }
 
     let author = recipe.author;
-
-    // NOTE: This isn't to spec but apparently sometimes author is
-    // NOTE: returned as a list
     if (Array.isArray(author)) {
         author = author.length > 0 ? author[0] : null;
     }
