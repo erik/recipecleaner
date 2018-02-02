@@ -26,6 +26,7 @@ const QUANTITIES = [
     'pound(?:s)?',
     'lb(?:s)?',
     '(?:kilo)?gram(?:s)?',
+    'g',
     'kg',
     'teaspoon(?:s)?',
     'tablespoon(?:s)?',
@@ -38,7 +39,8 @@ const QUANTITIES = [
     'large',
     'stick(?:s)?',
     'clove(?:s)?',
-    'bunch(?:es)?'
+    'bunch(?:es)?',
+    'can(?:s)?'
 ];
 
 const FRACTIONS = Object.values(FRACT_MAP).join('');
@@ -150,6 +152,7 @@ function normalizeRecipe(tab, recipe) {
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
         image: image,
         author: author,
+        yield: recipe.recipeYield,
         full: recipe,
         url: tab.url,
     };

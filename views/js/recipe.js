@@ -9,15 +9,8 @@ function view(recipe) {
 
           <main>
             <div className="grid">
-              <section id="ingredients">
-                <h2>Ingredients</h2>
-                { viewIngredients(recipe) }
-              </section>
-
-              <section id="instructions">
-                <h2>Instructions</h2>
-                { viewInstructions(recipe) }
-              </section>
+              { viewIngredients(recipe) }
+              { viewInstructions(recipe) }
             </div>
           </main>
         </div>
@@ -25,13 +18,28 @@ function view(recipe) {
 }
 
 function viewHeader(recipe) {
-    let image = recipe.image ? <img src={recipe.image} /> : null;
+    const image = recipe.image ? <img src={recipe.image} /> : null;
 
-    let author = recipe.author ? <small> by { recipe.author } </small> : null;
+    const bylineParts = [
+        recipe.author && (<span> by { recipe.author } </span>),
+        recipe.yield && (<span> yields { recipe.yield } </span>),
+        recipe.time && (<span> { recipe.time } </span>),
+        <a href={ recipe.url }>URL</a>
+    ].filter(e => e);
+
+    let byline = [];
+    bylineParts.forEach((e, i) => {
+        byline.push(e);
+        if (i !== bylineParts.length - 1) {
+            byline.push(<span> | </span>);
+        }
+    });
 
     return (
         <header>
-          <h1>{ recipe.name } { author }</h1>
+          <h1>{ recipe.name }</h1>
+          <div id="byline"> { byline }</div>
+
           <section id="meta">
             { image }
             <p id="description">
@@ -52,29 +60,37 @@ function viewIngredients(recipe) {
     });
 
     return (
-        <ul> { ingredients } </ul>
+        <section id="ingredients">
+          <h2>Ingredients</h2>
+          <ul> { ingredients } </ul>
+        </section>
     );
 }
 
 function viewInstructions(recipe) {
-    if (recipe.instructionText) {
-        return <p> { recipe.instructionText } </p>;
-    }
+    let instructionElem;
 
-    if (recipe.instructionList) {
+    if (recipe.instructionText) {
+        instructionElem = <p> { recipe.instructionText } </p>;
+    } else if (recipe.instructionList) {
         let instructions = recipe.instructionList.map(i => (
             <li className="instruction"> { i } </li>
         ));
 
-        return (
-            <ol> { instructions } </ol>
+        instructionElem = <ol> { instructions } </ol>;
+    } else {
+        instructionElem = (
+            <p>
+              Sorry, seems this recipe did not include any instructions.
+            </p>
         );
     }
 
     return (
-        <p>
-          This recipe did not include any instructions :(
-        </p>
+        <section id="instructions">
+          <h2>Instructions</h2>
+          { instructionElem }
+        </section>
     );
 }
 
