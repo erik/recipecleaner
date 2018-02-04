@@ -1,4 +1,5 @@
 import { h, app } from 'hyperapp';
+import browser from 'webextension-polyfill';
 
 const actions = {};
 

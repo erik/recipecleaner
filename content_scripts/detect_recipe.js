@@ -1,5 +1,8 @@
 /* Detect whether recipe is present on page */
 
+import browser from 'webextension-polyfill';
+
+
 // JSON LD blocks
 const JSON_LD_SEL = 'script[type="application/ld+json"]';
 

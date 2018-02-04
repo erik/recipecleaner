@@ -1,5 +1,6 @@
 import WAE from 'web-auto-extractor';
 import he from 'he';
+import browser from 'webextension-polyfill';
 
 
 // Mapping of tab id -> recipe id
@@ -275,7 +276,13 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         let recipe = normalizeRecipe(sender.tab, data);
 
         EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
-        browser.pageAction.show(sender.tab.id);
+
+        // Some weird bug in chrome...
+        if (typeof chrome !== 'undefined') {
+            chrome.pageAction.show(sender.tab.id);
+        } else {
+            browser.pageAction.show(sender.tab.id);
+        }
     }
 
     switch (msg.kind) {

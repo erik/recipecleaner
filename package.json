@@ -13,6 +13,7 @@
     "he": "^1.1.1",
     "hyperapp": "^1.0.2",
     "web-auto-extractor": "^1.0.17",
+    "webextension-polyfill": "^0.2.1",
     "webpack": "^3.10.0"
   },
   "devDependencies": {},
