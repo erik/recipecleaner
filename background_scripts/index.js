@@ -40,7 +40,8 @@ const QUANTITIES = [
     'stick(?:s)?',
     'clove(?:s)?',
     'bunch(?:es)?',
-    'can(?:s)?'
+    'can(?:s)?',
+    'stalk(?:s)?',
 ];
 
 const FRACTIONS = Object.values(FRACT_MAP).join('');
