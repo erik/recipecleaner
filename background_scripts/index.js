@@ -143,8 +143,37 @@ function normalizeRecipe(tab, recipe) {
         author = author.length > 0 ? author[0] : null;
     }
 
-    if (author && author.name) {
-        author = author.name;
+    // Sometimes a string, sometimes {"name": "..."}
+    author = (author && author.name) ? author.name : author;
+
+    if (author) {
+        author = author
+            .trim()
+            .replace('/contributors/', '');
+    }
+
+    let yield_ = recipe.recipeYield;
+    if (yield_) {
+        yield_ = yield_
+            .trim()
+            .replace(/^serves /i, '')
+            .toLowerCase();
+    }
+
+    // Very simplified parsing of ISO8601 duration.
+    // TODO: should use momentJS here and humanize
+    let time = recipe.totalTime;
+    if (time) {
+        let [_match, hours, minutes] = time.match(/PT(?:(\d+)H)?(\d+)M(?:\d+S)?/);
+        time = '';
+
+        if (hours && hours !== '0') {
+            time += `${hours} hour${hours === '1' ? '' : 's'}`;
+        }
+
+        if (minutes && minutes !== '0') {
+            time += `${minutes} minutes`;
+        }
     }
 
     let clean = {
@@ -153,13 +182,16 @@ function normalizeRecipe(tab, recipe) {
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
         image: image,
         author: author,
-        yield: recipe.recipeYield,
-        full: recipe,
+        yield: yield_,
         url: tab.url,
+        time: time,
+        original: recipe,
     };
 
     if (typeof recipe.recipeInstructions === 'string') {
-        clean.instructionText = recipe.recipeInstructions.trim();
+        clean.instructionText = recipe.recipeInstructions
+            .trim()
+            .replace(/^preparation/i, '');
 
         // Sometimes the text block is actually a list in disguise.
         if (clean.instructionText.startsWith('1.')) {
@@ -219,7 +251,11 @@ function normalizeRecipe(tab, recipe) {
 
 // TODO: Clean up old recipes after a while.
 function saveToStorage(recipe) {
-    let id = `${Date.now()}-${recipe.name}`;
+    let cleanName = recipe.name
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '');
+
+    let id = `${Date.now()}-${cleanName}`;
 
     console.log('Saving recipe as', id);
 

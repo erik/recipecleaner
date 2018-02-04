@@ -19,12 +19,13 @@ function view(recipe) {
 
 function viewHeader(recipe) {
     const image = recipe.image ? <img src={recipe.image} /> : null;
+    const hostname = (new URL(recipe.url)).hostname;
 
     const bylineParts = [
-        recipe.author && (<span> by { recipe.author } </span>),
-        recipe.yield && (<span> yields { recipe.yield } </span>),
+        recipe.author && (<span> By { recipe.author } </span>),
+        recipe.yield && (<span> Yields { recipe.yield } </span>),
         recipe.time && (<span> { recipe.time } </span>),
-        <a href={ recipe.url }>URL</a>
+        <span>Via <a href={ recipe.url }>{ hostname }</a></span>
     ].filter(e => e);
 
     let byline = [];
