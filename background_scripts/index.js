@@ -58,6 +58,17 @@ const RECIPE_QUANTITY_RE = new RegExp([
     `$`
 ].join(''), 'i');
 
+// PnYnMnDTnHnMnS
+const numbers = '\\d+(?:[\\.,]\\d{0,3})?';
+const weekPattern = `(?:${numbers}W)`;
+const datePattern = `(?:${numbers}Y)?(?:${numbers}M)?(?:${numbers}D)?`;
+const timePattern = `T(?:(${numbers})H)?(?:(${numbers})M)?(?:${numbers}S)?`;
+const iso8601 = `P(?:${weekPattern}|${datePattern}(?:${timePattern})?)`;
+
+// The ISO8601 regex for matching / testing durations
+// Taken from https://github.com/tolu/ISO8601-duration (MIT)
+export const ISO8601_DURATION_RE = new RegExp(iso8601);
+
 // Keys that should have `sanitizeString` run against them.
 const KEYS_TO_CLEAN = [
     'name',
@@ -167,17 +178,17 @@ function normalizeRecipe(tab, recipe) {
     // TODO: should use momentJS here and humanize
     let time = recipe.totalTime;
     if (time) {
-        const match = time.match(/PT(?:(\d+)H)?(\d+)M(?:\d+S)?/);
+        const match = time.match(ISO8601_DURATION_RE);
         if (match !== null) {
             let [_match, hours, minutes] = match;
             time = [];
 
             if (hours && hours !== '0') {
-                time.push(`${hours} hour${hours === '1' ? '' : 's'}`);
+                time.push(`${hours} hr`);
             }
 
             if (minutes && minutes !== '0') {
-                time.push(`${minutes} minutes`);
+                time.push(`${minutes} min`);
             }
 
             time = time.join(' ');
