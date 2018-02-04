@@ -164,15 +164,18 @@ function normalizeRecipe(tab, recipe) {
     // TODO: should use momentJS here and humanize
     let time = recipe.totalTime;
     if (time) {
-        let [_match, hours, minutes] = time.match(/PT(?:(\d+)H)?(\d+)M(?:\d+S)?/);
-        time = '';
+        const match = time.match(/PT(?:(\d+)H)?(\d+)M(?:\d+S)?/);
+        if (match !== null) {
+            let [_match, hours, minutes] = match;
+            time = '';
 
-        if (hours && hours !== '0') {
-            time += `${hours} hour${hours === '1' ? '' : 's'}`;
-        }
+            if (hours && hours !== '0') {
+                time += `${hours} hour${hours === '1' ? '' : 's'}`;
+            }
 
-        if (minutes && minutes !== '0') {
-            time += `${minutes} minutes`;
+            if (minutes && minutes !== '0') {
+                time += `${minutes} minutes`;
+            }
         }
     }
 
