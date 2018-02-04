@@ -60,6 +60,8 @@ const RECIPE_QUANTITY_RE = new RegExp([
 // Keys that should have `sanitizeString` run against them.
 const KEYS_TO_CLEAN = [
     'name',
+    'author',
+    'time',
     'description',
     'ingredients',
     'instructionText',
@@ -167,15 +169,17 @@ function normalizeRecipe(tab, recipe) {
         const match = time.match(/PT(?:(\d+)H)?(\d+)M(?:\d+S)?/);
         if (match !== null) {
             let [_match, hours, minutes] = match;
-            time = '';
+            time = [];
 
             if (hours && hours !== '0') {
-                time += `${hours} hour${hours === '1' ? '' : 's'}`;
+                time.push(`${hours} hour${hours === '1' ? '' : 's'}`);
             }
 
             if (minutes && minutes !== '0') {
-                time += `${minutes} minutes`;
+                time.push(`${minutes} minutes`);
             }
+
+            time = time.join(' ');
         }
     }
 
