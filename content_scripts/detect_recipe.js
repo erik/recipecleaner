@@ -12,42 +12,46 @@ const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
 
 function detectRecipeMicrodata() {
     // First try to pull JSON LD format, because it's cleaner / faster
-    const jsonNodes = Array.from(document.querySelectorAll(JSON_LD_SEL))
-              .map(node => {
-                  try {
-                      return JSON.parse(node.innerText);
-                  } catch (e) {
-                      console.error('Failed to parse json: ', e);
-                      return {};
-                  }
-              })
-              .filter(json => json['@type'] === 'Recipe');
+    for (const node of document.querySelectorAll(JSON_LD_SEL)) {
+        let json;
 
-    if (jsonNodes.length > 0) {
-        return jsonNodes;
+        try {
+            json = JSON.parse(node.innerText);
+        } catch (e) {
+            console.error('Failed to parse JSON: ', e);
+            continue;
+        }
+
+        // Generally, it's not a list, but since it can be, normalize to that.
+        if (!Array.isArray(json)) {
+            json = [json];
+        }
+
+        for (const microdata of json) {
+            // Right now, only take the first recipe we see.
+            if (microdata['@type'] === 'Recipe') {
+                console.log('recipe-detected', microdata);
+
+                browser.runtime.sendMessage({
+                    kind: 'recipe-detected',
+                    data: microdata
+                });
+
+                return;
+            }
+        }
     }
 
     // Then fall back to microdata if available
-    Array.from(document.querySelectorAll(MICRODATA_SEL))
-        .forEach(node => {
-            console.log('trying recipe!', node);
+    for (const node of document.querySelectorAll(MICRODATA_SEL)) {
+        console.log('trying recipe!', node);
 
-            browser.runtime.sendMessage({
-                kind: 'try-extract-recipe',
-                data: node.outerHTML
-            });
+        browser.runtime.sendMessage({
+            kind: 'try-extract-recipe',
+            data: node.outerHTML
         });
-
-    return [];
+    }
 }
 
 
-const microdata = detectRecipeMicrodata();
-if (microdata.length > 0) {
-    console.log('recipe-detected', microdata);
-
-    browser.runtime.sendMessage({
-        kind: 'recipe-detected',
-        data: microdata
-    });
-}
+detectRecipeMicrodata();

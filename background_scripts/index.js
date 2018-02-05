@@ -158,7 +158,7 @@ function normalizeRecipe(tab, recipe) {
     }
 
     // Sometimes a string, sometimes {"name": "..."}
-    author = (author && author.name) ? author.name : author;
+    author = (author && author.name !== undefined) ? author.name : author;
 
     if (author) {
         author = author
@@ -323,7 +323,7 @@ browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         break;
 
     case 'recipe-detected':
-        setRecipeData(msg.data[0]);
+        setRecipeData(msg.data);
         break;
 
     default:
