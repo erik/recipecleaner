@@ -2,6 +2,8 @@ import WAE from 'web-auto-extractor';
 import he from 'he';
 import browser from 'webextension-polyfill';
 
+import * as sanitize from './sanitize';
+
 
 // Mapping of tab id -> recipe id
 const TAB_RECIPE_MAP = {};
@@ -49,13 +51,13 @@ const FRACTIONS = Object.values(FRACT_MAP).join('');
 
 // Try to match things like "1 tablespoon sugar"
 const RECIPE_QUANTITY_RE = new RegExp([
-    `^`,
+    '^',
     `((?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)`,
-    `\\s*`,
+    '\\s*',
     `(${QUANTITIES.join('|')})?\\.?`,
-    `\\s*`,
-    `(.*)`,
-    `$`
+    '\\s*',
+    '(.*)',
+    '$'
 ].join(''), 'i');
 
 // PnYnMnDTnHnMnS
@@ -130,44 +132,17 @@ function sanitizeString(str) {
 }
 
 
-function normalizeRecipe(tab, recipe) {
+export function normalizeRecipe(tab, recipe) {
     console.log('recipe dirty', recipe);
 
     // Deprecated, redundant, and still used :(
-    if (recipe['@context'].includes('data-vocabulary.org')) {
+    if ((recipe['@context'] || '').includes('data-vocabulary.org')) {
         recipe = {
             name: recipe.name,
             ingredients: recipe.ingredient,
             description: recipe.summary,
             recipeInstructions: recipe.instructions,
         };
-    }
-
-    let image = recipe.image;
-    if (image['@list']) {
-        image = image['@list'];
-    }
-
-    if (Array.isArray(image)) {
-        image = image.length > 0 ? image[0] : null;
-    }
-
-    if (image && image.url) {
-        image = image.url;
-    }
-
-    let author = recipe.author;
-    if (Array.isArray(author)) {
-        author = author.length > 0 ? author[0] : null;
-    }
-
-    // Sometimes a string, sometimes {"name": "..."}
-    author = (author && author.name !== undefined) ? author.name : author;
-
-    if (author) {
-        author = author
-            .trim()
-            .replace('/contributors/', '');
     }
 
     let yield_ = recipe.recipeYield;
@@ -202,8 +177,8 @@ function normalizeRecipe(tab, recipe) {
         name: recipe.name || 'An untitled recipe',
         description: recipe.description,
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
-        image: image,
-        author: author,
+        image: sanitize.image(recipe.image),
+        author: sanitize.author(recipe.author),
         yield: yield_,
         url: tab.url,
         time: time,
@@ -211,7 +186,7 @@ function normalizeRecipe(tab, recipe) {
     };
 
     // instructions isn't in the spec, but is sometimes used anyway.
-    const instructions = (recipe.recipeInstructions || recipe.instructions);
+    const instructions = (recipe.recipeInstructions || recipe.instruction || []);
 
     if (typeof instructions === 'string') {
         const text = sanitizeString(instructions)
@@ -241,16 +216,16 @@ function normalizeRecipe(tab, recipe) {
 
     // Remove the junk from the strings.
     KEYS_TO_CLEAN.forEach(k => {
-            if (typeof clean[k] === 'string') {
-                clean[k] = sanitizeString(clean[k]);
-            } else if (Array.isArray(clean[k])) {
-                // Seems relatively common to have blank items in the list
-                clean[k] = clean[k]
-                    .map(v => sanitizeString(v))
-                    .map(i => i.trim())
-                    .filter(i => i !== "");
-            }
-        });
+        if (typeof clean[k] === 'string') {
+            clean[k] = sanitizeString(clean[k]);
+        } else if (Array.isArray(clean[k])) {
+            // Seems relatively common to have blank items in the list
+            clean[k] = clean[k]
+                .map(v => sanitizeString(v))
+                .map(i => i.trim())
+                .filter(i => i !== '');
+        }
+    });
 
     // Try to map ingredients from text to [{quantity, ingredient, unit}]
     clean.ingredients = clean.ingredients.map(ingredient => {

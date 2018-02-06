@@ -6,14 +6,14 @@ const actions = {};
 function view(recipe) {
     return (
         <div id="wrapper">
-          { viewHeader(recipe) }
+            { viewHeader(recipe) }
 
-          <main>
-            <div className="grid">
-              { viewIngredients(recipe) }
-              { viewInstructions(recipe) }
-            </div>
-          </main>
+            <main>
+                <div className="grid">
+                    { viewIngredients(recipe) }
+                    { viewInstructions(recipe) }
+                </div>
+            </main>
         </div>
     );
 }
@@ -39,15 +39,15 @@ function viewHeader(recipe) {
 
     return (
         <header>
-          <h1>{ recipe.name }</h1>
-          <div id="byline"> { byline }</div>
+            <h1>{ recipe.name }</h1>
+            <div id="byline"> { byline }</div>
 
-          <section id="meta">
-            { image }
-            <p id="description">
-              { recipe.description }
-            </p>
-          </section>
+            <section id="meta">
+                { image }
+                <p id="description">
+                    { recipe.description }
+                </p>
+            </section>
         </header>
     );
 }
@@ -55,16 +55,16 @@ function viewHeader(recipe) {
 function viewIngredients(recipe) {
     let ingredients = recipe.ingredients.map(i => {
         let quantity = i.quantity ?
-                <b className="quantity">{ i.quantity } { i.unit || '' }</b>
-                : null;
+            <b className="quantity">{ i.quantity } { i.unit || '' }</b>
+            : null;
 
         return <li> { quantity } { i.ingredient } </li>;
     });
 
     return (
         <section id="ingredients">
-          <h2>Ingredients</h2>
-          <ul> { ingredients } </ul>
+            <h2>Ingredients</h2>
+            <ul> { ingredients } </ul>
         </section>
     );
 }
@@ -82,16 +82,17 @@ function viewInstructions(recipe) {
         instructionElem = <ol> { instructions } </ol>;
     } else {
         instructionElem = (
-            <p>
-              Sorry, seems this recipe did not include any instructions.
-            </p>
+            <div>
+                <p> Sorry, seems this recipe did not include any instructions. </p>
+                <p> The recipe you tried to view was not properly formatted. </p>
+            </div>
         );
     }
 
     return (
         <section id="instructions">
-          <h2>Instructions</h2>
-          { instructionElem }
+            <h2>Instructions</h2>
+            { instructionElem }
         </section>
     );
 }

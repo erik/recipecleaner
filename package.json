@@ -16,9 +16,20 @@
         "webextension-polyfill": "^0.2.1",
         "webpack": "^3.10.0"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "assert": "^1.4.1",
+        "karma": "^2.0.0",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-firefox-launcher": "^1.1.0",
+        "karma-mocha": "^1.3.0",
+        "karma-mocha-reporter": "^2.2.5",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-webpack": "^2.0.9",
+        "mocha": "^5.0.0"
+    },
     "scripts": {
-        "web-ext": "cd addon && web-ext run"
+        "test": "karma start",
+        "web-ext": "web-ext run -s ./addon"
     },
     "author": "",
     "license": "ISC"
