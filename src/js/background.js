@@ -67,7 +67,7 @@ const iso8601 = `P(?:${weekPattern}|${datePattern}(?:${timePattern})?)`;
 
 // The ISO8601 regex for matching / testing durations
 // Taken from https://github.com/tolu/ISO8601-duration (MIT)
-export const ISO8601_DURATION_RE = new RegExp(iso8601);
+const ISO8601_DURATION_RE = new RegExp(iso8601);
 
 // Keys that should have `sanitizeString` run against them.
 const KEYS_TO_CLEAN = [
@@ -170,12 +170,11 @@ function normalizeRecipe(tab, recipe) {
     if (yield_) {
         yield_ = yield_
             .trim()
-            .replace(/^serves /i, '')
+            .replace(/^(serves|yield(s)?):? /i, '')
             .toLowerCase();
     }
 
-    // Very simplified parsing of ISO8601 duration.
-    // TODO: should use momentJS here and humanize
+    // Simplified parsing of ISO8601 duration.
     let time = recipe.totalTime;
     if (time) {
         const match = time.match(ISO8601_DURATION_RE);
