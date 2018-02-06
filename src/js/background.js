@@ -144,6 +144,10 @@ function normalizeRecipe(tab, recipe) {
     }
 
     let image = recipe.image;
+    if (image['@list']) {
+        image = image['@list'];
+    }
+
     if (Array.isArray(image)) {
         image = image.length > 0 ? image[0] : null;
     }
@@ -170,7 +174,7 @@ function normalizeRecipe(tab, recipe) {
     if (yield_) {
         yield_ = yield_
             .trim()
-            .replace(/^(serves|yield(s)?):? /i, '')
+            .replace(/^(serves|yield(s)?):?\s?/i, '')
             .toLowerCase();
     }
 
@@ -212,7 +216,8 @@ function normalizeRecipe(tab, recipe) {
     if (typeof instructions === 'string') {
         clean.instructionText = instructions
             .trim()
-            .replace(/^preparation/i, '');
+            .replace(/^preparation/i, '')
+            .replace(/(\w)\.(\w)/g, (_match, w1, w2) => `${w1}.\n${w2}`);
 
         // Sometimes the text block is actually a list in disguise.
         if (clean.instructionText.startsWith('1.')) {
