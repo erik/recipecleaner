@@ -88,7 +88,7 @@ browser.pageAction.onClicked.addListener((tab) => {
         TAB_RECIPE_MAP[tab.id] = recipeId;
 
         browser.tabs.update({
-            url: `views/recipe.html?recipeId=${encodeURI(recipeId)}`
+            url: `recipe.html?recipeId=${encodeURI(recipeId)}`
         }).catch(e => {
             console.error('FAILED to inject script:', e);
         });
@@ -207,8 +207,11 @@ function normalizeRecipe(tab, recipe) {
         original: recipe,
     };
 
-    if (typeof recipe.recipeInstructions === 'string') {
-        clean.instructionText = recipe.recipeInstructions
+    // instructions isn't in the spec, but is sometimes used anyway.
+    const instructions = (recipe.recipeInstructions || recipe.instructions);
+
+    if (typeof instructions === 'string') {
+        clean.instructionText = instructions
             .trim()
             .replace(/^preparation/i, '');
 
@@ -223,8 +226,8 @@ function normalizeRecipe(tab, recipe) {
 
     }
 
-    if (Array.isArray(recipe.recipeInstructions)) {
-        clean.instructionList = recipe.recipeInstructions
+    if (Array.isArray(instructions)) {
+        clean.instructionList = instructions
             .map((inst, idx) => {
                 // Sometimes the instruction list includes a number
                 // prefix, strip that out.

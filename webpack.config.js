@@ -3,13 +3,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
-        background_scripts: './background_scripts/index.js',
-        detect_recipe: './content_scripts/detect_recipe.js',
-        view_recipe: './views/js/recipe.js'
+        background: './src/js/background.js',
+        content: './src/js/content.js',
+        view_recipe: './src/js/view_recipe.js',
     },
 
     output: {
-        path: path.resolve(__dirname, 'addon', 'build'),
+        path: path.resolve(__dirname, 'addon'),
         filename: '[name].js'
     },
 
@@ -28,7 +28,9 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin([
-            {from: 'views/*.html', to: path.resolve(__dirname, 'addon')}
+            {from: './src/icons/', to: path.resolve(__dirname, 'addon', 'icons')},
+            {from: './src/manifest.json'},
+            {from: './src/html/'}
         ])
     ]
 };

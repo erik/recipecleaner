@@ -13,10 +13,10 @@
     },
     "content_scripts": [{
         "matches": ["*://*/*"],
-        "js": ["build/detect_recipe.js"]
+        "js": ["content.js"]
     }],
     "background": {
-        "scripts": ["build/background_scripts.js"]
+        "scripts": ["background.js"]
     },
     "permissions": [
         "*://*/*",
