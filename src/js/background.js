@@ -27,7 +27,7 @@ const QUANTITIES = [
     'pound(?:s)?',
     'lb(?:s)?',
     '(?:kilo)?gram(?:s)?',
-    'g',
+    'g\\b',
     'kg',
     'teaspoon(?:s)?',
     'tablespoon(?:s)?',
