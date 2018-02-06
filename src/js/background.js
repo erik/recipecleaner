@@ -126,7 +126,7 @@ function sanitizeString(str) {
     // Junk that appears on some sites
     str = str.replace(/Save \$/, '');
 
-    return str;
+    return str.trim();
 }
 
 
@@ -214,20 +214,18 @@ function normalizeRecipe(tab, recipe) {
     const instructions = (recipe.recipeInstructions || recipe.instructions);
 
     if (typeof instructions === 'string') {
-        clean.instructionText = instructions
-            .trim()
+        const text = sanitizeString(instructions)
             .replace(/^preparation/i, '')
             .replace(/(\w)\.(\w)/g, (_match, w1, w2) => `${w1}.\n${w2}`);
 
         // Sometimes the text block is actually a list in disguise.
-        if (clean.instructionText.startsWith('1.')) {
-            clean.instructionList = clean.instructionText.split(/\d+\./);
-            clean.instructionText = null;
-        } else if (clean.instructionText.includes('\n')) {
-            clean.instructionList = clean.instructionText.split(/\r?\n/);
-            clean.instructionText = null;
+        if (text.startsWith('1.')) {
+            clean.instructionList = text.split(/\d+\./);
+        } else if (text.includes('\n')) {
+            clean.instructionList = text.split(/\r?\n/);
+        } else {
+            clean.instructionText = text;
         }
-
     }
 
     if (Array.isArray(instructions)) {

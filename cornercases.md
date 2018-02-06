@@ -11,3 +11,7 @@ HTML tags encoded in recipe:
 Image is a list rather than a string:
 
 - https://cafedelites.com/best-fluffy-pancakes/
+
+InstructionText is actually a list in disguise:
+
+- https://www.thespruce.com/vegetarian-tempeh-taco-recipe-3377159
