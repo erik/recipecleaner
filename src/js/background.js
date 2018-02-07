@@ -98,18 +98,7 @@ export function normalizeRecipe(tab, recipe) {
     }
 
     // Remove the junk from the strings.
-    KEYS_TO_CLEAN.forEach(k => {
-        const value = clean[k];
-
-        if (typeof value === 'string') {
-            clean[k] = sanitize.common(value);
-        } else if (Array.isArray(value)) {
-            // Seems relatively common to have blank items in the list
-            clean[k] = value
-                .map(v => sanitize.common(v))
-                .filter(i => i !== '');
-        }
-    });
+    KEYS_TO_CLEAN.forEach(key => { clean[key] = sanitize.common(clean[key]); });
 
     // Try to map ingredients from text to [{quantity, ingredient, unit}]
     clean.ingredients = clean.ingredients.map(i => sanitize.ingredient(i));

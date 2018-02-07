@@ -154,6 +154,16 @@ function sanitizeIngredient (ingredient) {
 
 // Handles common case stuff for sanitization.
 function sanitizeCommon (input) {
+    if (Array.isArray(input)) {
+        return input.map(v => sanitizeString(v)).filter(i => i !== '');
+    } else if (typeof input === 'string') {
+        return sanitizeString(input);
+    }
+
+    return input;
+}
+
+function sanitizeString (input) {
     // Strip out HTML entities
     let str = he.decode(input);
 
@@ -180,6 +190,7 @@ function sanitizeCommon (input) {
 export default {
     author: sanitizeAuthor,
     common: sanitizeCommon,
+    string: sanitizeString,
     image: sanitizeImage,
     ingredient: sanitizeIngredient,
     time: sanitizeTime,

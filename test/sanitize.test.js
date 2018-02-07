@@ -96,18 +96,32 @@ describe('sanitize', () => {
         });
     });
 
-    describe('common', () => {
+    describe('string', () => {
         it('strips out leftover HTML tags', () => {
-            assert.equal(sanitize.common('foo <a href="foobar.com">bar</a> baz'), 'foo bar baz');
-            assert.equal(sanitize.common('foo <a href="unclosed string>bad</a>'), 'foo');
+            assert.equal(sanitize.string('foo <a href="foobar.com">bar</a> baz'), 'foo bar baz');
+            assert.equal(sanitize.string('foo <a href="unclosed string>bad</a>'), 'foo');
         });
 
         it('replaces fractions', () => {
-            assert.equal(sanitize.common('1/2 1/3 1/4 55/99'), '½ ⅓ ¼ 55⁄99');
+            assert.equal(sanitize.string('1/2 1/3 1/4 55/99'), '½ ⅓ ¼ 55⁄99');
         });
 
         it('replaces encoded html entities', () => {
-            assert.equal(sanitize.common('foo&amp;bar'), 'foo&bar');
+            assert.equal(sanitize.string('foo&amp;bar'), 'foo&bar');
+        });
+    });
+
+    describe('common', () => {
+        it('maps over arrays', () => {
+            assert.deepEqual(sanitize.common(['&amp;', 'foo', '1']), ['&', 'foo', '1']);
+        });
+
+        it('handles strings', () => {
+            assert.equal(sanitize.common('1/2'), '½');
+        });
+
+        it('leaves other things untouched', () => {
+            assert.deepEqual(sanitize.common({a: 2}), {a: 2});
         });
     });
 });
