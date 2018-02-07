@@ -2,7 +2,7 @@ import WAE from 'web-auto-extractor';
 import he from 'he';
 import browser from 'webextension-polyfill';
 
-import * as sanitize from './sanitize';
+import sanitize from './sanitize';
 
 
 // Mapping of tab id -> recipe id
@@ -60,16 +60,6 @@ const RECIPE_QUANTITY_RE = new RegExp([
     '$'
 ].join(''), 'i');
 
-// PnYnMnDTnHnMnS
-const numbers = '\\d+(?:[\\.,]\\d{0,3})?';
-const weekPattern = `(?:${numbers}W)`;
-const datePattern = `(?:${numbers}Y)?(?:${numbers}M)?(?:${numbers}D)?`;
-const timePattern = `T(?:(${numbers})H)?(?:(${numbers})M)?(?:${numbers}S)?`;
-const iso8601 = `P(?:${weekPattern}|${datePattern}(?:${timePattern})?)`;
-
-// The ISO8601 regex for matching / testing durations
-// Taken from https://github.com/tolu/ISO8601-duration (MIT)
-const ISO8601_DURATION_RE = new RegExp(iso8601);
 
 // Keys that should have `sanitizeString` run against them.
 const KEYS_TO_CLEAN = [
@@ -153,35 +143,15 @@ export function normalizeRecipe(tab, recipe) {
             .toLowerCase();
     }
 
-    // Simplified parsing of ISO8601 duration.
-    let time = recipe.totalTime;
-    if (time) {
-        const match = time.match(ISO8601_DURATION_RE);
-        if (match !== null) {
-            let [_match, hours, minutes] = match;
-            time = [];
-
-            if (hours && hours !== '0') {
-                time.push(`${hours} hr`);
-            }
-
-            if (minutes && minutes !== '0') {
-                time.push(`${minutes} min`);
-            }
-
-            time = time.join(' ');
-        }
-    }
-
     let clean = {
         name: recipe.name || 'An untitled recipe',
         description: recipe.description,
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
         image: sanitize.image(recipe.image),
         author: sanitize.author(recipe.author),
+        time: sanitize.time(recipe.totalTime),
         yield: yield_,
         url: tab.url,
-        time: time,
         original: recipe,
     };
 
