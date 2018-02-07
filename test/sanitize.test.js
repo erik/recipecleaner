@@ -59,4 +59,55 @@ describe('sanitize', () => {
             assert.equal(sanitize.time('PT0H0M'), null);
         });
     });
+
+    describe('ingredient', () => {
+        it('does not mangle unknown formats', () => {
+            ['abcd', 'bananas, 32 of them'].forEach(i => {
+                assert.deepEqual(sanitize.ingredient(i), {ingredient: i});
+            });
+        });
+
+        it('handles fractions', () => {
+            assert.deepEqual(sanitize.ingredient('½ tsp potato'), {
+                quantity: '½',
+                unit: 'tsp',
+                ingredient: 'potato'
+            });
+
+            assert.deepEqual(sanitize.ingredient('32 ½ cloves potato'), {
+                quantity: '32 ½',
+                unit: 'cloves',
+                ingredient: 'potato'
+            });
+
+            assert.deepEqual(sanitize.ingredient('8⁄2 grams potato'), {
+                quantity: '8⁄2',
+                unit: 'grams',
+                ingredient: 'potato'
+            });
+        });
+
+        it('handles missing units', () => {
+            assert.deepEqual(sanitize.ingredient('52 grapes'), {
+                quantity: '52',
+                unit: null,
+                ingredient: 'grapes'
+            });
+        });
+    });
+
+    describe('common', () => {
+        it('strips out leftover HTML tags', () => {
+            assert.equal(sanitize.common('foo <a href="foobar.com">bar</a> baz'), 'foo bar baz');
+            assert.equal(sanitize.common('foo <a href="unclosed string>bad</a>'), 'foo');
+        });
+
+        it('replaces fractions', () => {
+            assert.equal(sanitize.common('1/2 1/3 1/4 55/99'), '½ ⅓ ¼ 55⁄99');
+        });
+
+        it('replaces encoded html entities', () => {
+            assert.equal(sanitize.common('foo&amp;bar'), 'foo&bar');
+        });
+    });
 });

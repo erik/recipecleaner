@@ -1,5 +1,8 @@
 // Try to handle all the wacky inconsistencies of recipes on the internet.
 
+import he from 'he';
+
+
 function sanitizeImage (image) {
     if (!image) {
         return null;
@@ -79,8 +82,106 @@ function sanitizeTime (time) {
 }
 
 
+function sanitizeYield (yield_) {
+    if (!yield_) {
+        return null;
+    }
+
+    return yield_.trim()
+        .replace(/^(serves|yield(s)?):?\s?/i, '')
+        .toLowerCase();
+}
+
+const QUANTITIES = [
+    'ounce(?:s)?',
+    'oz',
+    'pound(?:s)?',
+    'lb(?:s)?',
+    '(?:kilo)?gram(?:s)?',
+    'g\\b',
+    'kg',
+    'teaspoon(?:s)?',
+    'tablespoon(?:s)?',
+    'cup(?:s)?',
+    'tsp',
+    'tbsp',
+    'c\\.',
+    'small',
+    'medium',
+    'large',
+    'stick(?:s)?',
+    'clove(?:s)?',
+    'bunch(?:es)?',
+    'can(?:s)?',
+    'stalk(?:s)?',
+];
+
+// Mapping of ASCII encoded fraction to unicode.
+// TODO: Missing some fractions still, but who uses 5/6
+export const FRACT_MAP = {
+    '1/2': '½',
+    '1/3': '⅓',
+    '2/3': '⅔',
+    '1/4': '¼',
+    '3/4': '¾',
+    '1/8': '⅛',
+    '1/10': '⅒',
+};
+
+const FRACTIONS = Object.values(FRACT_MAP).join('');
+
+// Try to match things like "1 tablespoon sugar"
+const RECIPE_QUANTITY_RE = new RegExp([
+    '^',
+    `((?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)`,
+    '\\s*',
+    `(${QUANTITIES.join('|')})?\\.?`,
+    '\\s*',
+    '(.*)',
+    '$'
+].join(''), 'i');
+
+function sanitizeIngredient (ingredient) {
+    const match = ingredient.match(RECIPE_QUANTITY_RE);
+
+    if (match === null) {
+        return {ingredient};
+    }
+
+    return {quantity: match[1], unit: match[2], ingredient: match[3]};
+}
+
+
+// Handles common case stuff for sanitization.
+function sanitizeCommon (input) {
+    // Strip out HTML entities
+    let str = he.decode(input);
+
+    // Sometimes HTML tags end up in the text. This is a quick way to parse
+    // them out.
+    if (/<\/(a|p|ol|li|ul|div|span|b|i|em)>/.test(str)) {
+        const div = document.createElement('div');
+        div.innerHTML = str;
+        str = div.innerText;
+    }
+
+    // Convert fractions into their unicode equivalent, falling back
+    // to the FRACTION character (U+2044).
+    //
+    // Clean up temperatures
+    //
+    // Junk that appears on some sites
+    return str.replace(/(\d+)\/(\d+)/g, (m, n, d) => FRACT_MAP[m] || `${n}⁄${d}`)
+        .replace(/(\d+) degree(?:s)? ([CF])/g, (_, n, d) => `${n}° ${d}`)
+        .replace(/Save \$/, '')
+        .trim();
+}
+
 export default {
-    image: sanitizeImage,
     author: sanitizeAuthor,
+    common: sanitizeCommon,
+    image: sanitizeImage,
+    ingredient: sanitizeIngredient,
     time: sanitizeTime,
+    yield: sanitizeYield,
 };
