@@ -153,14 +153,9 @@ browser.runtime.onMessage.addListener((msg, sender) => {
 
         try {
             const data = scraper.parse(msg.data);
+            const parsed = (data.jsonld.Recipe || data.microdata.Recipe || data.rdfa.Recipe);
 
-            if (data.jsonld.Recipe) {
-                result = data.jsonld.Recipe[0];
-            } else if (data.microdata.Recipe) {
-                result = data.microdata.Recipe[0];
-            } else if (data.rdfa.Recipe) {
-                result = data.rdfa.Recipe[0];
-            }
+            result = (parsed || [null])[0];
         } catch (e) {
             console.error('Failed to parse microdata:', e);
         }
