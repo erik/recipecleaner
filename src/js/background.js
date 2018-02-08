@@ -45,7 +45,8 @@ browser.tabs.onRemoved.addListener((tabId) => {
 
 
 export function normalizeRecipe(tab, recipe) {
-    console.log('recipe dirty', recipe);
+    console.group();
+    console.log('original recipe:', recipe);
 
     // Deprecated, redundant, and still used :(
     if ((recipe['@context'] || '').includes('data-vocabulary.org')) {
@@ -103,7 +104,8 @@ export function normalizeRecipe(tab, recipe) {
     // Try to map ingredients from text to [{quantity, ingredient, unit}]
     clean.ingredients = clean.ingredients.map(i => sanitize.ingredient(i));
 
-    console.log('recipe cleaned:', clean);
+    console.log('cleaned recipe:', clean);
+    console.groupEnd();
 
     return clean;
 }
