@@ -166,3 +166,15 @@ browser.runtime.onMessage.addListener((msg, sender) => {
         setRecipeData(sender.tab, result);
     }
 });
+
+// First time user experience
+browser.runtime.onInstalled.addListener(({reason, temporary}) => {
+    // Don't do anything if this isn't a first time install
+    // (e.g. extension update)
+    // TODO: Ignore temporary == true, it will get annoying.
+    if (reason !== "install") {
+        return;
+    }
+
+    browser.tabs.create({url: '/welcome.html'});
+});

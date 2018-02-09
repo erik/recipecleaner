@@ -6,6 +6,7 @@ module.exports = {
         background: './src/js/background.js',
         content: './src/js/content.js',
         view_recipe: './src/js/view_recipe.js',
+        welcome: './src/js/welcome.js'
     },
 
     output: {
@@ -26,6 +27,7 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             {from: './src/icons/', to: path.resolve(__dirname, 'addon', 'icons')},
+            {from: './src/images/', to: path.resolve(__dirname, 'addon', 'images')},
             {from: './src/manifest.json'},
             {from: './src/html/'}
         ])

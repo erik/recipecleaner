@@ -5,7 +5,8 @@ browser = chrome = {
     },
 
     runtime: {
-        onMessage: { addListener () {} }
+        onMessage: { addListener () {} },
+        onInstalled: { addListener () {} }
     },
 
     tabs: {
