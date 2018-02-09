@@ -14,6 +14,10 @@ function view(recipe) {
                     { viewInstructions(recipe) }
                 </div>
             </main>
+
+            <script type="application/ld+json">
+                { JSON.stringify(recipe.original) }
+            </script>
         </div>
     );
 }
