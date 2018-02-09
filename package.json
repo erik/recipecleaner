@@ -28,7 +28,9 @@
         "mocha": "^5.0.0"
     },
     "scripts": {
-        "test": "karma start",
+        "test": "karma run",
+        "test:watch": "karma start",
+        "build:watch": "webpack -w",
         "web-ext": "web-ext run -s ./addon"
     },
     "author": "",

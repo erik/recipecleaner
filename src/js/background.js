@@ -10,7 +10,7 @@ const TAB_RECIPE_MAP = {};
 const EPHEMERAL_TAB_MAP = {};
 
 
-// Keys that should have `common` run against them.
+// Keys that should have `sanitize.common` run against them.
 const KEYS_TO_CLEAN = [
     'name',
     'author',
@@ -136,21 +136,26 @@ function setRecipeData(tab, data) {
     }
 }
 
+export function tryExtractRecipe(data) {
+    const scraper = WAE();
+
+    try {
+        const parsed = scraper.parse(data);
+        const micro = (parsed.jsonld.Recipe || parsed.microdata.Recipe || parsed.rdfa.Recipe);
+
+        return (micro || [null])[0];
+    } catch (e) {
+        console.error('Failed to parse microdata:', e);
+    }
+
+    return null;
+}
+
 browser.runtime.onMessage.addListener((msg, sender) => {
     let result;
 
     if (msg.kind === 'try-extract-recipe') {
-        const scraper = WAE();
-
-        try {
-            const data = scraper.parse(msg.data);
-            const parsed = (data.jsonld.Recipe || data.microdata.Recipe || data.rdfa.Recipe);
-
-            result = (parsed || [null])[0];
-        } catch (e) {
-            console.error('Failed to parse microdata:', e);
-        }
-
+        result = tryExtractRecipe(msg.data);
     } else if (msg.kind === 'recipe-detected') {
         result = msg.data;
     } else {
