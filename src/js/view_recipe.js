@@ -1,4 +1,4 @@
-import { h, app } from 'hyperapp';
+import { h, app } from 'hyperapp'; // eslint-disable-line no-unused-vars
 import browser from 'webextension-polyfill';
 
 const actions = {};

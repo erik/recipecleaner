@@ -168,11 +168,11 @@ browser.runtime.onMessage.addListener((msg, sender) => {
 });
 
 // First time user experience
-browser.runtime.onInstalled.addListener(({reason, temporary}) => {
+browser.runtime.onInstalled.addListener(({reason}) => {
     // Don't do anything if this isn't a first time install
     // (e.g. extension update)
     // TODO: Ignore temporary == true, it will get annoying.
-    if (reason !== "install") {
+    if (reason !== 'install') {
         return;
     }
 

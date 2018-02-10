@@ -33,5 +33,5 @@ module.exports = {
         ])
     ],
 
-    devtool: 'sourcemap',
+    devtool: 'sourcemap'
 };
