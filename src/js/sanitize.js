@@ -115,6 +115,8 @@ const QUANTITIES = [
     'bunch(?:es)?',
     'can(?:s)?',
     'stalk(?:s)?',
+    'head(?:s)?',
+    'part(?:s)?'
 ];
 
 // Mapping of ASCII encoded fraction to unicode.
