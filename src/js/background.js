@@ -4,9 +4,7 @@ import browser from 'webextension-polyfill';
 import sanitize from './sanitize';
 
 
-// Mapping of tab id -> recipe id
-const TAB_RECIPE_MAP = {};
-// Mapping of tab id -> recipe that is not persisted to storage.
+// Mapping of tab id -> recipe (not persisted to storage)
 const EPHEMERAL_TAB_MAP = {};
 
 
@@ -26,8 +24,6 @@ browser.pageAction.onClicked.addListener((tab) => {
 
     // We delay storing the recipe until the user actually wants it.
     saveToStorage(recipe).then(recipeId => {
-        TAB_RECIPE_MAP[tab.id] = recipeId;
-
         browser.tabs.update({
             url: `recipe.html?recipeId=${encodeURI(recipeId)}`
         }).catch(e => {
@@ -40,7 +36,6 @@ browser.pageAction.onClicked.addListener((tab) => {
 // Clean up after ourselves.
 browser.tabs.onRemoved.addListener((tabId) => {
     delete EPHEMERAL_TAB_MAP[tabId];
-    delete TAB_RECIPE_MAP[tabId];
 });
 
 
