@@ -7,13 +7,11 @@ module.exports = function(config) {
         browsers: ['Firefox', 'ChromeHeadless'],
 
         files: [
-            {pattern: 'test/*.js', watched: false},
-            {pattern: 'test/**/*.js', watched: false}
+            {pattern: 'test/*.js', watched: false}
         ],
 
         preprocessors: {
-            'test/*.js': ['webpack', 'sourcemap'],
-            'test/**/*.js': ['webpack', 'sourcemap']
+            'test/*.js': ['webpack', 'sourcemap']
         },
 
         webpack: webpackConfig,

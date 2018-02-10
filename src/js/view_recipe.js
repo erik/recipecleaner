@@ -106,12 +106,13 @@ const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
 browser.storage.local.get(recipeId).then(recipes => {
     const recipe = recipes[recipeId];
+    const node = document.querySelector('#hyperapp');
 
     if (recipe !== null) {
         console.log('Recipe -> ', recipe);
         document.title = `${recipe.name} :: Recipe Thing`;
-        app(recipe, actions, view, document.body);
+        app(recipe, actions, view, node);
     } else {
-        app({}, {}, () => (<h1>Sorry, I could not find that recipe!</h1>), document.body);
+        app({}, {}, () => (<h1>Sorry, I could not find that recipe!</h1>), node);
     }
 });

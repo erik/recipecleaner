@@ -98,6 +98,8 @@
            max-height: 128px;
            margin-right: 2em;
        }
+
+       #bugreport { display: none; }
    }
 
    #byline {
@@ -106,8 +108,16 @@
 
    #ingredients { grid-column: 1; }
    #instructions { grid-column: span 5; }
+   #bugreport {
+       position: absolute;
+       top: 0;
+       right: 0;
+       color: #dcdcdc;
+   }
   </style>
 </head>
 
 <body>
+    <a id="bugreport" target="_blank" href="https://goo.gl/forms/bsr8RJJoeiXDKJqo2">Report a bug</a>
+    <div id="hyperapp"></div>
 </body>
