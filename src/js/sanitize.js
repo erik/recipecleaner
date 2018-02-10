@@ -64,6 +64,7 @@ function sanitizeTime (time) {
 
     const match = time.trim().match(ISO8601_DURATION_RE);
     if (match !== null) {
+        // eslint-disable-next-line no-unused-vars
         const [_match, hours, minutes] = match;
         const parts = [];
 
