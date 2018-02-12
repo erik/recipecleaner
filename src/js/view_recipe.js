@@ -101,6 +101,22 @@ function viewInstructions (recipe) {
     );
 }
 
+function viewError () {
+    return (
+        <div id="wrapper">
+            <h1>I could not find that recipe!</h1>
+
+            <p>
+              Sorry about that, something went wrong.
+            </p>
+
+            <p>
+              Please report a bug so that this issue can be fixed.
+            </p>
+        </div>
+    );
+}
+
 const params = new URLSearchParams(window.location.search);
 const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
@@ -108,11 +124,12 @@ browser.storage.local.get(recipeId).then(recipes => {
     const recipe = recipes[recipeId];
     const node = document.querySelector('#hyperapp');
 
-    if (recipe !== null) {
-        console.log('Recipe -> ', recipe);
+    console.log('Recipe -> ', recipe);
+
+    if (recipe) {
         document.title = `${recipe.name} :: Recipe Thing`;
         app(recipe, actions, view, node);
     } else {
-        app({}, {}, () => (<h1>Sorry, I could not find that recipe!</h1>), node);
+        app({}, {}, viewError, node);
     }
 });
