@@ -64,6 +64,11 @@ export function normalizeRecipe (tab, recipe) {
         original: recipe,
     };
 
+    // Bug fix for single ingredient recipes.
+    if (!Array.isArray(clean.ingredients)) {
+        clean.ingredients = [clean.ingredients];
+    }
+
     // instructions isn't in the spec, but is sometimes used anyway.
     const instructions = recipe.recipeInstructions || recipe.instruction || [];
 

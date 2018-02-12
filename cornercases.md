@@ -19,3 +19,7 @@ InstructionText is actually a list in disguise:
 Two names:
 
 - http://www.eatingwell.com/recipe/257781/chipotle-lime-cauliflower-tacos/
+
+Single ingredient:
+
+- https://minimalistbaker.com/how-to-make-cauliflower-rice/
