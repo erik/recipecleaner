@@ -3,7 +3,7 @@ import browser from 'webextension-polyfill';
 
 const actions = {};
 
-function view(recipe) {
+function view (recipe) {
     return (
         <div id="wrapper">
             { viewHeader(recipe) }
@@ -22,7 +22,7 @@ function view(recipe) {
     );
 }
 
-function viewHeader(recipe) {
+function viewHeader (recipe) {
     const image = recipe.image ? <img src={recipe.image} /> : null;
     const hostname = (new URL(recipe.url)).hostname;
 
@@ -56,7 +56,7 @@ function viewHeader(recipe) {
     );
 }
 
-function viewIngredients(recipe) {
+function viewIngredients (recipe) {
     let ingredients = recipe.ingredients.map(i => {
         let quantity = i.quantity ?
             <b className="quantity">{ i.quantity } { i.unit || '' }</b>
@@ -73,7 +73,7 @@ function viewIngredients(recipe) {
     );
 }
 
-function viewInstructions(recipe) {
+function viewInstructions (recipe) {
     let instructionElem;
 
     if (recipe.instructionText) {

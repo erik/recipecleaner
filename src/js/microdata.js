@@ -31,7 +31,7 @@ function getPropValue (node) {
 }
 
 // Recursively walk through DOM tree, building up microdata in place.
-function walkDOM(node, microdata) {
+function walkDOM (node, microdata) {
     let next = node.firstChild;
 
     while (next) {

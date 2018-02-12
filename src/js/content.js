@@ -10,7 +10,7 @@ const JSON_LD_SEL = 'script[type="application/ld+json"]';
 const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
 
 
-(function detectRecipeMicrodata() {
+(function detectRecipeMicrodata () {
     // First try to pull JSON LD format, because it's cleaner / faster
     for (const node of document.querySelectorAll(JSON_LD_SEL)) {
         let json;

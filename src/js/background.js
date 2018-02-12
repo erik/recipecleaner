@@ -38,7 +38,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
 });
 
 
-export function normalizeRecipe(tab, recipe) {
+export function normalizeRecipe (tab, recipe) {
     console.group();
     console.log('original recipe:', recipe);
 
@@ -105,7 +105,7 @@ export function normalizeRecipe(tab, recipe) {
 }
 
 // TODO: Clean up old recipes after a while.
-function saveToStorage(recipe) {
+function saveToStorage (recipe) {
     const cleanName = recipe.name
         .replace(/\s+/g, '-')
         .replace(/[^\w-]/g, '');
@@ -117,22 +117,18 @@ function saveToStorage(recipe) {
     return browser.storage.local.set({[id]: recipe}).then(() => id);
 }
 
-function setRecipeData(tab, data) {
-    const recipe = normalizeRecipe(tab, data);
-
-    EPHEMERAL_TAB_MAP[tab.id] = recipe;
-
-    // Some weird bug in chrome...
-    if (typeof chrome !== 'undefined') {
-        chrome.pageAction.show(tab.id);
-    } else {
-        browser.pageAction.show(tab.id);
-    }
-}
-
 browser.runtime.onMessage.addListener((msg, sender) => {
     if (msg.kind === 'recipe-detected') {
-        setRecipeData(sender.tab, msg.data);
+        const recipe = normalizeRecipe(sender.tab, msg.data);
+
+        EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
+
+        // Some weird bug in chrome...
+        if (typeof chrome !== 'undefined') {
+            chrome.pageAction.show(sender.tab.id);
+        } else {
+            browser.pageAction.show(sender.tab.id);
+        }
     } else {
         console.error('Unknown message kind:', msg.kind);
     }
@@ -142,7 +138,6 @@ browser.runtime.onMessage.addListener((msg, sender) => {
 browser.runtime.onInstalled.addListener(({reason}) => {
     // Don't do anything if this isn't a first time install
     // (e.g. extension update)
-    // TODO: Ignore temporary == true, it will get annoying.
     if (reason !== 'install') {
         return;
     }

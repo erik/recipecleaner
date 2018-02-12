@@ -28,6 +28,7 @@ module.exports = {
             "error",
             "always"
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "space-before-function-paren": ["error", {"named": "always", "asyncArrow": "always", "anonymous": "never"}]
     }
 };
