@@ -91,7 +91,8 @@ function sanitizeYield (yield_) {
         return null;
     }
 
-    return yield_.trim()
+    // Coerce to string because sometimes yield comes in as a number
+    return `${yield_}`.trim()
         .replace(/^(serves|yield(s)?):?\s?/i, '')
         .toLowerCase();
 }

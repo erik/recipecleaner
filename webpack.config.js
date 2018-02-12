@@ -31,7 +31,5 @@ module.exports = {
             {from: './src/manifest.json'},
             {from: './src/html/'}
         ])
-    ],
-
-    devtool: 'sourcemap'
+    ]
 };

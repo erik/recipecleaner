@@ -124,4 +124,10 @@ describe('sanitize', () => {
             assert.deepEqual(sanitize.common({a: 2}), {a: 2});
         });
     });
+
+    describe('yield', () => {
+        it('handles strings', () => {
+            assert.equal(sanitize.yield(1), '1');
+        })
+    });
 });
