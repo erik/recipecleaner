@@ -3,6 +3,15 @@
 import he from 'he';
 
 
+// Expect a scalar value, taking first item in list if not
+function expectSingle (maybeList) {
+    if (Array.isArray(maybeList)) {
+        return maybeList[0];
+    }
+
+    return maybeList;
+}
+
 function sanitizeImage (image) {
     if (!image) {
         return null;
@@ -12,9 +21,7 @@ function sanitizeImage (image) {
         image = image['@list'];
     }
 
-    if (Array.isArray(image)) {
-        image = image.length > 0 ? image[0] : null;
-    }
+    image = expectSingle(image);
 
     if (image && image.url) {
         image = image.url;
@@ -29,9 +36,7 @@ function sanitizeAuthor (author) {
         return null;
     }
 
-    if (Array.isArray(author)) {
-        author = author.length > 0 ? author[0] : null;
-    }
+    author = expectSingle(author);
 
     // Sometimes a string, sometimes {"name": "..."}
     if (author && author.name !== undefined) {
@@ -191,6 +196,7 @@ function sanitizeString (input) {
 }
 
 export default {
+    expectSingle,
     author: sanitizeAuthor,
     common: sanitizeCommon,
     string: sanitizeString,

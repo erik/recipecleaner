@@ -1,4 +1,3 @@
-import WAE from 'web-auto-extractor';
 import browser from 'webextension-polyfill';
 
 import sanitize from './sanitize';
@@ -54,7 +53,7 @@ export function normalizeRecipe(tab, recipe) {
     }
 
     const clean = {
-        name: recipe.name || 'An untitled recipe',
+        name: sanitize.expectSingle(recipe.name || 'An untitled recipe'),
         description: recipe.description,
         ingredients: recipe.recipeIngredient || recipe.ingredients || [],
         image: sanitize.image(recipe.image),
@@ -131,34 +130,11 @@ function setRecipeData(tab, data) {
     }
 }
 
-export function tryExtractRecipe(data) {
-    const scraper = WAE();
-
-    try {
-        const parsed = scraper.parse(data);
-        const micro = (parsed.jsonld.Recipe || parsed.microdata.Recipe || parsed.rdfa.Recipe);
-
-        return (micro || [null])[0];
-    } catch (e) {
-        console.error('Failed to parse microdata:', e);
-    }
-
-    return null;
-}
-
 browser.runtime.onMessage.addListener((msg, sender) => {
-    let result;
-
-    if (msg.kind === 'try-extract-recipe') {
-        result = tryExtractRecipe(msg.data);
-    } else if (msg.kind === 'recipe-detected') {
-        result = msg.data;
+    if (msg.kind === 'recipe-detected') {
+        setRecipeData(sender.tab, msg.data);
     } else {
         console.error('Unknown message kind:', msg.kind);
-    }
-
-    if (result) {
-        setRecipeData(sender.tab, result);
     }
 });
 

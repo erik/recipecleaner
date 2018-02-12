@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'assert-diff';
 
 import sanitize from '../src/js/sanitize.js';
 
