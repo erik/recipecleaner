@@ -93,7 +93,9 @@ export function normalizeRecipe (tab, recipe) {
     }
 
     // Remove the junk from the strings.
-    KEYS_TO_CLEAN.forEach(key => { clean[key] = sanitize.common(clean[key]); });
+    for (const key of KEYS_TO_CLEAN) {
+        clean[key] = sanitize.common(clean[key]);
+    }
 
     // Try to map ingredients from text to [{quantity, ingredient, unit}]
     clean.ingredients = clean.ingredients.map(i => sanitize.ingredient(i));

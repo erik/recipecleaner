@@ -1,7 +1,5 @@
 // Try to handle all the wacky inconsistencies of recipes on the internet.
 
-import he from 'he';
-
 
 // Expect a scalar value, taking first item in list if not
 function expectSingle (maybeList) {
@@ -172,12 +170,11 @@ function sanitizeCommon (input) {
 }
 
 function sanitizeString (input) {
-    // Strip out HTML entities
-    let str = he.decode(input);
+    let str = input;
 
-    // Sometimes HTML tags end up in the text. This is a quick way to parse
-    // them out.
-    if (/<\/(a|p|ol|li|ul|div|span|b|i|em)>/.test(str)) {
+    // Sometimes HTML tags or encoded entities end up in the text. This is a
+    // quick way to parse them out.
+    if (/(<\/\w+>)|(&\w+;)/.test(str)) {
         const div = document.createElement('div');
         div.innerHTML = str;
         str = div.innerText;
