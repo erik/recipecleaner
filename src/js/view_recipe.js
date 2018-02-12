@@ -3,6 +3,11 @@ import browser from 'webextension-polyfill';
 
 const actions = {};
 
+// Callback for onclick events.
+function toggleStrikethrough () {
+    this.classList.toggle('strikethrough');
+}
+
 function view (recipe) {
     return (
         <div id="wrapper">
@@ -62,7 +67,12 @@ function viewIngredients (recipe) {
             <b className="quantity">{ i.quantity } { i.unit || '' }</b>
             : null;
 
-        return <li> { quantity } { i.ingredient } </li>;
+        return (
+            <li className="ingredient"
+                onclick={toggleStrikethrough}>
+              { quantity } { i.ingredient }
+            </li>
+        );
     });
 
     return (
