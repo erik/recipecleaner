@@ -1,3 +1,4 @@
+// Return node's microdata schema type, or null if it doesn't have one.
 function getItemType (node) {
     const attributes = node.attributes;
 
@@ -12,7 +13,7 @@ function getItemType (node) {
     };
 }
 
-
+// Return node's microdata property value, or null if it's a schema object.
 function getPropValue (node) {
     const itemprop = node.attributes.itemprop.value;
     const tag = node.tagName.toLowerCase();

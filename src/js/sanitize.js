@@ -158,6 +158,47 @@ function sanitizeIngredient (ingredient) {
     return {quantity: match[1], unit: match[2], ingredient: match[3]};
 }
 
+function sanitizeInstructions (instructions) {
+    if (typeof instructions === 'string') {
+        instructions = sanitizeInstructionText(instructions);
+    }
+
+    if (Array.isArray(instructions)) {
+        return {text: null, list: sanitizeInstructionList(instructions)};
+    }
+
+    return {text: instructions, list: null};
+}
+
+// Possibly convert instructionText to a list, and otherwise clean up the data.
+function sanitizeInstructionText (instructionText) {
+    const text = sanitizeCommon(instructionText)
+        .replace(/^preparation/i, '')
+        .replace(/(\w)\.(\w)/g, (_match, w1, w2) => `${w1}.\n${w2}`);
+
+    // Sometimes the text block is actually a list in disguise.
+    if (text.startsWith('1.')) {
+        return text.split(/\d+\./);
+    }
+
+    if (text.includes('\n')) {
+        return text.split(/\r?\n/);
+    }
+
+    return text;
+}
+
+function sanitizeInstructionList (list) {
+    return list.map((instruction, i) => {
+        // Sometimes the instruction list includes a number
+        // prefix, strip that out.
+        return instruction
+            .replace(/^(\d+)\.?\s*/, (orig, num) => {
+                return +num === i + 1 ? '' : orig;
+            })
+            .trim();
+    }).filter(i => i !== '');
+}
 
 // Handles common case stuff for sanitization.
 function sanitizeCommon (input) {
@@ -200,6 +241,9 @@ export default {
     string: sanitizeString,
     image: sanitizeImage,
     ingredient: sanitizeIngredient,
+    instructions: sanitizeInstructions,
+    instructionText: sanitizeInstructionText,
+    instructionList: sanitizeInstructionList,
     time: sanitizeTime,
     yield: sanitizeYield,
 };

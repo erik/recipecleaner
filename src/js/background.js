@@ -70,32 +70,10 @@ export function normalizeRecipe (tab, recipe) {
     }
 
     // instructions isn't in the spec, but is sometimes used anyway.
-    const instructions = recipe.recipeInstructions || recipe.instruction || [];
+    const instructions = sanitize.instructions(recipe.recipeInstructions || recipe.instruction || []);
 
-    if (typeof instructions === 'string') {
-        const text = sanitize.common(instructions)
-            .replace(/^preparation/i, '')
-            .replace(/(\w)\.(\w)/g, (_match, w1, w2) => `${w1}.\n${w2}`);
-
-        // Sometimes the text block is actually a list in disguise.
-        if (text.startsWith('1.')) {
-            clean.instructionList = text.split(/\d+\./);
-        } else if (text.includes('\n')) {
-            clean.instructionList = text.split(/\r?\n/);
-        } else {
-            clean.instructionText = text;
-        }
-    }
-
-    if (Array.isArray(instructions)) {
-        clean.instructionList = instructions.map((inst, idx) => {
-            // Sometimes the instruction list includes a number
-            // prefix, strip that out.
-            return inst.replace(/^(\d+)\.?\s*/, (orig, num) => {
-                return +num === idx + 1 ? '' : orig;
-            });
-        });
-    }
+    clean.instructionText = instructions.text;
+    clean.instructionList = instructions.list;
 
     // Remove the junk from the strings.
     for (const key of KEYS_TO_CLEAN) {

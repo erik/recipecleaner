@@ -70,7 +70,7 @@ function viewIngredients (recipe) {
         return (
             <li className="ingredient"
                 onclick={toggleStrikethrough}>
-              { quantity } { i.ingredient }
+                { quantity } { i.ingredient }
             </li>
         );
     });

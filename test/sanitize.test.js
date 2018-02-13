@@ -128,6 +128,37 @@ describe('sanitize', () => {
     describe('yield', () => {
         it('handles strings', () => {
             assert.equal(sanitize.yield(1), '1');
-        })
+        });
+    });
+
+    describe('instructions', () => {
+        it('converts text blocks with numbers to lists', () => {
+            const instr = sanitize.instructions('1. stir\n2. bake\n3. serve');
+
+            assert.equal(instr.text, null);
+            assert.deepEqual(instr.list, ['stir', 'bake', 'serve']);
+        });
+
+        it('converts text blocks with line breaks to lists', () => {
+            const instr = sanitize.instructions('stir\nbake\nserve');
+
+            assert.equal(instr.text, null);
+            assert.deepEqual(instr.list, ['stir', 'bake', 'serve']);
+        });
+
+        it('converts text blocks with probable missing newlines to lists', () => {
+            const instr = sanitize.instructions('stir.now bake. and then.serve');
+
+            assert.equal(instr.text, null);
+            assert.deepEqual(instr.list, ['stir.', 'now bake. and then.', 'serve']);
+        });
+
+        it('leaves regular text blocks alone', () => {
+            const text = 'heat oven to xyz. cook for whatever. then do this.';
+            const instr = sanitize.instructions(text);
+
+            assert.equal(instr.list, null);
+            assert.equal(instr.text, text);
+        });
     });
 });
