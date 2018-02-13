@@ -15,6 +15,10 @@ InstructionText is actually a list in disguise:
 
 - https://www.thespruce.com/vegetarian-tempeh-taco-recipe-3377159
 
+Double encoded HTML:
+
+- https://www.thespruce.com/vegetarian-tempeh-taco-recipe-3377159
+
 Two names:
 
 - http://www.eatingwell.com/recipe/257781/chipotle-lime-cauliflower-tacos/
@@ -23,6 +27,8 @@ Single ingredient:
 
 - https://minimalistbaker.com/how-to-make-cauliflower-rice/
 
-## Sites that have exposed bugs in the past.
+## Regression checks
+
+### Undetected Recipe:
 
 - http://allrecipes.com/recipe/238987/paleo-cauliflower-rice/

@@ -109,6 +109,12 @@ describe('sanitize', () => {
         it('replaces encoded html entities', () => {
             assert.equal(sanitize.string('foo&amp;bar'), 'foo&bar');
         });
+
+        it('works on double encoded HTML', () => {
+            assert.equal(
+                sanitize.string('&lt;span&gt;foo&amp;bar&lt;/span&gt;'),
+                'foo&bar');
+        });
     });
 
     describe('common', () => {

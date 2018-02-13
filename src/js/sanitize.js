@@ -174,7 +174,7 @@ function sanitizeInstructions (instructions) {
 function sanitizeInstructionText (instructionText) {
     const text = sanitizeCommon(instructionText)
         .replace(/^preparation/i, '')
-        .replace(/(\w)\.(\w)/g, (_match, w1, w2) => `${w1}.\n${w2}`);
+        .replace(/(\w)([.!?])(\w)/g, (_match, w1, pt, w2) => `${w1}${pt}\n${w2}`);
 
     // Sometimes the text block is actually a list in disguise.
     if (text.startsWith('1.')) {
@@ -215,8 +215,19 @@ function sanitizeString (input) {
     let str = input;
 
     // Sometimes HTML tags or encoded entities end up in the text. This is a
-    // quick way to parse them out.
-    if (/(<\/\w+>)|(&\w+;)/.test(str)) {
+    // quick way to parse them out. Unfortunately do it twice because
+    // sometimes it's *both*.
+    //
+    // FIXME: This opens us up to arbitrary code execution (maybe inside of
+    // FIXME: the content script context?)
+
+    if (/&\w+;/.test(str)) {
+        const div = document.createElement('div');
+        div.innerHTML = str;
+        str = div.innerText;
+    }
+
+    if (/<\/\w+>/.test(str)) {
         const div = document.createElement('div');
         div.innerHTML = str;
         str = div.innerText;
