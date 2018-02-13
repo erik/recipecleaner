@@ -61,7 +61,7 @@ describe('microdata', () => {
     <div itemscope itemtype="http://schema.org/Recipe">
       <span itemprop="name">Mom's World Famous Banana Bread</span>
       By <span itemprop="author">John Smith</span>,
-      <img itemprop="image" src="bananabread.jpg"
+      <img itemprop="image" src="http://schema.org/favicon.ico"
            alt="Banana bread on a plate" />
       <span itemprop="description">food.</span>
       Prep Time: <meta itemprop="prepTime" content="PT15M">15 minutes
@@ -89,7 +89,7 @@ describe('microdata', () => {
                 '@type': 'Recipe',
                 name: 'Mom\'s World Famous Banana Bread',
                 author: 'John Smith',
-                image: 'bananabread.jpg',
+                image: 'http://schema.org/favicon.ico',
                 description: 'food.',
                 prepTime: 'PT15M',
                 cookTime: 'PT1H',
