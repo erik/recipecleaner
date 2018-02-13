@@ -7,7 +7,6 @@ HTML tags encoded in recipe:
 
 - https://www.thespruce.com/easy-vegan-vegetable-rice-biryani-3378477
 
-
 Image is a list rather than a string:
 
 - https://cafedelites.com/best-fluffy-pancakes/
@@ -23,3 +22,7 @@ Two names:
 Single ingredient:
 
 - https://minimalistbaker.com/how-to-make-cauliflower-rice/
+
+## Sites that have exposed bugs in the past.
+
+- http://allrecipes.com/recipe/238987/paleo-cauliflower-rice/

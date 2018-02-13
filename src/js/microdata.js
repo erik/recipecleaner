@@ -2,7 +2,7 @@
 function getItemType (node) {
     const attributes = node.attributes;
 
-    if (!attributes.itemtype) {
+    if (!node.hasAttribute('itemtype')) {
         return null;
     }
 
@@ -18,7 +18,7 @@ function getPropValue (node) {
     const itemprop = node.attributes.itemprop.value;
     const tag = node.tagName.toLowerCase();
 
-    if (node.attributes.itemtype) {
+    if (node.hasAttribute('itemtype')) {
         return null;
     } else if ((tag === 'a' || tag === 'link') && node.attributes.href) {
         return node.attributes.href.value.trim();
@@ -36,22 +36,23 @@ function walkDOM (node, microdata) {
     let next = node.firstChild;
 
     while (next) {
-        const attributes = next.attributes || {};
-
         // Schema'd thing.
-        if (attributes.itemscope) {
+        if (next.attributes && next.hasAttribute('itemscope')) {
             const type = getItemType(next);
 
-            if (type !== null) {
-                const key = attributes.itemprop.value;
+            // Only want to recurse if this is a named item. Otherwise
+            // it could be something unrelated like an embedded
+            // BreadcrumbList or such.
+            if (type !== null && next.hasAttribute('itemprop')) {
+                const key = next.getAttribute('itemprop');
                 const data = walkDOM(next, {});
 
                 microdata[key] = microdata[key] || [];
                 microdata[key].push(data);
             }
 
-        } else if (attributes.itemprop) {
-            const key = attributes.itemprop.value;
+        } else if (next.attributes && next.hasAttribute('itemprop')) {
+            const key = next.getAttribute('itemprop');
             const value = getPropValue(next);
 
             microdata[key] = microdata[key] || [];

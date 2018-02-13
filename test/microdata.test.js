@@ -45,6 +45,27 @@ describe('microdata', () => {
         });
     });
 
+    describe('walkDOM', () => {
+        it('ignores unassociated nested schemas', () => {
+            const node = stringToNode(`
+<div>
+    <meta itemprop="recipeCategory" content="Side Dish">
+    <meta itemprop="recipeCategory" content="Vegetables">
+
+    <ol itemscope="" itemtype="http://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope=""
+          itemtype="http://schema.org/ListItem">
+        <meta itemprop="position" content="1">
+      </li>
+    </ol>
+</div>
+`);
+            assert.deepEqual(microdata.walkDOM(node, {}), {
+                recipeCategory: ['Side Dish', 'Vegetables']
+            });
+        });
+    });
+
     describe('extractRecipe', () => {
         it('handles blank recipe', () => {
             const html = stringToNode('<div itemscope itemtype="http://schema.org/Recipe">...</div>');
