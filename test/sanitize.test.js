@@ -99,7 +99,7 @@ describe('sanitize', () => {
     describe('string', () => {
         it('strips out leftover HTML tags', () => {
             assert.equal(sanitize.string('foo <a href="foobar.com">bar</a> baz'), 'foo bar baz');
-            assert.equal(sanitize.string('foo <a href="unclosed string>bad</a>'), 'foo');
+            assert.equal(sanitize.string('foo <a href="unclosed string>bar</a>'), 'foo bar');
         });
 
         it('replaces fractions', () => {
@@ -114,6 +114,12 @@ describe('sanitize', () => {
             assert.equal(
                 sanitize.string('&lt;span&gt;foo&amp;bar&lt;/span&gt;'),
                 'foo&bar');
+        });
+
+        it('is not vulnerable to XSS', () => {
+            const input = `<img src="x" onerror="alert('xss'); window.FAILED = true" />`;
+            assert.equal(sanitize.string(input), '');
+            assert.equal(typeof window.FAILED, 'undefined');
         });
     });
 
@@ -165,6 +171,23 @@ describe('sanitize', () => {
 
             assert.equal(instr.list, null);
             assert.equal(instr.text, text);
+        });
+    });
+
+    describe('stripTags', () => {
+        it('strips simple cases', () => {
+            const input = `foo <a src='asdf' href="bar baz quux">bar</a> baz`;
+            assert.equal(sanitize.stripTags(input), 'foo bar baz');
+        });
+
+        it('strips nested tags', () => {
+            const input = `foo <a src='asdf' href="bar baz quux">bar <span class="foo">baz</span></a>`;
+            assert.equal(sanitize.stripTags(input), 'foo bar baz');
+        });
+
+        it('strips bad html', () => {
+            const input = `fizz<a href='"></a>buzz`;
+            assert.equal(sanitize.stripTags(input), 'fizzbuzz');
         });
     });
 });

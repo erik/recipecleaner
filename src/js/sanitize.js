@@ -211,27 +211,30 @@ function sanitizeCommon (input) {
     return input;
 }
 
+// Handle majority of cases of stripping out HTML tags. Won't strip out on a
+// site that's actively trying to show broken content, but eh.
+function stripTags (input) {
+    return input.replace(/<[^>]*?>/g, '');
+}
+
 function sanitizeString (input) {
     let str = input;
 
     // Sometimes HTML tags or encoded entities end up in the text. This is a
     // quick way to parse them out. Unfortunately do it twice because
     // sometimes it's *both*.
-    //
-    // FIXME: This opens us up to arbitrary code execution (maybe inside of
-    // FIXME: the content script context?)
-
-    if (/&\w+;/.test(str)) {
-        const div = document.createElement('div');
-        div.innerHTML = str;
-        str = div.innerText;
+    if (/&[#\w]+;/.test(str)) {
+        // Using a text area decodes things like &amp; but doesn't execute
+        // scripts.
+        // FIXME: Potential issue: images loading? doesn't seem important as
+        // FIXME: there is already a user controlled image field
+        const node = document.createElement('textarea');
+        node.innerHTML = str;
+        str = node.innerText;
     }
 
-    if (/<\/\w+>/.test(str)) {
-        const div = document.createElement('div');
-        div.innerHTML = str;
-        str = div.innerText;
-    }
+    // If there is possibly HTML encoded, try to strip it.
+    str = stripTags(str);
 
     // Convert fractions into their unicode equivalent, falling back
     // to the FRACTION character (U+2044).
@@ -247,6 +250,7 @@ function sanitizeString (input) {
 
 export default {
     expectSingle,
+    stripTags,
     author: sanitizeAuthor,
     common: sanitizeCommon,
     string: sanitizeString,
