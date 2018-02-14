@@ -137,7 +137,7 @@ browser.storage.local.get(recipeId).then(recipes => {
     console.log('Recipe -> ', recipe);
 
     if (recipe) {
-        document.title = `${recipe.name} :: Recipe Thing`;
+        document.title = `${recipe.name} :: One Recipe`;
         app(recipe, actions, view, node);
     } else {
         app({}, {}, viewError, node);
