@@ -4,7 +4,7 @@
 // Expect a scalar value, taking first item in list if not
 function expectSingle (maybeList) {
     if (Array.isArray(maybeList)) {
-        return maybeList[0];
+        return maybeList.length > 0 ? maybeList[0] : null;
     }
 
     return maybeList;

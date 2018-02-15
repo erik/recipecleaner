@@ -6,8 +6,8 @@ import sanitize from '../src/js/sanitize.js';
 describe('sanitize', () => {
     describe('image', () => {
         it('handles undefined and null', () => {
-            assert.equal(sanitize.image(null), null);
-            assert.equal(sanitize.image(undefined), null);
+            assert.strictEqual(sanitize.image(null), null);
+            assert.strictEqual(sanitize.image(undefined), null);
         });
 
         it('handle simple strings', () => {
@@ -18,6 +18,10 @@ describe('sanitize', () => {
             assert.equal(sanitize.image(['foo', 'bar']), 'foo');
         });
 
+        it('handles empty lists', () => {
+            assert.strictEqual(sanitize.image([]), null);
+        });
+
         it('handles microdata lists', () => {
             assert.equal(sanitize.image({'@list': ['foobar']}), 'foobar');
             assert.equal(sanitize.image({'@list': [{url: 'foobar'}]}), 'foobar');
@@ -26,8 +30,8 @@ describe('sanitize', () => {
 
     describe('author', () => {
         it('handles undefined and null', () => {
-            assert.equal(sanitize.author(null), null);
-            assert.equal(sanitize.author(undefined), null);
+            assert.strictEqual(sanitize.author(null), null);
+            assert.strictEqual(sanitize.author(undefined), null);
         });
 
         it('works with lists', () => {
@@ -35,14 +39,14 @@ describe('sanitize', () => {
         });
 
         it('handles empty names', () => {
-            assert.equal(sanitize.author({name: ''}), null);
+            assert.strictEqual(sanitize.author({name: ''}), null);
         });
     });
 
     describe('time', () => {
         it('returns null on bad data', () => {
             [null, 'not a duration', 'P7D4', 'P'].forEach(duration => {
-                assert.equal(sanitize.time(duration), null);
+                assert.strictEqual(sanitize.time(duration), null);
             });
         });
 
