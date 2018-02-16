@@ -28,7 +28,6 @@ function sanitizeImage (image) {
     return image;
 }
 
-
 function sanitizeAuthor (author) {
     if (!author) {
         return null;
@@ -220,9 +219,7 @@ function stripTags (input) {
 function sanitizeString (input) {
     let str = input;
 
-    // Sometimes HTML tags or encoded entities end up in the text. This is a
-    // quick way to parse them out. Unfortunately do it twice because
-    // sometimes it's *both*.
+    // Sometimes HTML encoded entities end up in the text.
     if (/&[#\w]+;/.test(str)) {
         // Using a text area decodes things like &amp; but doesn't execute
         // scripts.
@@ -233,7 +230,7 @@ function sanitizeString (input) {
         str = node.innerText;
     }
 
-    // If there is possibly HTML encoded, try to strip it.
+    // If there are remaining HTML tags, strip them out.
     str = stripTags(str);
 
     // Convert fractions into their unicode equivalent, falling back
