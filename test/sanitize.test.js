@@ -114,6 +114,11 @@ describe('sanitize', () => {
             assert.equal(sanitize.string('foo&amp;bar'), 'foo&bar');
         });
 
+        it('replaces numeric encoded entities', () => {
+            assert.equal(
+                sanitize.string('It&#8217;s'), 'It’s');
+        });
+
         it('works on double encoded HTML', () => {
             assert.equal(
                 sanitize.string('&lt;span&gt;foo&amp;bar&lt;/span&gt;'),
