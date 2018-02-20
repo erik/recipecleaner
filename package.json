@@ -36,5 +36,5 @@
         "web-ext": "web-ext run -s ./addon"
     },
     "author": "",
-    "license": "GPLv3"
+    "license": "GPL-3.0"
 }
