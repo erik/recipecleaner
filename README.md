@@ -1,4 +1,4 @@
-# OneRecipe
+# RecipeThing
 
 Recipe sites suck. Make them suck a little less.
 
