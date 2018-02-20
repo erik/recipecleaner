@@ -7,17 +7,6 @@ import sanitize from './sanitize';
 const EPHEMERAL_TAB_MAP = {};
 
 
-// Keys that should have `sanitize.common` run against them.
-const KEYS_TO_CLEAN = [
-    'name',
-    'author',
-    'time',
-    'description',
-    'ingredients',
-    'instructionText',
-    'instructionList',
-];
-
 browser.pageAction.onClicked.addListener((tab) => {
     const recipe = EPHEMERAL_TAB_MAP[tab.id];
 
@@ -38,57 +27,6 @@ browser.tabs.onRemoved.addListener((tabId) => {
 });
 
 
-export function normalizeRecipe (tab, recipe) {
-    console.group();
-    console.log('original recipe:', recipe);
-
-    // Deprecated, redundant, and still used :(
-    if ((recipe['@context'] || '').includes('data-vocabulary.org')) {
-        recipe = {
-            name: recipe.name,
-            ingredients: recipe.ingredient,
-            description: recipe.summary,
-            recipeInstructions: recipe.instructions,
-        };
-    }
-
-    const clean = {
-        name: sanitize.expectSingle(recipe.name || 'An untitled recipe'),
-        description: recipe.description,
-        ingredients: recipe.recipeIngredient || recipe.ingredients || [],
-        image: sanitize.image(recipe.image),
-        author: sanitize.author(recipe.author),
-        time: sanitize.time(recipe.totalTime),
-        yield: sanitize.yield(recipe.recipeYield),
-        url: tab.url,
-        original: recipe,
-    };
-
-    // Bug fix for single ingredient recipes.
-    if (!Array.isArray(clean.ingredients)) {
-        clean.ingredients = [clean.ingredients];
-    }
-
-    // instructions isn't in the spec, but is sometimes used anyway.
-    const instructions = sanitize.instructions(recipe.recipeInstructions || recipe.instruction || []);
-
-    clean.instructionText = instructions.text;
-    clean.instructionList = instructions.list;
-
-    // Remove the junk from the strings.
-    for (const key of KEYS_TO_CLEAN) {
-        clean[key] = sanitize.common(clean[key]);
-    }
-
-    // Try to map ingredients from text to [{quantity, ingredient, unit}]
-    clean.ingredients = clean.ingredients.map(i => sanitize.ingredient(i));
-
-    console.log('cleaned recipe:', clean);
-    console.groupEnd();
-
-    return clean;
-}
-
 // TODO: Clean up old recipes after a while.
 function saveToStorage (recipe) {
     const cleanName = recipe.name
@@ -104,7 +42,13 @@ function saveToStorage (recipe) {
 
 browser.runtime.onMessage.addListener((msg, sender) => {
     if (msg.kind === 'recipe-detected') {
-        const recipe = normalizeRecipe(sender.tab, msg.data);
+        console.group();
+        console.log('detected recipe. original:', recipe);
+
+        const recipe = sanitize.recipe(sender.tab.url, msg.data);
+
+        console.log('cleaned recipe:', recipe);
+        console.groupEnd();
 
         EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
 

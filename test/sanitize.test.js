@@ -126,7 +126,7 @@ describe('sanitize', () => {
         });
 
         it('is not vulnerable to XSS', () => {
-            const input = `<img src="x" onerror="alert('xss'); window.FAILED = true" />`;
+            const input = '<img src="x" onerror="alert(\'xss\'); window.FAILED = true" />';
             assert.equal(sanitize.string(input), '');
             assert.equal(typeof window.FAILED, 'undefined');
         });
@@ -155,48 +155,95 @@ describe('sanitize', () => {
     describe('instructions', () => {
         it('converts text blocks with numbers to lists', () => {
             const instr = sanitize.instructions('1. stir\n2. bake\n3. serve');
-
-            assert.equal(instr.text, null);
-            assert.deepEqual(instr.list, ['stir', 'bake', 'serve']);
+            assert.deepEqual(instr, ['stir', 'bake', 'serve']);
         });
 
         it('converts text blocks with line breaks to lists', () => {
             const instr = sanitize.instructions('stir\nbake\nserve');
-
-            assert.equal(instr.text, null);
-            assert.deepEqual(instr.list, ['stir', 'bake', 'serve']);
+            assert.deepEqual(instr, ['stir', 'bake', 'serve']);
         });
 
         it('converts text blocks with probable missing newlines to lists', () => {
             const instr = sanitize.instructions('stir.now bake. and then.serve');
+            assert.deepEqual(instr, ['stir.', 'now bake. and then.', 'serve']);
+        });
 
-            assert.equal(instr.text, null);
-            assert.deepEqual(instr.list, ['stir.', 'now bake. and then.', 'serve']);
+        it('handles weirdly formatted lists', () => {
+            const instr = sanitize.instructions('1. this2. that3. the other');
+            assert.deepEqual(instr, ['this', 'that', 'the other']);
         });
 
         it('leaves regular text blocks alone', () => {
             const text = 'heat oven to xyz. cook for whatever. then do this.';
             const instr = sanitize.instructions(text);
-
-            assert.equal(instr.list, null);
-            assert.equal(instr.text, text);
+            assert.deepEqual(instr, text);
         });
     });
 
     describe('stripTags', () => {
         it('strips simple cases', () => {
-            const input = `foo <a src='asdf' href="bar baz quux">bar</a> baz`;
+            const input = 'foo <a src=\'asdf\' href="bar baz quux">bar</a> baz';
             assert.equal(sanitize.stripTags(input), 'foo bar baz');
         });
 
         it('strips nested tags', () => {
-            const input = `foo <a src='asdf' href="bar baz quux">bar <span class="foo">baz</span></a>`;
+            const input = 'foo <a src=\'asdf\' href="bar baz quux">bar <span class="foo">baz</span></a>';
             assert.equal(sanitize.stripTags(input), 'foo bar baz');
         });
 
         it('strips bad html', () => {
-            const input = `fizz<a href='"></a>buzz`;
+            const input = 'fizz<a href=\'"></a>buzz';
             assert.equal(sanitize.stripTags(input), 'fizzbuzz');
         });
     });
+
+    describe('recipe', () => {
+        it('normalizes a simple recipe', () => {
+            const BASIC_RECIPE = {
+                '@context': 'http://schema.org/Recipe',
+                name: 'waffles',
+                description: 'pancakes&amp;waffles',
+                author: {name: 'foobar'}
+            };
+
+            const expected = {
+                name: 'waffles',
+                url: 'foo',
+                description: 'pancakes&waffles',
+                author: 'foobar'
+            };
+
+            const cleaned = sanitize.recipe('foo', BASIC_RECIPE);
+
+            for (const key in expected) {
+                assert.equal(cleaned[key], expected[key]);
+            }
+        });
+
+        it('works with data-vocabulary.org recipes', () => {
+            const recipe = {
+                '@context': 'http://data-vocabulary.org/Recipe',
+                name: 'foo',
+                ingredient: ['a', 'b', 'c'],
+                summary: 'a recipe',
+                instructions: '1. this2. that3. the other'
+            };
+
+            const expected = {
+                name: 'foo',
+                url: 'bar',
+                description: recipe.summary,
+                ingredients: recipe.ingredient.map(i => ({ingredient: i})),
+                instructionList: ['this', 'that', 'the other']
+            };
+
+            const cleaned = sanitize.recipe('bar', recipe);
+
+            for (const key in expected) {
+                assert.deepEqual(cleaned[key], expected[key]);
+            }
+        });
+    });
+
+
 });
