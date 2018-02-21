@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "OneRecipe",
-    "version": "1.0.0",
+    "name": "Recipe Thing",
+    "version": "1.1.0",
     "description": "Remove the clutter, ads, popups and paragraphs and paragraphs of filler text from recipe sites.",
     "icons": {
         "32": "icons/icon-32.png"
