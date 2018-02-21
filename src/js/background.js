@@ -43,7 +43,7 @@ function saveToStorage (recipe) {
 browser.runtime.onMessage.addListener((msg, sender) => {
     if (msg.kind === 'recipe-detected') {
         console.group();
-        console.log('detected recipe. original:', recipe);
+        console.log('detected recipe. original:', msg.data);
 
         const recipe = sanitize.recipe(sender.tab.url, msg.data);
 
