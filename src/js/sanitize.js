@@ -1,6 +1,17 @@
 // Try to handle all the wacky inconsistencies of recipes on the internet.
 
 
+// Keys that should have `sanitize.common` run against them.
+const COMMON_KEYS_TO_CLEAN = [
+    'name',
+    'author',
+    'time',
+    'description',
+    'ingredients',
+    'instructionText',
+    'instructionList',
+];
+
 // Expect a scalar value, taking first item in list if not
 function expectSingle (maybeList) {
     if (Array.isArray(maybeList)) {
@@ -163,10 +174,10 @@ function sanitizeInstructions (instructions) {
     }
 
     if (Array.isArray(instructions)) {
-        return {text: null, list: sanitizeInstructionList(instructions)};
+        return sanitizeInstructionList(instructions);
     }
 
-    return {text: instructions, list: null};
+    return instructions;
 }
 
 // Possibly convert instructionText to a list, and otherwise clean up the data.
@@ -245,6 +256,57 @@ function sanitizeString (input) {
         .trim();
 }
 
+function sanitizeRecipe (url, recipe) {
+    // Deprecated, redundant, and still used :(
+    if ((recipe['@context'] || '').includes('data-vocabulary.org')) {
+        recipe = {
+            name: recipe.name,
+            ingredients: recipe.ingredient,
+            description: recipe.summary,
+            recipeInstructions: recipe.instructions
+        };
+    }
+
+    const clean = {
+        name: expectSingle(recipe.name || 'An untitled recipe'),
+        description: recipe.description,
+        ingredients: recipe.recipeIngredient || recipe.ingredients || [],
+        image: sanitizeImage(recipe.image),
+        author: sanitizeAuthor(recipe.author),
+        time: sanitizeTime(recipe.totalTime),
+        yield: sanitizeYield(recipe.recipeYield),
+        url: url,
+        original: recipe,
+    };
+
+    // Bug fix for single ingredient recipes.
+    if (!Array.isArray(clean.ingredients)) {
+        clean.ingredients = [clean.ingredients];
+    }
+
+    // Instructions could be either a list or a string. Sometimes it
+    // comes in as a string but will be converted to a list by
+    // `sanitizeInstructionText`.
+    const inst = sanitizeInstructions(
+        recipe.recipeInstructions || recipe.instructions || []);
+
+    if (Array.isArray(inst)) {
+        clean.instructionList = inst;
+    } else {
+        clean.instructionText = inst;
+    }
+
+    // Remove the junk from the strings.
+    for (const key of COMMON_KEYS_TO_CLEAN) {
+        clean[key] = sanitizeCommon(clean[key]);
+    }
+
+    // Try to map ingredients from text to [{quantity, ingredient, unit}]
+    clean.ingredients = clean.ingredients.map(i => sanitizeIngredient(i));
+
+    return clean;
+}
+
 export default {
     expectSingle,
     stripTags,
@@ -256,6 +318,7 @@ export default {
     instructions: sanitizeInstructions,
     instructionText: sanitizeInstructionText,
     instructionList: sanitizeInstructionList,
+    recipe: sanitizeRecipe,
     time: sanitizeTime,
     yield: sanitizeYield,
 };
