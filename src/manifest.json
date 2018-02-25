@@ -1,14 +1,16 @@
 {
     "manifest_version": 2,
     "name": "Recipe Thing",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Remove the clutter, ads, popups and paragraphs and paragraphs of filler text from recipe sites.",
     "icons": {
-        "32": "icons/icon-32.png"
+        "32": "icons/icon-detected-32.png",
+        "48": "icons/icon-detected-48.png",
+        "96": "icons/icon-detected-96.png"
     },
     "page_action": {
         "browser_style": true,
-        "default_icon": "icons/icon-32.png",
+        "default_icon": "icons/icon-detected-96.png",
         "default_title": "Just show me the recipe!"
     },
     "content_scripts": [{

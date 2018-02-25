@@ -55,7 +55,7 @@ browser.runtime.onMessage.addListener((msg, sender) => {
         // Some weird bug in chrome...
         if (typeof chrome !== 'undefined') {
             chrome.pageAction.setIcon({
-                path: 'icons/icon-detected-32.png',
+                path: 'icons/icon-detected-96.png',
                 tabId: sender.tab.id
             });
             chrome.pageAction.show(sender.tab.id);
