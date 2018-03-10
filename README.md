@@ -32,3 +32,6 @@ from the extension stores.
 
 RecipeThing is available under GNU GPLv3. See `LICENSE` in the root of
 this repository.
+
+RecipeThing's icon is derived from FontAwesome, which is licensed as
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
