@@ -37,7 +37,7 @@
        min-width: 30ch;
    }
 
-   @media (max-width: 600px) {
+   @media (max-width: 700px) {
        .grid { display: block; }
        ul, ol { padding-left: 2ch; }
    }
@@ -59,6 +59,7 @@
 
    .ingredient {
        cursor: pointer;
+       transition: color linear 0.2s;
    }
 
    .instruction {
@@ -75,24 +76,31 @@
    #description {
        font-style: italic;
        max-height: 8em;
+       max-width: 75ch;
        overflow: hidden;
        margin-top: 0;
+       color: hsl(0, 0%, 35%);
+       font-size: 16px;
+       margin: 0 auto;
    }
 
    #wrapper {
        margin: 2em auto;
        max-width: 100ch;
-       padding: 1em;
+       padding: 0 2em;
    }
 
    @media screen {
        #meta {
            text-align: center;
+           padding: 1em;
        }
 
        #meta img {
            max-width: 45vw;
            max-height: 50vh;
+           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+           border-radius: 3px;
        }
    }
 
@@ -120,7 +128,7 @@
    #bugreport {
        position: absolute;
        top: 0;
-       right: 0;
+       right: 1ch;
        color: #dcdcdc;
    }
   </style>
