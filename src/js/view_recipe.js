@@ -8,7 +8,7 @@ function toggleStrikethrough () {
     this.classList.toggle('strikethrough');
 }
 
-// Callback fro instruction onclick events.
+// Callback from instruction onclick events.
 function toggleHighlight () {
     // If it's currently highlighted, just disable it
     if (this.classList.contains('highlight')) {
@@ -28,12 +28,10 @@ function toggleHighlight () {
 function view (recipe) {
     return (
         <div id="wrapper">
-            { viewHeader(recipe) }
-
             <main>
                 <div className="grid">
-                    { viewIngredients(recipe) }
-                    { viewInstructions(recipe) }
+                    { viewLeftColumn(recipe) }
+                    { viewRightColumn(recipe) }
                 </div>
             </main>
 
@@ -44,8 +42,28 @@ function view (recipe) {
     );
 }
 
-function viewHeader (recipe) {
+// Image and ingredients
+function viewLeftColumn (recipe) {
     const image = recipe.image ? <img src={recipe.image} /> : null;
+
+    return (
+        <div id="left">
+            { image }
+            { viewIngredients(recipe) }
+        </div>
+    );
+}
+
+function viewRightColumn (recipe) {
+    return (
+        <div id="right">
+            { viewHeader(recipe) }
+            { viewInstructions(recipe) }
+        </div>
+    );
+}
+
+function viewHeader (recipe) {
     const hostname = (new URL(recipe.url)).hostname;
 
     const bylineParts = [
@@ -63,17 +81,26 @@ function viewHeader (recipe) {
         }
     });
 
+    let description = <div id="spacer" />;
+    if (recipe.description) {
+        // Since we're using a decorative quote, strip out leading
+        // quotes from the description if they exist.
+        const stripped = recipe.description.replace(/^"/, '');
+
+        description = (
+            <div id="description">
+                <span id="quote"></span>
+                <p> { stripped } </p>
+            </div>
+        );
+    }
+
     return (
         <header>
             <h1>{ recipe.name }</h1>
             <div id="byline"> { byline }</div>
 
-            <section id="meta">
-                { image }
-                <p id="description">
-                    { recipe.description }
-                </p>
-            </section>
+            { description }
         </header>
     );
 }
@@ -94,7 +121,6 @@ function viewIngredients (recipe) {
 
     return (
         <section id="ingredients">
-            <h2>Ingredients</h2>
             <ul> { ingredients } </ul>
         </section>
     );
@@ -125,7 +151,6 @@ function viewInstructions (recipe) {
 
     return (
         <section id="instructions">
-            <h2>Instructions</h2>
             { instructionElem }
         </section>
     );

@@ -8,60 +8,77 @@
 
   <style>
    body {
-       font-family: Charter, Palatino, Optima, Garamond, Georgia, serif;
+       font-family: Charter, Optima, Georgia, serif;
        color: #222;
        line-height: 1.6;
-       font-size: 115%;
+       font-size: 18px;
    }
 
    ul, ol {
        padding-left: 0;
+       margin-top: 0;
    }
 
    h1 {
        margin-top: 0;
        margin-bottom: 0;
        line-height: 1.2;
-   }
-
-   h2, h3, h4 {
-       font-weight: normal;
+       font-size: 24px;
    }
 
    .grid {
        display: grid;
-       grid-template-columns: repeat(6, 1fr);
-       grid-gap: 2em;
    }
 
-   .grid > section {
-       min-width: 30ch;
+   @media (min-width: 700px) {
+       .grid {
+           grid-template-columns: repeat(6, 1fr);
+           grid-gap: 3em;
+       }
+
+       #left {
+           grid-column: 1;
+           min-width: 30ch;
+       }
+
+       #right {
+           grid-column: span 5;
+       }
    }
 
    @media (max-width: 700px) {
-       .grid { display: block; }
-       ul, ol { padding-left: 2ch; }
+       #right {
+           grid-row: 1;
+           grid-column: auto;
+       }
+
+       #left {
+           grid-row: 2;
+           grid-column: auto;
+       }
    }
 
    @media print {
        body {
            font-size: 12px;
-           line-height: 1.2em;
+           line-height: 1.2;
            color: #222;
        }
-
-       ul, ol { padding-left: 2ch; }
+       h1 { font-size: 18px; }
+       img { display: none; }
+       #description p { font-size: 12px; }
    }
 
    .strikethrough {
        text-decoration: line-through;
-       color: #dcdcdc;
+       color: hsl(0, 0%, 55%);
    }
 
    .ingredient {
        cursor: pointer;
        list-style: none;
        transition: color linear 0.2s;
+       margin-bottom: 0.5em;
    }
 
    .instruction {
@@ -70,20 +87,32 @@
    }
 
    .highlight {
-       border-left: 5px solid #d7aa5d;
+       border-left: 5px solid #8fa6ac;
        padding-left: 1em;
        list-style: none;
    }
 
    #description {
+       display: flex;
+   }
+
+   @media screen {
+       #description #quote::before {
+           content: '“';
+           color: #8fa6ac;
+           font-size: 50px;
+       }
+   }
+
+   #description p {
+       padding-left: 1ch;
        font-style: italic;
-       max-height: 8em;
-       max-width: 75ch;
-       overflow: hidden;
-       margin-top: 0;
        color: hsl(0, 0%, 35%);
        font-size: 16px;
-       margin: 0 auto;
+   }
+
+   #spacer {
+       padding: 1em;
    }
 
    #wrapper {
@@ -92,41 +121,17 @@
        padding: 0 2em;
    }
 
-   @media screen {
-       #meta {
-           text-align: center;
-           padding: 1em;
-       }
-
-       #meta img {
-           max-width: 45vw;
-           max-height: 50vh;
-           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-           border-radius: 8px;
-       }
+   img {
+       max-width: 100%;
+       border-radius: 5px;
+       display: block;
+       margin: 0 auto 1em;
    }
 
    @media print {
-       #meta {
-           display: inline-block;
-       }
-
-       #meta img {
-           float: left;
-           max-width: 128px;
-           max-height: 128px;
-           margin-right: 2em;
-       }
-
        #bugreport { display: none; }
    }
 
-   #byline {
-       padding-bottom: 1em;
-   }
-
-   #ingredients { grid-column: 1; }
-   #instructions { grid-column: span 5; }
    #bugreport {
        position: absolute;
        top: 0;
