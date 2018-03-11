@@ -33,6 +33,7 @@
         "lint": "eslint --fix src/",
         "build": "webpack",
         "build:watch": "webpack -w",
+        "release": "web-ext build -s ./addon",
         "web-ext": "web-ext run -s ./addon"
     },
     "author": "",
