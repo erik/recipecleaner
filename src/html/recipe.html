@@ -11,7 +11,7 @@
        font-family: Charter, Optima, Georgia, serif;
        color: #222;
        line-height: 1.6;
-       font-size: 18px;
+       font-size: 115%;
    }
 
    ul, ol {
@@ -22,8 +22,7 @@
    h1 {
        margin-top: 0;
        margin-bottom: 0;
-       line-height: 1.2;
-       font-size: 24px;
+       font-size: 1.2em;
    }
 
    .grid {
@@ -60,13 +59,11 @@
 
    @media print {
        body {
-           font-size: 12px;
+           font-size: 14px;
            line-height: 1.2;
            color: #222;
        }
-       h1 { font-size: 18px; }
        img { display: none; }
-       #description p { font-size: 12px; }
    }
 
    .strikethrough {
@@ -78,11 +75,11 @@
        cursor: pointer;
        list-style: none;
        transition: color linear 0.2s;
-       margin-bottom: 0.5em;
+       margin-bottom: 0.4em;
    }
 
    .instruction {
-       margin-bottom: 1em;
+       margin-bottom: 1.2em;
        transition: padding-left ease-in-out 0.1s;
    }
 
@@ -100,7 +97,7 @@
        #description #quote::before {
            content: '“';
            color: #8fa6ac;
-           font-size: 50px;
+           font-size: 2.4em;
        }
    }
 
@@ -108,7 +105,7 @@
        padding-left: 1ch;
        font-style: italic;
        color: hsl(0, 0%, 35%);
-       font-size: 16px;
+       font-size: 0.8em;
    }
 
    #spacer {
@@ -116,7 +113,7 @@
    }
 
    #wrapper {
-       margin: 2em auto;
+       margin: 1em auto;
        max-width: 100ch;
        padding: 0 2em;
    }
