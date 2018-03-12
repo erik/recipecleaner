@@ -5,7 +5,7 @@ Recipe sites suck. Make them suck a little less.
 #### [Download for Firefox](https://addons.mozilla.org/en-US/firefox/addon/recipething/)
 #### [Download for Chrome](https://chrome.google.com/webstore/detail/recipe-thing/omonbdfjebcopdfdkiaaajifkaelcohp)
 
-![](https://i.imgur.com/hIRrrvF.gif)
+![](https://i.imgur.com/U5NXFip.png)
 
 
 ## Building
