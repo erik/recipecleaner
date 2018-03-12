@@ -2,10 +2,21 @@
 
 Recipe sites suck. Make them suck a little less.
 
-#### [Download for Firefox](https://addons.mozilla.org/en-US/firefox/addon/recipething/)
-#### [Download for Chrome](https://chrome.google.com/webstore/detail/recipe-thing/omonbdfjebcopdfdkiaaajifkaelcohp)
-
 ![](https://i.imgur.com/U5NXFip.png)
+
+Even with an ad blocker, recipe sites are a messy experience. Popups
+asking you to subscribe, pages and pages of filler text about where
+the recipe came from, tons of images to scroll through, and then
+the recipe is tucked away at the bottom somewhere.
+
+RecipeThing shows you only what you care about: what you're making,
+what you need, and how to make it.
+
+Available for
+**[Firefox](https://addons.mozilla.org/en-US/firefox/addon/recipething/)**
+and
+**[Chrome](https://chrome.google.com/webstore/detail/recipe-thing/omonbdfjebcopdfdkiaaajifkaelcohp)**
+
 
 
 ## Building
