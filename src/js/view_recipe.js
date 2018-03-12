@@ -64,7 +64,8 @@ function viewRightColumn (recipe) {
 }
 
 function viewHeader (recipe) {
-    const hostname = (new URL(recipe.url)).hostname;
+    // Save a bit of space by not including 'www.'
+    const hostname = (new URL(recipe.url)).hostname.replace(/^www\./, '');
 
     const bylineParts = [
         recipe.author && (<span> By { recipe.author } </span>),
