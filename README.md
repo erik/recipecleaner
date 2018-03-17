@@ -12,7 +12,7 @@ RecipeCleaner shows you only what you care about: what you're making, what you
 need, and how to make it.
 
 Available for
-**[Firefox](https://addons.mozilla.org/en-US/firefox/addon/RecipeCleaner/)**
+**[Firefox](https://addons.mozilla.org/en-US/firefox/addon/recipecleaner/)**
 and
 **[Chrome](https://chrome.google.com/webstore/detail/recipe-thing/omonbdfjebcopdfdkiaaajifkaelcohp)**
 
