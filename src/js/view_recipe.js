@@ -183,7 +183,7 @@ browser.storage.local.get(recipeId).then(recipes => {
     console.log('Recipe -> ', recipe);
 
     if (recipe) {
-        document.title = `${recipe.name} :: RecipeThing`;
+        document.title = `${recipe.name} :: RecipeCleaner`;
         app(recipe, actions, view, node);
     } else {
         app({}, {}, viewError, node);
