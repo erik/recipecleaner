@@ -4,19 +4,19 @@ import browser from 'webextension-polyfill';
 const actions = {};
 
 // Callback for ingredient onclick events.
-function toggleStrikethrough () {
-    this.classList.toggle('strikethrough');
+function toggleStrikethrough (elem) {
+    elem.classList.toggle('strikethrough');
 }
 
 // Callback from instruction onclick events.
-function toggleHighlight () {
+function toggleHighlight (elem) {
     // If it's currently highlighted, just disable it
-    if (this.classList.contains('highlight')) {
-        this.classList.remove('highlight');
+    if (elem.classList.contains('highlight')) {
+        elem.classList.remove('highlight');
     } else {
         // otherwise remove the attribute from anything else that had it.
         for (const i of document.querySelectorAll('.instruction')) {
-            if (i === this) {
+            if (i === elem) {
                 i.classList.add('highlight');
             } else {
                 i.classList.remove('highlight');
@@ -114,7 +114,7 @@ function viewIngredients (recipe) {
 
         return (
             <li className="ingredient"
-                onclick={toggleStrikethrough}>
+                onclick={(e) => toggleStrikethrough(e.currentTarget)}>
                 { quantity } { i.ingredient }
             </li>
         );
@@ -135,7 +135,7 @@ function viewInstructions (recipe) {
     } else if (recipe.instructionList) {
         let instructions = recipe.instructionList.map(i => (
             <li className="instruction"
-                onclick={toggleHighlight}>
+                onclick={(e) => toggleHighlight(e.currentTarget)}>
                 { i }
             </li>
         ));
