@@ -1,12 +1,13 @@
 :root {
-    --base-font-size: 115%;
+    --main-text-color: #333;
+    --info-text-color: hsl(0, 0%, 35%);
 }
 
 body {
     font-family: Charter, Optima, Georgia, serif;
-    color: #333;
+    color: var(--main-text-color);
     line-height: 1.6;
-    font-size: var(--base-font-size);
+    font-size: 115%;
 }
 
 ul, ol {
@@ -20,3 +21,6 @@ h1 {
     font-size: 1.2em;
 }
 
+a, a:visited {
+    color: var(--main-text-color);
+}

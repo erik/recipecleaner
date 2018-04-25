@@ -38,9 +38,7 @@ module.exports = {
     },
 
     plugins: [
-        new ExtractTextPlugin({
-            filename: '[name]'
-        }),
+        new ExtractTextPlugin({filename: '[name]'}),
         new CopyWebpackPlugin([
             {from: './src/icons/', to: path.resolve(__dirname, 'addon', 'icons')},
             {from: './src/images/', to: path.resolve(__dirname, 'addon', 'images')},

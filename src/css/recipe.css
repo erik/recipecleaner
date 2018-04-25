@@ -33,6 +33,10 @@
     list-style: none;
 }
 
+#byline {
+    color: var(--info-text-color);
+}
+
 #description {
     display: flex;
 }
@@ -48,7 +52,7 @@
 #description p {
     padding-left: 1ch;
     font-style: italic;
-    color: hsl(0, 0%, 35%);
+    color: var(--info-text-color);
     font-size: 0.8em;
 }
 
@@ -79,4 +83,3 @@ img {
     right: 1ch;
     color: #dcdcdc;
 }
-

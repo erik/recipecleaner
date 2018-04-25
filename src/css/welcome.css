@@ -15,10 +15,6 @@ img {
     display: none;
 }
 
-a, a:visited {
-    color: black;
-}
-
 footer {
     font-size: 0.8em;
 }
