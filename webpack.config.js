@@ -8,11 +8,11 @@ module.exports = {
     entry: {
         'background.js': './src/js/background.js',
         'content.js': './src/js/content.js',
-        'view_recipe.js': './src/js/view_recipe.js',
+        'recipe.js': './src/js/recipe.js',
         'welcome.js': './src/js/welcome.js',
 
         'welcome.css': './src/css/welcome.css',
-        'view_recipe.css': './src/css/recipe_view.css',
+        'recipe.css': './src/css/recipe.css',
     },
 
     output: {
