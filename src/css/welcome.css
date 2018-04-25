@@ -1,0 +1,24 @@
+@import 'base.css';
+
+main {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+img {
+    text-align: center;
+    max-width: 100%;
+    display: none;
+}
+
+a, a:visited {
+    color: black;
+}
+
+footer {
+    font-size: 0.8em;
+}

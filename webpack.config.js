@@ -1,17 +1,23 @@
 const path = require('path');
+
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 
 module.exports = {
     entry: {
-        background: './src/js/background.js',
-        content: './src/js/content.js',
-        view_recipe: './src/js/view_recipe.js',
-        welcome: './src/js/welcome.js'
+        'background.js': './src/js/background.js',
+        'content.js': './src/js/content.js',
+        'view_recipe.js': './src/js/view_recipe.js',
+        'welcome.js': './src/js/welcome.js',
+
+        'welcome.css': './src/css/welcome.css',
+        'view_recipe.css': './src/css/recipe_view.css',
     },
 
     output: {
         path: path.resolve(__dirname, 'addon'),
-        filename: '[name].js'
+        filename: '[name]'
     },
 
     module: {
@@ -19,12 +25,22 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {loader: 'babel-loader'}
+                use: ['babel-loader']
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: 'css-loader'
+                })
             }
         ]
     },
 
     plugins: [
+        new ExtractTextPlugin({
+            filename: '[name]'
+        }),
         new CopyWebpackPlugin([
             {from: './src/icons/', to: path.resolve(__dirname, 'addon', 'icons')},
             {from: './src/images/', to: path.resolve(__dirname, 'addon', 'images')},
