@@ -1,0 +1,85 @@
+@import 'base.css';
+@import 'grid.css';
+
+@media print {
+    body {
+        font-size: 14px;
+        line-height: 1.2;
+        color: #222;
+    }
+    img { display: none; }
+}
+
+.strikethrough {
+    text-decoration: line-through;
+    color: hsl(0, 0%, 55%);
+}
+
+.ingredient {
+    cursor: pointer;
+    list-style: none;
+    transition: color linear 0.2s;
+    margin-bottom: 0.4em;
+}
+
+.instruction {
+    margin-bottom: 1.2em;
+    transition: padding-left ease-in-out 0.1s;
+}
+
+.highlight {
+    border-left: 5px solid #8fa6ac;
+    padding-left: 1em;
+    list-style: none;
+}
+
+#byline {
+    color: var(--info-text-color);
+}
+
+#description {
+    display: flex;
+}
+
+@media screen {
+    #description #quote::before {
+        content: '“';
+        color: #8fa6ac;
+        font-size: 2.4em;
+    }
+}
+
+#description p {
+    padding-left: 1ch;
+    font-style: italic;
+    color: var(--info-text-color);
+    font-size: 0.8em;
+}
+
+#spacer {
+    padding: 1em;
+}
+
+#wrapper {
+    margin: 1em auto;
+    max-width: 100ch;
+    padding: 0 2em;
+}
+
+img {
+    max-width: 100%;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto 1em;
+}
+
+@media print {
+    #bugreport { display: none; }
+}
+
+#bugreport {
+    position: absolute;
+    top: 0;
+    right: 1ch;
+    color: #dcdcdc;
+}

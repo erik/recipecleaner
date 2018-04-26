@@ -1,0 +1,26 @@
+:root {
+    --main-text-color: #333;
+    --info-text-color: hsl(0, 0%, 35%);
+}
+
+body {
+    font-family: Charter, Optima, Georgia, serif;
+    color: var(--main-text-color);
+    line-height: 1.6;
+    font-size: 115%;
+}
+
+ul, ol {
+    padding-left: 0;
+    margin-top: 0;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1.2em;
+}
+
+a, a:visited {
+    color: var(--main-text-color);
+}

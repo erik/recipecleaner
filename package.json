@@ -10,7 +10,10 @@
         "babel-loader": "^8.0.0-beta.2",
         "babel-plugin-transform-react-jsx": "^6.24.1",
         "copy-webpack-plugin": "^4.5.1",
+        "css-loader": "^0.28.11",
+        "extract-text-webpack-plugin": "^3.0.2",
         "hyperapp": "^1.2.5",
+        "style-loader": "^0.21.0",
         "webextension-polyfill": "^0.2.1",
         "webpack": "^3.11.0"
     },
