@@ -9,7 +9,6 @@ module.exports = {
         'background.js': './src/js/background.js',
         'content.js': './src/js/content.js',
         'recipe.js': './src/js/recipe.js',
-        'welcome.js': './src/js/welcome.js',
 
         'welcome.css': './src/css/welcome.css',
         'recipe.css': './src/css/recipe.css',

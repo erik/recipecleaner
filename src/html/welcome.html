@@ -50,5 +50,14 @@
 
     </main>
 
-    <script src="/welcome.js"></script>
+    <script type="text/javascript">
+     // Show the correct screenshot for the current browser.
+     const visible = 'display: block;';
+
+     if (/firefox/i.test(navigator.userAgent)) {
+         document.querySelector('#firefox').style = visible;
+     } else {
+         document.querySelector('#chrome').style = visible;
+     }
+    </script>
 </body>
