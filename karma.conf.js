@@ -16,6 +16,12 @@ module.exports = function(config) {
 
         webpack: webpackConfig,
 
-        reporters: ['mocha']
+        reporters: ['mocha'],
+
+        client: {
+            mocha: {
+                reporter: 'html'
+            }
+        }
     });
 };
