@@ -5,6 +5,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 module.exports = {
+    mode: 'none',
+
     entry: {
         'background.js': './src/js/background.js',
         'content.js': './src/js/content.js',
