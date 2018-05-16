@@ -178,6 +178,50 @@ describe('sanitize', () => {
             const instr = sanitize.instructions(text);
             assert.deepEqual(instr, text);
         });
+
+        it('handles HowToSection instructions', () => {
+            const instr = ['foo', 'bar', 'baz'];
+            const howToStep = instr.map(i => ({
+                '@type': 'HowToSection',
+                itemListElement: [{'@type': 'HowToStep', text: i}]
+            }));
+
+            const sanitized = sanitize.instructions(howToStep);
+
+            assert.deepEqual(sanitized, instr);
+        });
+
+        it('handles weirdly formatted HowToSection instructions', () => {
+            const howToStep = [
+                {'@type': 'HowToSection',
+                    itemListElement: {'@type': 'HowToStep', text: 'foo'}
+                },
+                {'@type': 'HowToSection', itemListElement: [
+                    {'@type': 'HowToStep', text: 'bar'},
+                    {'@type': 'HowToStep', text: 'baz'},
+                ]},
+                {'@type': 'HowToSection', itemListElement: 'baz'}
+            ];
+
+            const sanitized = sanitize.instructions(howToStep);
+            assert.deepEqual(sanitized, ['foo', 'bar\nbaz', 'baz']);
+        });
+
+        it('skips instructions it cannot parse', () => {
+            const howToStep = [
+                {'@type': 'HowToSection',
+                    itemListElement: {'@type': 'HowToStep', text: 'foo'}
+                },
+                {'@type': 'SomethingElse!', itemListElement: [
+                    {'@type': 'HowToStep', text: 'bar'},
+                ]},
+                {'@type': 'HowToSection', somethingElse: 'baz'}
+            ];
+
+            const sanitized = sanitize.instructions(howToStep);
+            assert.deepEqual(sanitized, ['foo']);
+        });
+
     });
 
     describe('stripTags', () => {

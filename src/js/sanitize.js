@@ -198,11 +198,42 @@ function sanitizeInstructionText (instructionText) {
     return text;
 }
 
+// Convert recipeInstructions from HowToSection schema to simple string.
+function sanitizeHowToSection (section) {
+    const elem = section['itemListElement'];
+
+    // FIXME: I don't think this is exhaustive.
+    if (typeof elem === 'string') {
+        return elem;
+    } else if (Array.isArray(elem)) {
+        return elem.map(e => e.text).join('\n');
+    } else if (typeof elem === 'object' && elem['@type'] === 'HowToStep') {
+        return elem.text;
+    }
+
+    // Failure case: just return empty string
+    return '';
+}
+
 function sanitizeInstructionList (list) {
     return list.map((instruction, i) => {
+        let instructionText = instruction;
+
+        // Handle the case where the list does not contain strings,
+        // but HowToSteps.
+        if (typeof instruction === 'object') {
+            if (instruction['@type'] === 'HowToSection') {
+                instructionText = sanitizeHowToSection(instruction);
+            } else {
+                console.warn('Unknown instruction format! Expected string ' +
+                             'or HowToSection', instruction);
+                return '';
+            }
+        }
+
         // Sometimes the instruction list includes a number
         // prefix, strip that out.
-        return instruction
+        return instructionText
             .replace(/^(\d+)\.?\s*/, (orig, num) => {
                 return +num === i + 1 ? '' : orig;
             })
