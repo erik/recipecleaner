@@ -27,6 +27,10 @@ Single ingredient:
 
 - https://minimalistbaker.com/how-to-make-cauliflower-rice/
 
+Instructions list uses HowToStep schema
+
+- https://yupitsvegan.com/vegan-shepherds-pie-lentil/
+
 ## Regression checks
 
 ### Undetected Recipe:
