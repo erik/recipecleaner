@@ -200,11 +200,12 @@ describe('sanitize', () => {
                     {'@type': 'HowToStep', text: 'bar'},
                     {'@type': 'HowToStep', text: 'baz'},
                 ]},
-                {'@type': 'HowToSection', itemListElement: 'baz'}
+                {'@type': 'HowToSection', itemListElement: 'baz'},
+                {'@type': 'HowToStep', text: 'quux'}
             ];
 
             const sanitized = sanitize.instructions(howToStep);
-            assert.deepEqual(sanitized, ['foo', 'bar\nbaz', 'baz']);
+            assert.deepEqual(sanitized, ['foo', 'bar\nbaz', 'baz', 'quux']);
         });
 
         it('skips instructions it cannot parse', () => {
@@ -215,13 +216,16 @@ describe('sanitize', () => {
                 {'@type': 'SomethingElse!', itemListElement: [
                     {'@type': 'HowToStep', text: 'bar'},
                 ]},
-                {'@type': 'HowToSection', somethingElse: 'baz'}
+                {'@type': 'SomethingElse!', itemListElement: [
+                    {'@type': 'HowToStep'},
+                ]},
+                {'@type': 'HowToSection', somethingElse: 'baz'},
+                {'@type': 'HowToStep'}
             ];
 
             const sanitized = sanitize.instructions(howToStep);
             assert.deepEqual(sanitized, ['foo']);
         });
-
     });
 
     describe('stripTags', () => {

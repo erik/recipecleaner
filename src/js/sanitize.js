@@ -206,9 +206,9 @@ function sanitizeHowToSection (section) {
     if (typeof elem === 'string') {
         return elem;
     } else if (Array.isArray(elem)) {
-        return elem.map(e => e.text).join('\n');
+        return elem.map(e => e.text || '').join('\n');
     } else if (typeof elem === 'object' && elem['@type'] === 'HowToStep') {
-        return elem.text;
+        return elem.text || '';
     }
 
     // Failure case: just return empty string
@@ -224,6 +224,8 @@ function sanitizeInstructionList (list) {
         if (typeof instruction === 'object') {
             if (instruction['@type'] === 'HowToSection') {
                 instructionText = sanitizeHowToSection(instruction);
+            } else if (instruction['@type'] === 'HowToStep') {
+                instructionText = instruction.text || '';
             } else {
                 console.warn('Unknown instruction format! Expected string ' +
                              'or HowToSection', instruction);
