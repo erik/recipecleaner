@@ -1,0 +1,32 @@
+#options {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#options--toggle {
+    text-align: right;
+    cursor: pointer;
+}
+
+#options--pane {
+    visibility: hidden;
+    
+    padding: 1ch;
+    background-color: white;
+    color: black;
+    font-size: 100%;
+    font-family: sans-serif;
+}
+
+#options--pane.pane-visible {
+    visibility: visible;
+}
+
+#options--pane ul {
+    list-style: none;
+}
+
+#options--pane li {
+    cursor: pointer;
+}

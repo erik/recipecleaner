@@ -28,7 +28,7 @@
 }
 
 .highlight {
-    border-left: 5px solid #8fa6ac;
+    border-left: 5px solid var(--accent-color);
     padding-left: 1em;
     list-style: none;
 }
@@ -44,7 +44,7 @@
 @media screen {
     #description #quote::before {
         content: '“';
-        color: #8fa6ac;
+        color: var(--accent-color);
         font-size: 2.4em;
     }
 }

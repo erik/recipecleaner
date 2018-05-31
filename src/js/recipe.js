@@ -173,12 +173,13 @@ function viewError () {
     );
 }
 
+
 const params = new URLSearchParams(window.location.search);
 const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
 browser.storage.local.get(recipeId).then(recipes => {
     const recipe = recipes[recipeId];
-    const node = document.querySelector('#hyperapp');
+    const node = document.querySelector('#recipe');
 
     console.log('Recipe -> ', recipe);
 
