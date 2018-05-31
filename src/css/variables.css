@@ -1,0 +1,15 @@
+/* these can all be overwritten by the config */
+
+:root {
+    /* Global variables */
+    --base-text-color: #333;
+    --base-text-size: 100%;
+    --info-text-color: hsl(0, 0%, 35%);
+    --font-stack: Charter, Optima, Georgia, serif;
+    --base-line-height: 1.6;
+    --background-color: white;
+
+    /* Recipe specific variables */
+    --accent-color: #8fa6ac;
+}
+
