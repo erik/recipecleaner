@@ -15,7 +15,7 @@
         "hyperapp": "^1.2.5",
         "style-loader": "^0.21.0",
         "webextension-polyfill": "^0.2.1",
-        "webpack": "^3.11.0"
+        "webpack": "^3.12.0"
     },
     "devDependencies": {
         "assert-diff": "^1.2.5",
