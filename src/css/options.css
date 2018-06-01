@@ -11,7 +11,7 @@
 
 #options--pane {
     visibility: hidden;
-    
+
     padding: 1ch;
     background-color: white;
     color: black;
@@ -19,7 +19,7 @@
     font-family: sans-serif;
 }
 
-#options--pane.pane-visible {
+#options--pane.expanded {
     visibility: visible;
 }
 

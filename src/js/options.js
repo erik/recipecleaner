@@ -1,14 +1,7 @@
-import { h, app } from 'hyperapp'; // eslint-disable-line no-unused-vars
 import browser from 'webextension-polyfill';
 
 const THEMES = {
-    'DEFAULT': {
-        // '--main-text-color': '#333',
-        // '--info-text-color': 'hsl(0, 0%, 35%)',
-        // '--base-text-size': '150%',
-        // '--font-stack': 'Comic Sans, Comic Sans MS',
-        // '--base-line-height': '1.6',
-    },
+    DEFAULT: {},
     SERIF: {
         '--font-stack': 'Charter, Optima, Georgia, serif',
     },
@@ -27,8 +20,20 @@ const THEMES = {
     }
 };
 
-const actions = {
-    toggleExpanded: () => (state) => ({expanded: !state.expanded})
+
+// Mapping of selector => click handler
+const CLICK_HANDLERS = {
+    '#options--toggle': () => {
+        const pane = document.querySelector('#options--pane');
+        pane.classList.toggle('expanded');
+    },
+    '#options--pane .theme':  (e) => {
+        console.log('--->'
+                    , e);
+        const theme = e.target.dataset['theme'];
+        console.log('theme is', theme);
+        applyTheme(THEMES[theme]);
+    }
 };
 
 function getSavedOptions () {
@@ -47,49 +52,47 @@ function applyTheme (theme) {
 }
 
 
-function viewOptionsPane () {
+function renderOptionsPane () {
     const options = Object.keys(THEMES)
-        .map(theme => ({
-            text: theme,
-            click: () => applyTheme(THEMES[theme])
-        }))
-        .map(el => (<li onclick={el.click}>{ el.text }</li>));
+          .map(el => `<li class="theme" data-theme="${el}">${el}</li>`)
+          .join('\n');
 
-    return <ul> { options } </ul>;
+    return `<ul> ${ options } </ul>`;
 }
 
 
-function view (state, actions) {
-    const className = state.expanded ? 'pane-visible' : '';
-
-    return (
+function render() {
+    return `
         <div>
-            <div id="options--toggle"
-                onclick={actions.toggleExpanded}>
-            OPTIONS
-            </div>
-            <div id="options--pane" className={className}>
-                { viewOptionsPane() }
+            <div id="options--toggle"> OPTIONS </div>
+            <div id="options--pane">
+                ${ renderOptionsPane() }
+
                 <hr />
 
-                <a target="_blank"
-                    href="https://goo.gl/forms/bsr8RJJoeiXDKJqo2">
-              Report a bug.
+                <a target="_blank" href="https://goo.gl/forms/bsr8RJJoeiXDKJqo2">
+                  Report a bug.
                 </a>
             </div>
         </div>
-    );
+    `;
 }
 
-function initialState () {
-    return {
-        expanded: false
-    };
-}
+
 
 getSavedOptions().then(opts => {
     applyTheme(opts['options.theme']);
 
     const node = document.querySelector('#options');
-    app(initialState(), actions, view, node);
+    node.innerHTML = view();
+
+    for (let selector in CLICK_HANDLERS) {
+        let handler = CLICK_HANDLERS[selector];
+
+        console.log('installing selector: ', selector);
+
+        for (let node of document.querySelectorAll(selector)) {
+            node.addEventListener('click', handler);
+        }
+    }
 });
