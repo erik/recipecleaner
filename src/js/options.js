@@ -1,5 +1,8 @@
 import browser from 'webextension-polyfill';
 
+import { addClickHandlers } from './util.js';
+
+
 const THEMES = {
     DEFAULT: {},
     SERIF: {
@@ -38,15 +41,6 @@ const CLICK_HANDLERS = {
     }
 };
 
-function addClickHandlers (handlers) {
-    for (const selector in handlers) {
-        const handler = handlers[selector];
-
-        for (const node of document.querySelectorAll(selector)) {
-            node.addEventListener('click', handler);
-        }
-    }
-}
 
 function getSavedOptions () {
     return browser.storage.local

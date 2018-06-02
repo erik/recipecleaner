@@ -1,7 +1,5 @@
 {
-    "plugins": [
-        ["transform-react-jsx", { "pragma": "h" }]
-    ],
+    "plugins": [],
     "presets": [
         ["@babel/preset-env", {"targets": {
             "browsers": ["last 2 Firefox versions", "last 2 Chrome versions"]

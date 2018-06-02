@@ -1,164 +1,154 @@
-import { h, app } from 'hyperapp'; // eslint-disable-line no-unused-vars
 import browser from 'webextension-polyfill';
 
-const actions = {};
+import { addClickHandlers } from './util';
 
-// Callback for ingredient onclick events.
-function toggleStrikethrough (elem) {
-    elem.classList.toggle('strikethrough');
-}
 
-// Callback from instruction onclick events.
-function toggleHighlight (elem) {
-    // If it's currently highlighted, just disable it
-    if (elem.classList.contains('highlight')) {
-        elem.classList.remove('highlight');
-    } else {
-        // otherwise remove the attribute from anything else that had it.
-        for (const i of document.querySelectorAll('.instruction')) {
-            if (i === elem) {
-                i.classList.add('highlight');
-            } else {
-                i.classList.remove('highlight');
+// Mapping of selector => click handler
+const CLICK_HANDLERS = {
+    '#recipe .ingredient': (e) => {
+        e.target.classList.toggle('strikethrough');
+    },
+
+    '#recipe .instruction': (e) => {
+        const elem = e.target;
+
+        // If it's currently highlighted, just disable it
+        if (elem.classList.contains('highlight')) {
+            elem.classList.remove('highlight');
+        } else {
+            // otherwise remove the attribute from anything else that had it.
+            for (const i of document.querySelectorAll('.instruction')) {
+                if (i === elem) {
+                    i.classList.add('highlight');
+                } else {
+                    i.classList.remove('highlight');
+                }
             }
         }
     }
-}
+};
 
-function view (recipe) {
-    return (
+
+function renderRecipe (recipe) {
+    return `
         <div id="wrapper">
             <main>
-                <div className="grid">
-                    { viewLeftColumn(recipe) }
-                    { viewRightColumn(recipe) }
+                <div class="grid">
+                    ${ renderLeftColumn(recipe) }
+                    ${ renderRightColumn(recipe) }
                 </div>
             </main>
 
             <script type="application/ld+json">
-                { JSON.stringify(recipe.original) }
+                ${ JSON.stringify(recipe.original) }
             </script>
-        </div>
-    );
+        </div>`;
 }
 
 // Image and ingredients
-function viewLeftColumn (recipe) {
-    const image = recipe.image ? <img src={recipe.image} /> : null;
+function renderLeftColumn (recipe) {
+    const image = recipe.image && `<img src="${recipe.image}" />`;
 
-    return (
+    return `
         <div id="left">
-            { image }
-            { viewIngredients(recipe) }
+            ${ image || '' }
+            ${ renderIngredients(recipe) }
         </div>
-    );
+    `;
 }
 
-function viewRightColumn (recipe) {
-    return (
+function renderRightColumn (recipe) {
+    return `
         <div id="right">
-            { viewHeader(recipe) }
-            { viewInstructions(recipe) }
+            ${ renderHeader(recipe) }
+            ${ renderInstructions(recipe) }
         </div>
-    );
+    `;
 }
 
-function viewHeader (recipe) {
+function renderHeader (recipe) {
     // Save a bit of space by not including 'www.'
     const hostname = (new URL(recipe.url)).hostname.replace(/^www\./, '');
 
     const bylineParts = [
-        recipe.author && (<span> By { recipe.author } </span>),
-        recipe.yield && (<span> Yields { recipe.yield } </span>),
-        recipe.time && (<span> { recipe.time } </span>),
-        <span>Via <a href={ recipe.url }>{ hostname }</a></span>
+        recipe.author && `<span> By ${ recipe.author } </span>`,
+        recipe.yield && `<span> Yields ${ recipe.yield } </span>`,
+        recipe.time && `<span> ${ recipe.time } </span>`,
+        `<span>Via <a href="${ recipe.url }">${ hostname }</a></span>`
     ].filter(e => e);
 
     let byline = [];
     bylineParts.forEach((e, i) => {
         byline.push(e);
         if (i !== bylineParts.length - 1) {
-            byline.push(<span> | </span>);
+            byline.push(`<span> | </span>`);
         }
     });
 
-    let description = <div id="spacer" />;
+    let description = `<div id="spacer" />`;
     if (recipe.description) {
         // Since we're using a decorative quote, strip out leading
         // quotes from the description if they exist.
         const stripped = recipe.description.replace(/^"/, '');
 
-        description = (
+        description = `
             <div id="description">
                 <span id="quote"></span>
-                <p> { stripped } </p>
+                <p> ${ stripped } </p>
             </div>
-        );
+        `;
     }
 
-    return (
+    return `
         <header>
-            <h1>{ recipe.name }</h1>
-            <div id="byline"> { byline }</div>
+            <h1>${ recipe.name }</h1>
+            <div id="byline"> ${ byline.join('\n') }</div>
 
-            { description }
+            ${ description }
         </header>
-    );
+    `;
 }
 
-function viewIngredients (recipe) {
+function renderIngredients (recipe) {
     let ingredients = recipe.ingredients.map(i => {
-        let quantity = i.quantity ?
-            <b className="quantity">{ i.quantity } { i.unit || '' }</b>
-            : null;
+        let quantity = i.quantity &&
+            `<b class="quantity">${ i.quantity } ${ i.unit || '' }</b>`;
 
-        return (
-            <li className="ingredient"
-                onclick={(e) => toggleStrikethrough(e.currentTarget)}>
-                { quantity } { i.ingredient }
-            </li>
-        );
-    });
+        return `<li class="ingredient">${ quantity || '' } ${ i.ingredient }</li>`;
+    }).join('\n');
 
-    return (
+    return `
         <section id="ingredients">
-            <ul> { ingredients } </ul>
+            <ul> ${ ingredients } </ul>
         </section>
-    );
+    `;
 }
 
-function viewInstructions (recipe) {
+function renderInstructions (recipe) {
     let instructionElem;
 
     if (recipe.instructionText) {
-        instructionElem = <p> { recipe.instructionText } </p>;
+        instructionElem = `<p> ${ recipe.instructionText } </p>`;
     } else if (recipe.instructionList) {
-        let instructions = recipe.instructionList.map(i => (
-            <li className="instruction"
-                onclick={(e) => toggleHighlight(e.currentTarget)}>
-                { i }
-            </li>
-        ));
+        let instructions = recipe.instructionList.map(text => `
+            <li class="instruction"> ${ text } </li>
+        `).join('\n');
 
-        instructionElem = <ol> { instructions } </ol>;
+        instructionElem = `<ol> ${ instructions } </ol>`;
     } else {
-        instructionElem = (
+        instructionElem = `
             <div>
                 <p> Sorry, seems this recipe did not include any instructions. </p>
                 <p> The recipe you tried to view was not properly formatted. </p>
             </div>
-        );
+        `;
     }
 
-    return (
-        <section id="instructions">
-            { instructionElem }
-        </section>
-    );
+    return `<section id="instructions">${ instructionElem }</section>`;
 }
 
-function viewError () {
-    return (
+function renderError () {
+    return `
         <div id="wrapper">
             <h1>I could not find that recipe!</h1>
 
@@ -170,7 +160,7 @@ function viewError () {
               Please report a bug so that this issue can be fixed.
             </p>
         </div>
-    );
+    `;
 }
 
 
@@ -185,8 +175,10 @@ browser.storage.local.get(recipeId).then(recipes => {
 
     if (recipe) {
         document.title = `${recipe.name} :: RecipeCleaner`;
-        app(recipe, actions, view, node);
+        node.innerHTML = renderRecipe(recipe);
+
+        addClickHandlers(CLICK_HANDLERS);
     } else {
-        app({}, {}, viewError, node);
+        node.innerHTML = renderError();
     }
 });
