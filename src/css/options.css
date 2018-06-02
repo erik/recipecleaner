@@ -1,22 +1,29 @@
+.theme-transition {
+    transition: background-color ease-in-out var(--slow-transition-time),
+                color ease-in-out var(--slow-transition-time);
+}
+
 #options {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 8px;
+    right: 16px;
+    font-size: 16px;
 }
 
 #options--toggle {
-    text-align: right;
     cursor: pointer;
+    text-align: right;
 }
 
 #options--pane {
     visibility: hidden;
 
-    padding: 1ch;
+    padding: 3ch;
     background-color: white;
     color: black;
-    font-size: 100%;
     font-family: sans-serif;
+
+    box-shadow: 2px 2px 8px 0px rgba(230,230,230,1);
 }
 
 #options--pane.expanded {
@@ -29,4 +36,12 @@
 
 #options--pane li {
     cursor: pointer;
+}
+
+#options--pane li:hover {
+    list-style: disc;
+}
+
+#options--pane a:visited {
+    color: black;
 }

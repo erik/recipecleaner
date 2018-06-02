@@ -4,7 +4,15 @@ import { addClickHandlers } from './util.js';
 
 
 const THEMES = {
-    DEFAULT: {},
+    RESET: {
+
+    },
+    RESET_FONT: {
+        '--base-text-size': '100%',
+    },
+    KITCHEN_VIEW: {
+        '--base-text-size': '175%',
+    },
     SERIF: {
         '--font-stack': 'Charter, Optima, Georgia, serif',
     },
@@ -12,14 +20,22 @@ const THEMES = {
         '--font-stack': 'Avenir Next, Avenir, Helvetica, sans-serif',
     },
     DARK: {
-        '--background-color': '#222',
-        '--base-text-color': '#ccc',
-        '--info-text-color': '#eee',
+        '--background-color': '#1d1f21',
+        '--base-text-color': '#c5c8c6',
+        '--info-text-color': '#969896',
+        '--accent-color': '#b294bb',
     },
     LIGHT: {
         '--background-color': '#fff',
-        '--base-text-color': '#333',
-        '--info-text-color': '#222',
+        '--base-text-color': '#4d4d4c',
+        '--info-text-color': '#8e908c',
+        '--accent-color': '#c82829',
+    },
+    SOLARIZED: {
+        '--background-color': '#fdf6e3',
+        '--base-text-color': '#586e75',
+        '--info-text-color': '#657b83',
+        '--accent-color': '#2aa198',
     }
 };
 
@@ -44,7 +60,7 @@ const CLICK_HANDLERS = {
 
 function getSavedOptions () {
     return browser.storage.local
-        .get({[STORAGE_KEY]: THEMES['DEFAULT']})
+        .get({[STORAGE_KEY]: {}})
         .then(obj => obj[STORAGE_KEY]);
 }
 
@@ -79,11 +95,11 @@ function renderOptionsList () {
 function renderOptions () {
     return `
         <div>
-            <div id="options--toggle"> OPTIONS </div>
+            <div id="options--toggle"> ⚙️ </div>
             <div id="options--pane">
                 ${ renderOptionsList() }
                 <hr />
-                <a target="_blank" href="${BUG_REPORT_LINK}">Report a bug.</a>
+                <a target="_blank" href="${ BUG_REPORT_LINK }">Report a bug.</a>
             </div>
         </div>
     `;
@@ -92,6 +108,8 @@ function renderOptions () {
 getSavedOptions()
     .then(opts => saveAndApplyOptions(opts))
     .then(() => {
+        document.body.classList.add('theme-transition');
+
         const node = document.querySelector('#options');
         node.innerHTML = renderOptions();
 

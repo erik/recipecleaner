@@ -18,13 +18,13 @@
 .ingredient {
     cursor: pointer;
     list-style: none;
-    transition: color linear 0.2s;
+    transition: color linear var(--slow-transition-time);
     margin-bottom: 0.4em;
 }
 
 .instruction {
     margin-bottom: 1.2em;
-    transition: padding-left ease-in-out 0.1s;
+    transition: padding-left ease-in-out var(--fast-transition-time);
 }
 
 .highlight {
