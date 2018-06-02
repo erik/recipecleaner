@@ -57,7 +57,7 @@ const CLICK_HANDLERS = {
         saveAndApplyOptions(THEMES[theme]);
     },
 
-    '.options--size-toggle': (e) => {
+    '.options--size-toggle': () => {
         const currentSize = document.body.style.getPropertyValue('--base-text-size') || '';
 
         if (currentSize === THEMES.NORMAL_TEXT['--base-text-size'] || currentSize === '') {
@@ -98,7 +98,7 @@ function saveAndApplyOptions (theme) {
 
 
 function renderOptionsList () {
-    const sizeToggle = `<div class="options--button options--size-toggle">🔍</div>`;
+    const sizeToggle = '<div class="options--button options--size-toggle">🔍</div>';
 
     const fonts = ['SERIF', 'SANS_SERIF'].map(name => {
         const theme = THEMES[name];
