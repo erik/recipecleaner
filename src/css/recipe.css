@@ -73,13 +73,3 @@ img {
     margin: 0 auto 1em;
 }
 
-@media print {
-    #bugreport { display: none; }
-}
-
-#bugreport {
-    position: absolute;
-    top: 0;
-    right: 1ch;
-    color: #dcdcdc;
-}

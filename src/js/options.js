@@ -4,21 +4,22 @@ import { addClickHandlers } from './util.js';
 
 
 const THEMES = {
-    RESET: {
-
-    },
-    RESET_FONT: {
+    NORMAL_TEXT: {
         '--base-text-size': '100%',
+        '--large-text-toggle': '0',
     },
-    KITCHEN_VIEW: {
+    LARGE_TEXT: {
         '--base-text-size': '175%',
+        '--large-text-toggle': '0.25',
     },
+
     SERIF: {
         '--font-stack': 'Charter, Optima, Georgia, serif',
     },
     SANS_SERIF: {
         '--font-stack': 'Avenir Next, Avenir, Helvetica, sans-serif',
     },
+
     DARK: {
         '--background-color': '#1d1f21',
         '--base-text-color': '#c5c8c6',
@@ -51,9 +52,19 @@ const CLICK_HANDLERS = {
         pane.classList.toggle('expanded');
     },
 
-    '#options--pane .theme': (e) => {
+    '[data-theme]': (e) => {
         const theme = e.target.dataset['theme'];
         saveAndApplyOptions(THEMES[theme]);
+    },
+
+    '.options--size-toggle': (e) => {
+        const currentSize = document.body.style.getPropertyValue('--base-text-size') || '';
+
+        if (currentSize === THEMES.NORMAL_TEXT['--base-text-size'] || currentSize === '') {
+            applyOptions(THEMES.LARGE_TEXT);
+        } else {
+            applyOptions(THEMES.NORMAL_TEXT);
+        }
     }
 };
 
@@ -71,24 +82,51 @@ function saveOptions (options) {
         }));
 }
 
-function saveAndApplyOptions (theme) {
+function applyOptions (theme) {
     console.log('APPLY THEME', theme);
     for (let key in theme) {
         if (theme[key] !== null) {
             document.body.style.setProperty(key, theme[key]);
         }
     }
+}
 
+function saveAndApplyOptions (theme) {
+    applyOptions(theme);
     return saveOptions(theme);
 }
 
 
 function renderOptionsList () {
-    const options = Object.keys(THEMES)
-        .map(el => `<li class="theme" data-theme="${el}">${el}</li>`)
-        .join('\n');
+    const sizeToggle = `<div class="options--button options--size-toggle">🔍</div>`;
 
-    return `<ul> ${ options } </ul>`;
+    const fonts = ['SERIF', 'SANS_SERIF'].map(name => {
+        const theme = THEMES[name];
+        const style = ` font-family: ${ theme['--font-stack'] }; `;
+
+        return `<div class="options--button" data-theme="${name}" style="${ style }">Aa</div>`;
+    });
+
+    const colors = ['DARK', 'LIGHT', 'SOLARIZED'].map(name => {
+        const theme = THEMES[name];
+
+        const style = `
+color: ${ theme['--base-text-color'] };
+background-color: ${ theme['--background-color'] };
+border-bottom: 4px solid ${ theme['--accent-color'] };
+`;
+
+        return `<div class="options--button" data-theme="${name}" style="${ style }">Aa</div>`;
+    });
+
+
+
+    return [
+        fonts.concat([sizeToggle]),
+        colors,
+    ].map(row => {
+        return `<div class="options--row"> ${ row.join('\n') } </div>`;
+    }).join('\n');
 }
 
 
@@ -99,7 +137,7 @@ function renderOptions () {
             <div id="options--pane">
                 ${ renderOptionsList() }
                 <hr />
-                <a target="_blank" href="${ BUG_REPORT_LINK }">Report a bug.</a>
+                <a class="bug" target="_blank" href="${ BUG_REPORT_LINK }">Report a bug.</a>
             </div>
         </div>
     `;
