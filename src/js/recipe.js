@@ -81,11 +81,11 @@ function renderHeader (recipe) {
     bylineParts.forEach((e, i) => {
         byline.push(e);
         if (i !== bylineParts.length - 1) {
-            byline.push(`<span> | </span>`);
+            byline.push('<span> | </span>');
         }
     });
 
-    let description = `<div id="spacer" />`;
+    let description = '<div id="spacer" />';
     if (recipe.description) {
         // Since we're using a decorative quote, strip out leading
         // quotes from the description if they exist.
