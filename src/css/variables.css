@@ -15,5 +15,10 @@
     /* Recipe specific variables */
     --accent-color: unset;
     --large-text-toggle: unset;
+
+    /* Variables not configured by options */
+    --fast-transition-time: 0.1s;
+    --slow-transition-time: 0.5s;
+
 }
 

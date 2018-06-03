@@ -12,11 +12,8 @@ const THEMES = {
         '--base-line-height': '1.6',
         '--background-color': 'white',
 
-        '--fast-transition-time': '0.1s',
-        '-slow-transition-time': '0.5s',
-
-        '-accent-color': '#8fa6ac',
-        '--large-text-toggle': 0,
+        '--accent-color': '#8fa6ac',
+        '--large-text-toggle': '0',
     },
 
     NORMAL_TEXT: {
