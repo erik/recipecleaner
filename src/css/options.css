@@ -13,10 +13,15 @@
 #options--toggle {
     cursor: pointer;
     text-align: right;
+    height: 32px;
+}
+
+#options--toggle svg {
+    fill: var(--info-text-color);
 }
 
 #options--pane {
-    visibility: hidden;
+    display: none;
 
     padding: 3ch;
     background-color: white;
@@ -26,11 +31,15 @@
     box-shadow: 2px 2px 8px 0px rgba(230,230,230,1);
 }
 
-#options--pane.expanded {
-    visibility: visible;
+#options--pane ::selection {
+    background-color: transparent;
 }
 
-#options--pane a, a:visited {
+#options--pane.expanded {
+    display: block;
+}
+
+#options--pane a, #options--pane a:visited {
     color: #222;
 }
 

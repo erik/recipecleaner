@@ -22,6 +22,11 @@
     margin-bottom: 0.4em;
 }
 
+/* Prevent click handlers from striking the wrong part of the ingredient */
+.ingredient * {
+    pointer-events: none;
+}
+
 .instruction {
     margin-bottom: 1.2em;
     transition: padding-left ease-in-out var(--fast-transition-time);
@@ -72,4 +77,3 @@ img {
     display: block;
     margin: 0 auto 1em;
 }
-
