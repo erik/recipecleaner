@@ -2,18 +2,18 @@
 
 :root {
     /* Global variables */
-    --base-text-color: #333;
-    --base-text-size: 100%;
-    --info-text-color: hsl(0, 0%, 35%);
-    --font-stack: Charter, Optima, Georgia, serif;
-    --base-line-height: 1.6;
-    --background-color: white;
+    --base-text-color: unset;
+    --base-text-size: unset;
+    --info-text-color: unset;
+    --font-stack: unset;
+    --base-line-height: unset;
+    --background-color: unset;
 
-    --fast-transition-time: 0.1s;
-    --slow-transition-time: 0.5s;
+    --fast-transition-time: unset;
+    --slow-transition-time: unset;
 
     /* Recipe specific variables */
-    --accent-color: #2aa198;
-    --large-text-toggle: 0;
+    --accent-color: unset;
+    --large-text-toggle: unset;
 }
 
