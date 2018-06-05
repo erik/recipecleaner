@@ -14,7 +14,7 @@ const THEMES = {
         '--base-line-height': '1.6',
         '--background-color': 'white',
 
-        '--accent-color': '#8fa6ac',
+        '--accent-color': '#c82829',
         '--large-text-toggle': '0',
     },
 
