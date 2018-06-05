@@ -2,10 +2,9 @@ import { html, escapeHTML } from './util';
 
 
 export function renderRecipe (recipe) {
-    const original = html`
-        <script type="application/ld+json">
-            ${ JSON.stringify(recipe.original) }
-        </script>`;
+    // FIXME: this might need some work
+    const original = JSON.stringify(recipe.original)
+              .replace(/<\/script/g, '<\\/script');
 
     return `
         <div id="wrapper">
@@ -16,7 +15,9 @@ export function renderRecipe (recipe) {
                 </div>
             </main>
 
-            ${ original }
+            <script type="application/ld+json">
+                ${ original }
+            </script>
         </div>`;
 }
 
