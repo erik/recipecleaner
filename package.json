@@ -4,16 +4,14 @@
     "description": "",
     "main": "webpack.config.js",
     "dependencies": {
-        "copy-webpack-plugin": "^4.5.1",
-        "css-loader": "^0.28.11",
-        "extract-text-webpack-plugin": "^3.0.2",
-        "style-loader": "^0.21.0",
-        "webextension-polyfill": "^0.2.1",
-        "webpack": "^3.12.0"
+        "webextension-polyfill": "^0.2.1"
     },
     "devDependencies": {
         "assert-diff": "^1.2.6",
+        "copy-webpack-plugin": "^4.5.1",
+        "css-loader": "^0.28.11",
         "eslint": "^4.19.1",
+        "extract-text-webpack-plugin": "^3.0.2",
         "karma": "^2.0.2",
         "karma-chrome-launcher": "^2.2.0",
         "karma-firefox-launcher": "^1.1.0",
@@ -22,7 +20,9 @@
         "karma-sourcemap-loader": "^0.3.7",
         "karma-webpack": "^2.0.13",
         "mocha": "^5.2.0",
-        "web-ext": "^2.7.0"
+        "style-loader": "^0.21.0",
+        "web-ext": "^2.7.0",
+        "webpack": "^3.12.0"
     },
     "scripts": {
         "test": "karma start --single-run",
