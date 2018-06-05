@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 
 import { addClickHandlers} from './util.js';
-import { renderRecipe } from './render_recipe.js';
+import { renderRecipe, renderError } from './render_recipe.js';
 
 
 // Mapping of selector => click handler

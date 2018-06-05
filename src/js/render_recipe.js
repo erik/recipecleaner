@@ -127,7 +127,7 @@ function renderInstructions (recipe) {
     return `<section id="instructions">${ instructionElem }</section>`;
 }
 
-function renderError () {
+export function renderError () {
     return `
         <div id="wrapper">
             <h1>I could not find that recipe!</h1>
