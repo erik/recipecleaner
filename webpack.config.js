@@ -5,15 +5,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 module.exports = {
-    mode: 'none',
-
     entry: {
         'background.js': './src/js/background.js',
         'content.js': './src/js/content.js',
         'recipe.js': './src/js/recipe.js',
+        'options.js': './src/js/options.js',
 
         'welcome.css': './src/css/welcome.css',
         'recipe.css': './src/css/recipe.css',
+        'options.css': './src/css/options.css',
     },
 
     output: {
@@ -23,11 +23,6 @@ module.exports = {
 
     module: {
         rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
-            },
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({

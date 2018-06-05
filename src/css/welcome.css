@@ -3,10 +3,15 @@
 main {
     max-width: 500px;
     margin: 0 auto;
+    font-size: var(--base-font-size);
 }
 
 h1 {
     text-align: center;
+}
+
+li {
+    list-style: none;
 }
 
 img {

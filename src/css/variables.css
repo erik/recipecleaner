@@ -1,0 +1,24 @@
+/* these can all be overwritten by the config */
+
+:root {
+    /* Global variables */
+    --base-text-color: unset;
+    --base-text-size: unset;
+    --info-text-color: unset;
+    --font-stack: unset;
+    --base-line-height: unset;
+    --background-color: unset;
+
+    --fast-transition-time: unset;
+    --slow-transition-time: unset;
+
+    /* Recipe specific variables */
+    --accent-color: unset;
+    --large-text-toggle: unset;
+
+    /* Variables not configured by options */
+    --fast-transition-time: 0.1s;
+    --slow-transition-time: 0.5s;
+
+}
+

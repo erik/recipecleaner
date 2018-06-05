@@ -1,6 +1,5 @@
 // Try to handle all the wacky inconsistencies of recipes on the internet.
 
-
 // Keys that should have `sanitize.common` run against them.
 const COMMON_KEYS_TO_CLEAN = [
     'name',
@@ -246,7 +245,9 @@ function sanitizeInstructionList (list) {
 // Handles common case stuff for sanitization.
 function sanitizeCommon (input) {
     if (Array.isArray(input)) {
-        return input.map(v => sanitizeString(v)).filter(i => i !== '');
+        return input
+            .map(v => sanitizeString(v))
+            .filter(i => i !== '');
     } else if (typeof input === 'string') {
         return sanitizeString(input);
     }

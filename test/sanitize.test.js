@@ -291,7 +291,27 @@ describe('sanitize', () => {
                 assert.deepEqual(cleaned[key], expected[key]);
             }
         });
+
+        it('properly escapes HTML', () => {
+            const BASIC_RECIPE = {
+                '@context': 'http://schema.org/Recipe',
+                name: '&quot;waffles&quot;',
+                description: 'pancakes&amp;waffles',
+                author: {name: '&lt;'}
+            };
+
+            const expected = {
+                name: '"waffles"',
+                url: 'foo',
+                description: 'pancakes&waffles',
+                author: '<'
+            };
+
+            const cleaned = sanitize.recipe('foo', BASIC_RECIPE);
+
+            for (const key in expected) {
+                assert.equal(cleaned[key], expected[key]);
+            }
+        });
     });
-
-
 });

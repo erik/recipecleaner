@@ -18,17 +18,22 @@
 .ingredient {
     cursor: pointer;
     list-style: none;
-    transition: color linear 0.2s;
+    transition: color linear var(--slow-transition-time);
     margin-bottom: 0.4em;
+}
+
+/* Prevent click handlers from striking the wrong part of the ingredient */
+.ingredient * {
+    pointer-events: none;
 }
 
 .instruction {
     margin-bottom: 1.2em;
-    transition: padding-left ease-in-out 0.1s;
+    transition: padding-left ease-in-out var(--fast-transition-time);
 }
 
 .highlight {
-    border-left: 5px solid #8fa6ac;
+    border-left: 5px solid var(--accent-color);
     padding-left: 1em;
     list-style: none;
 }
@@ -44,7 +49,7 @@
 @media screen {
     #description #quote::before {
         content: '“';
-        color: #8fa6ac;
+        color: var(--accent-color);
         font-size: 2.4em;
     }
 }
@@ -71,15 +76,4 @@ img {
     border-radius: 5px;
     display: block;
     margin: 0 auto 1em;
-}
-
-@media print {
-    #bugreport { display: none; }
-}
-
-#bugreport {
-    position: absolute;
-    top: 0;
-    right: 1ch;
-    color: #dcdcdc;
 }

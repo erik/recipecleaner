@@ -1,0 +1,74 @@
+.theme-transition {
+    transition: background-color ease-in-out var(--slow-transition-time),
+                color ease-in-out var(--slow-transition-time);
+}
+
+#options {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 16px;
+}
+
+#options--toggle {
+    cursor: pointer;
+    text-align: right;
+    height: 32px;
+}
+
+#options--toggle svg {
+    fill: var(--info-text-color);
+}
+
+#options--pane {
+    display: none;
+
+    padding: 3ch;
+    background-color: white;
+    color: black;
+    font-family: sans-serif;
+
+    box-shadow: 2px 2px 8px 0px rgba(230,230,230,1);
+}
+
+#options--pane ::selection {
+    background-color: transparent;
+}
+
+#options--pane.expanded {
+    display: block;
+}
+
+#options--pane a, #options--pane a:visited {
+    color: #222;
+}
+
+#options--pane .options--row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: calc(128px * 3 + 8px * 2);
+    margin-bottom: 8px;
+}
+
+#options--pane .options--button {
+    font-size: 32px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #cfcfcf;
+    box-sizing: border-box;
+    width: 128px;
+    cursor: pointer;
+}
+
+#options--pane .options--button:hover {
+    border: 1px solid #222;
+}
+
+#options--pane .options--size-toggle {
+    box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, var(--large-text-toggle));
+}
+
+@media not screen {
+    #options { display: none; }
+}
