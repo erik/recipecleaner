@@ -3,12 +3,14 @@ import browser from 'webextension-polyfill';
 import { addClickHandlers } from './util.js';
 
 
+const SERIF_STACK = 'Palatino, Charter, Optima, Georgia, serif';
+
 const THEMES = {
     RESET: {
         '--base-text-color': '#333',
         '--base-text-size': '100%',
         '--info-text-color': 'hsl(0, 0%, 35%)',
-        '--font-stack': 'Charter, Optima, Georgia, serif',
+        '--font-stack': SERIF_STACK,
         '--base-line-height': '1.6',
         '--background-color': 'white',
 
@@ -26,7 +28,7 @@ const THEMES = {
     },
 
     SERIF: {
-        '--font-stack': 'Charter, Optima, Georgia, serif',
+        '--font-stack': SERIF_STACK,
     },
     SANS_SERIF: {
         '--font-stack': 'Avenir, Helvetica Neue, Helvetica, Arial, sans-serif',
@@ -152,7 +154,9 @@ function renderOptions () {
             <div id="options--toggle">${ COG_SVG }</div>
             <div id="options--pane">
                 ${ renderOptionsList() }
-                <a class="bug" target="_blank" href="${ BUG_REPORT_LINK }">Send feedback</a>
+                <a class="bug" target="_blank" href="${ BUG_REPORT_LINK }">
+                    Send feedback
+                </a>
             </div>
         </div>
     `;
