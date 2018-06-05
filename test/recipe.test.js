@@ -24,9 +24,10 @@ describe('renderRecipe', () => {
             {quantity: '<&>', unit: '<&>', ingredient: '<&>'}
         ];
         recipe['instructionList'] = ['<&>'];
-        recipe['original'] = {foo: '<&>'};
+        recipe['original'] = {foo: '</script foo>'};
 
         let rendered = renderRecipe(recipe);
         assert.equal(rendered.includes('<&>'), false);
+        assert.equal(rendered.includes('</script foo>'), false);
     });
 });

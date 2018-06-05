@@ -4,7 +4,7 @@ import { html, escapeHTML } from './util';
 export function renderRecipe (recipe) {
     // FIXME: this might need some work
     const original = JSON.stringify(recipe.original)
-              .replace(/<\/script/g, '<\\/script');
+        .replace(/<\/script/g, '<\\/script');
 
     return `
         <div id="wrapper">
