@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import extension from './extension.js';
 
 import { addClickHandlers } from './util.js';
 
@@ -88,16 +88,14 @@ const CLICK_HANDLERS = {
 
 
 function getSavedOptions () {
-    return browser.storage.local
-        .get({[STORAGE_KEY]: THEMES.RESET})
-        .then(obj => obj[STORAGE_KEY]);
+    return extension.storage.getLocal(STORAGE_KEY, THEMES.RESET);
 }
 
 function saveOptions (options) {
-    return getSavedOptions()
-        .then(saved => browser.storage.local.set({
-            [STORAGE_KEY]: Object.assign(saved, options)
-        }));
+    return getSavedOptions().then(saved => {
+        return extension.storage.setLocal(
+            STORAGE_KEY, {...saved, options});
+    });
 }
 
 function applyOptions (theme) {

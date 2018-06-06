@@ -1,5 +1,4 @@
-import browser from 'webextension-polyfill';
-
+import extension from './extension.js';
 import { addClickHandlers} from './util.js';
 import { renderRecipe, renderError } from './render_recipe.js';
 
@@ -33,11 +32,11 @@ const CLICK_HANDLERS = {
 const params = new URLSearchParams(window.location.search);
 const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
-browser.storage.local.get(recipeId).then(recipes => {
+extension.storage.getLocal(recipeId).then(recipes => {
     const recipe = recipes[recipeId];
     const node = document.querySelector('#recipe');
 
-    console.log('Recipe -> ', recipe);
+    console.log('Recipe -> ', recipe, 'also', recipes);
 
     if (recipe) {
         document.title = `${recipe.name} :: RecipeCleaner`;

@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import extension from './extension.js';
 
 import sanitize from './sanitize';
 
@@ -7,40 +7,32 @@ import sanitize from './sanitize';
 const EPHEMERAL_TAB_MAP = {};
 
 
-browser.pageAction.onClicked.addListener((tab) => {
+// When the user clicks on the page action icon, we redirect to the
+// cleaned up recipe.
+//
+// We delay storing the recipe until the user actually wants it.
+extension.pageAction.onClicked((tab) => {
     const recipe = EPHEMERAL_TAB_MAP[tab.id];
 
-    // We delay storing the recipe until the user actually wants it.
-    saveToStorage(recipe).then(recipeId => {
-        browser.tabs.update({
-            url: `recipe.html?recipeId=${encodeURI(recipeId)}`
-        }).catch(e => {
-            console.error('FAILED to inject script:', e);
-        });
-    });
-});
-
-
-// Clean up after ourselves.
-browser.tabs.onRemoved.addListener((tabId) => {
-    delete EPHEMERAL_TAB_MAP[tabId];
-});
-
-
-// TODO: Clean up old recipes after a while.
-function saveToStorage (recipe) {
     const cleanName = recipe.name
         .replace(/\s+/g, '-')
         .replace(/[^\w-]/g, '');
 
     const id = `${Date.now()}-${cleanName}`;
+    extension.storage.setLocal({[id]: recipe})
+        .then(() => {
+            const url = `recipe.html?recipeId=${encodeURI(id)}`;
+            return extension.tabs.update(url);
+        }).catch(e => {
+            console.error('Failed to inject script:', e);
+        });
+});
 
-    console.log('Saving recipe as', id);
 
-    return browser.storage.local.set({[id]: recipe}).then(() => id);
-}
+// Clean up after ourselves.
+extension.tabs.onRemoved((tabId) => { delete EPHEMERAL_TAB_MAP[tabId]; });
 
-browser.runtime.onMessage.addListener((msg, sender) => {
+extension.runtime.onMessage((msg, sender) => {
     if (msg.kind === 'recipe-detected') {
         console.group();
         console.log('detected recipe. original:', msg.data);
@@ -52,24 +44,19 @@ browser.runtime.onMessage.addListener((msg, sender) => {
 
         EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
 
-        // Some weird bug in chrome...
-        if (typeof chrome !== 'undefined') {
-            chrome.pageAction.show(sender.tab.id);
-        } else {
-            browser.pageAction.show(sender.tab.id);
-        }
+        extension.pageAction.show(sender.tab.id);
     } else {
         console.error('Unknown message kind:', msg.kind);
     }
 });
 
 // First time user experience
-browser.runtime.onInstalled.addListener(({reason}) => {
+extension.runtime.onInstalled(({reason}) => {
     // Don't do anything if this isn't a first time install
     // (e.g. extension update)
     if (reason !== 'install') {
         return;
     }
 
-    browser.tabs.create({url: '/welcome.html'});
+    extension.tabs.create('/welcome.html');
 });

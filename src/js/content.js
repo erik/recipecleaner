@@ -1,6 +1,6 @@
 /* Detect whether recipe is present on page */
 
-import browser from 'webextension-polyfill';
+import extension from './extension.js';
 import microdata from './microdata.js';
 
 // JSON LD blocks
@@ -32,7 +32,7 @@ const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
             if (data['@type'] === 'Recipe') {
                 console.log('recipe-detected', data);
 
-                browser.runtime.sendMessage({kind: 'recipe-detected', data});
+                extension.runtime.sendMessage({kind: 'recipe-detected', data});
                 return;
             }
         }
@@ -46,7 +46,7 @@ const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
         if (extracted !== null) {
             console.log('extracted recipe ->', extracted);
 
-            browser.runtime.sendMessage({
+            extension.runtime.sendMessage({
                 kind: 'recipe-detected',
                 data: extracted
             });
