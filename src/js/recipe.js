@@ -33,7 +33,6 @@ const params = new URLSearchParams(window.location.search);
 const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
 extension.storage.getLocal(recipeId).then(recipe => {
-    console.log('recipe thing is', recipe);
     const node = document.querySelector('#recipe');
 
     console.log('Recipe -> ', recipe);

@@ -43,11 +43,8 @@ extension.runtime.onMessage((msg, sender) => {
         console.groupEnd();
 
         EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
-        console.log('here now', EPHEMERAL_TAB_MAP);
 
         extension.pageAction.show(sender.tab.id);
-
-        console.log('hwere?');
     } else {
         console.error('Unknown message kind:', msg.kind);
     }
