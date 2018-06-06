@@ -30,7 +30,7 @@ export default {
     pageAction: {
         show: (tabId) => {
             // Some weird bug in chrome...
-            const target = typeof chrome !== 'undefined' ? chrome : browser;
+            const target = typeof chrome === 'undefined' ? browser : chrome;
             return target.pageAction.show(tabId);
         },
 

@@ -15,10 +15,16 @@
     },
     "content_scripts": [{
         "matches": ["*://*/*"],
-        "js": ["content.js"]
+        "js": [
+            "js/vendor.js",
+            "js/content.js"
+        ]
     }],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": [
+            "js/vendor.js",
+            "js/background.js"
+        ]
     },
     "permissions": [
         "*://*/*",

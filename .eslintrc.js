@@ -6,10 +6,10 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
+        "sourceType": "module",
         "ecmaFeatures": {
-            "jsx": true
-        },
-        "sourceType": "module"
+            "experimentalObjectRestSpread": true
+        }
     },
     "rules": {
         "indent": [
@@ -29,6 +29,12 @@ module.exports = {
             "always"
         ],
         "no-console": "off",
-        "space-before-function-paren": ["error", {"named": "always", "asyncArrow": "always", "anonymous": "never"}]
+        "space-before-function-paren": [
+            "error", {
+                "named": "always",
+                "asyncArrow": "always",
+                "anonymous": "always"
+            }
+        ]
     }
 };

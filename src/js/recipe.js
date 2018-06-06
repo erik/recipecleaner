@@ -32,11 +32,11 @@ const CLICK_HANDLERS = {
 const params = new URLSearchParams(window.location.search);
 const recipeId = decodeURI(params.get('recipeId') || 'no id');
 
-extension.storage.getLocal(recipeId).then(recipes => {
-    const recipe = recipes[recipeId];
+extension.storage.getLocal(recipeId).then(recipe => {
+    console.log('recipe thing is', recipe);
     const node = document.querySelector('#recipe');
 
-    console.log('Recipe -> ', recipe, 'also', recipes);
+    console.log('Recipe -> ', recipe);
 
     if (recipe) {
         document.title = `${recipe.name} :: RecipeCleaner`;

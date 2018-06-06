@@ -94,7 +94,7 @@ function getSavedOptions () {
 function saveOptions (options) {
     return getSavedOptions().then(saved => {
         return extension.storage.setLocal(
-            STORAGE_KEY, {...saved, options});
+            STORAGE_KEY, {...saved, ...options});
     });
 }
 

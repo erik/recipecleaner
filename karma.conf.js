@@ -1,4 +1,7 @@
-const webpackConfig = require('./webpack.config.js');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const globals = require('rollup-plugin-node-globals');
+const builtins = require('rollup-plugin-node-builtins');
 
 
 module.exports = function(config) {
@@ -11,10 +14,29 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-            'test/*.js': ['webpack', 'sourcemap']
+            'test/*.js': ['rollup']
         },
 
-        webpack: webpackConfig,
+        rollupPreprocessor: {
+            output: {
+                format: 'es',
+                name: 'recipecleaner',
+                sourcemap: 'inline',
+                globals: ['chrome', 'browser'],
+            },
+            plugins: [
+                resolve({
+                    preferBuiltins: true,
+                    module: true,
+                    browser: true,
+                }),
+                commonjs({
+                    include: 'node_modules/**'
+                }),
+                globals(),
+                builtins(),
+            ]
+        },
 
         reporters: ['mocha'],
 

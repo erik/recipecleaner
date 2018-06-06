@@ -19,9 +19,9 @@ extension.pageAction.onClicked((tab) => {
         .replace(/[^\w-]/g, '');
 
     const id = `${Date.now()}-${cleanName}`;
-    extension.storage.setLocal({[id]: recipe})
+    extension.storage.setLocal(id, recipe)
         .then(() => {
-            const url = `recipe.html?recipeId=${encodeURI(id)}`;
+            const url = `/recipe.html?recipeId=${encodeURI(id)}`;
             return extension.tabs.update(url);
         }).catch(e => {
             console.error('Failed to inject script:', e);
@@ -43,8 +43,11 @@ extension.runtime.onMessage((msg, sender) => {
         console.groupEnd();
 
         EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
+        console.log('here now', EPHEMERAL_TAB_MAP);
 
         extension.pageAction.show(sender.tab.id);
+
+        console.log('hwere?');
     } else {
         console.error('Unknown message kind:', msg.kind);
     }
