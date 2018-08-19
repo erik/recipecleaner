@@ -1,9 +1,6 @@
 import extension from './extension.js';
 
-import {
-  createNode as h,
-  addClickHandlers
-} from './util.js';
+import { createNode as h } from './util.js';
 
 
 const SERIF_STACK = 'Palatino, Charter, Optima, Georgia, serif';
@@ -125,14 +122,27 @@ function saveAndApplyOptions (theme) {
 
 function renderOptionsList () {
   const sizeToggle = h('div', {
-    className: 'options--button options--size-toggle'
+    className: 'options--button options--size-toggle',
+    onClick: () => {
+      if (document.body.style.getPropertyValue('--base-text-size') ===
+          THEMES.NORMAL_TEXT['--base-text-size']) {
+
+        applyOptions(THEMES.LARGE_TEXT);
+      } else {
+        applyOptions(THEMES.NORMAL_TEXT);
+      }
+    }
   }, ZOOM_SVG);
 
   const fonts = ['SERIF', 'SANS_SERIF'].map(name => {
     const theme = THEMES[name];
     const style = ` font-family: ${ theme['--font-stack'] }; `;
 
-    return h('div', {className: 'options--button', 'data-theme': name, style}, 'Aa');
+    return h('div', {
+      className: 'options--button',
+      onClick: () => saveAndApplyOptions(theme),
+      style,
+    }, 'Aa');
   });
 
   const colors = ['DARK', 'LIGHT', 'SOLARIZED'].map(name => {
@@ -145,7 +155,9 @@ border-bottom: 4px solid ${ theme['--accent-color'] };
 `;
 
     return h('div', {
-      className: 'options--button', 'data-theme': name, style
+      className: 'options--button',
+      onClick: () => saveAndApplyOptions(theme),
+      style
     }, 'Aa');
   });
 
@@ -158,7 +170,13 @@ border-bottom: 4px solid ${ theme['--accent-color'] };
 
 function renderOptions () {
   return h.div([
-    h('div', {id: 'options--toggle'}, COG_SVG),
+    h('div', {
+      id: 'options--toggle',
+      onClick: () => {
+        const pane = document.querySelector('#options--pane');
+        pane.classList.toggle('expanded');
+      }
+    }, COG_SVG),
     h('div', {id: 'options--pane'}, [
       ...renderOptionsList(),
       h('a', {className: 'bug', target: '_blank', href: BUG_REPORT_LINK},
@@ -176,6 +194,4 @@ getSavedOptions()
     const options = renderOptions();
     console.log('options', options);
     node.appendChild(renderOptions());
-
-    addClickHandlers(CLICK_HANDLERS);
   });
