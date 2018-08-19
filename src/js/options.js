@@ -70,30 +70,6 @@ const ZOOM_SVG = h.svg(
 );
 
 
-// Mapping of selector => click handler
-const CLICK_HANDLERS = {
-  '#options--toggle': () => {
-    const pane = document.querySelector('#options--pane');
-    pane.classList.toggle('expanded');
-  },
-
-  '[data-theme]': (e) => {
-    const theme = e.target.dataset['theme'];
-    saveAndApplyOptions(THEMES[theme]);
-  },
-
-  '.options--size-toggle': () => {
-    if (document.body.style.getPropertyValue('--base-text-size') ===
-            THEMES.NORMAL_TEXT['--base-text-size']) {
-
-      applyOptions(THEMES.LARGE_TEXT);
-    } else {
-      applyOptions(THEMES.NORMAL_TEXT);
-    }
-  }
-};
-
-
 function getSavedOptions () {
   return extension.storage.getLocal(STORAGE_KEY, THEMES.RESET);
 }
