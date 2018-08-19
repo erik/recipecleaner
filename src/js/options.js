@@ -178,4 +178,4 @@ getSavedOptions()
         node.appendChild(renderOptions());
 
         addClickHandlers(CLICK_HANDLERS);
-    })
+    });

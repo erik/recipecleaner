@@ -54,9 +54,6 @@ export const createNode = function () {
     function impl (tag, props, children=[]) {
         const ns = props.xmlns || 'http://www.w3.org/1999/xhtml';
         const node = document.createElementNS(ns, tag);
-        if (props.xmlns) {
-            console.log('creating a non html thing', ns, tag, props, children, node);
-        }
 
         Object.entries(props).forEach(([k, v]) => {
             switch (k) {
