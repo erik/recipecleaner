@@ -1,6 +1,9 @@
 import extension from './extension.js';
 
-import { addClickHandlers } from './util.js';
+import {
+    createNode as h,
+    addClickHandlers
+} from './util.js';
 
 
 const SERIF_STACK = 'Palatino, Charter, Optima, Georgia, serif';
@@ -59,8 +62,15 @@ const BUG_REPORT_LINK = 'https://goo.gl/forms/bsr8RJJoeiXDKJqo2';
 
 const STORAGE_KEY = 'options';
 
-const COG_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path d="M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z"/></svg>';
-const ZOOM_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="100%" viewBox="0 0 512 512"><path d="M304 192v32c0 6.6-5.4 12-12 12h-56v56c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-56h-56c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h56v-56c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v56h56c6.6 0 12 5.4 12 12zm201 284.7L476.7 505c-9.4 9.4-24.6 9.4-33.9 0L343 405.3c-4.5-4.5-7-10.6-7-17V372c-35.3 27.6-79.7 44-128 44C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208c0 48.3-16.4 92.7-44 128h16.3c6.4 0 12.5 2.5 17 7l99.7 99.7c9.3 9.4 9.3 24.6 0 34zM344 208c0-75.2-60.8-136-136-136S72 132.8 72 208s60.8 136 136 136 136-60.8 136-136z"/></svg>';
+const COG_SVG = h.svg(
+    {width: '16', height: '16', viewBox: '0 0 512 512'},
+    {d: 'M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z'}
+);
+
+const ZOOM_SVG = h.svg(
+    {width: '32', height: '100%', viewBox: '0 0 512 512'},
+    {d: 'M304 192v32c0 6.6-5.4 12-12 12h-56v56c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-56h-56c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h56v-56c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v56h56c6.6 0 12 5.4 12 12zm201 284.7L476.7 505c-9.4 9.4-24.6 9.4-33.9 0L343 405.3c-4.5-4.5-7-10.6-7-17V372c-35.3 27.6-79.7 44-128 44C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208c0 48.3-16.4 92.7-44 128h16.3c6.4 0 12.5 2.5 17 7l99.7 99.7c9.3 9.4 9.3 24.6 0 34zM344 208c0-75.2-60.8-136-136-136S72 132.8 72 208s60.8 136 136 136 136-60.8 136-136z'}
+);
 
 
 // Mapping of selector => click handler
@@ -114,13 +124,15 @@ function saveAndApplyOptions (theme) {
 
 
 function renderOptionsList () {
-    const sizeToggle = `<div class="options--button options--size-toggle">${ ZOOM_SVG }</div>`;
+    const sizeToggle = h('div', {
+        className: 'options--button options--size-toggle'
+    }, ZOOM_SVG);
 
     const fonts = ['SERIF', 'SANS_SERIF'].map(name => {
         const theme = THEMES[name];
         const style = ` font-family: ${ theme['--font-stack'] }; `;
 
-        return `<div class="options--button" data-theme="${name}" style="${ style }">Aa</div>`;
+        return h('div', {className: 'options--button', 'data-theme': name, style}, 'Aa');
     });
 
     const colors = ['DARK', 'LIGHT', 'SOLARIZED'].map(name => {
@@ -132,32 +144,27 @@ background-color: ${ theme['--background-color'] };
 border-bottom: 4px solid ${ theme['--accent-color'] };
 `;
 
-        return `<div class="options--button" data-theme="${name}" style="${ style }">Aa</div>`;
+        return h('div', {
+            className: 'options--button', 'data-theme': name, style
+        }, 'Aa');
     });
 
 
 
-    return [
-        fonts.concat([sizeToggle]),
-        colors,
-    ].map(row => {
-        return `<div class="options--row"> ${ row.join('\n') } </div>`;
-    }).join('\n');
+    return [fonts.concat([sizeToggle]), colors,]
+        .map(row => h('div', {className: 'options--row'}, row));
 }
 
 
 function renderOptions () {
-    return `
-        <div>
-            <div id="options--toggle">${ COG_SVG }</div>
-            <div id="options--pane">
-                ${ renderOptionsList() }
-                <a class="bug" target="_blank" href="${ BUG_REPORT_LINK }">
-                    Send feedback
-                </a>
-            </div>
-        </div>
-    `;
+    return h.div([
+        h('div', {id: 'options--toggle'}, COG_SVG),
+        h('div', {id: 'options--pane'}, [
+            ...renderOptionsList(),
+            h('a', {className: 'bug', target: '_blank', href: BUG_REPORT_LINK},
+                'Send feedback')
+        ])
+    ]);
 }
 
 getSavedOptions()
@@ -166,7 +173,9 @@ getSavedOptions()
         document.body.classList.add('theme-transition');
 
         const node = document.querySelector('#options');
-        node.innerHTML = renderOptions();
+        const options = renderOptions();
+        console.log('options', options);
+        node.appendChild(renderOptions());
 
         addClickHandlers(CLICK_HANDLERS);
-    });
+    })

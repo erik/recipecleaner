@@ -39,10 +39,10 @@ extension.storage.getLocal(recipeId).then(recipe => {
 
     if (recipe) {
         document.title = `${recipe.name} :: RecipeCleaner`;
-        node.innerHTML = renderRecipe(recipe);
+        node.appendChild(renderRecipe(recipe));
 
         addClickHandlers(CLICK_HANDLERS);
     } else {
-        node.innerHTML = renderError();
+        node.appendChild(renderError());
     }
 });

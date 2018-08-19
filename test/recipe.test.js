@@ -1,6 +1,5 @@
 import assert from 'assert-diff';
 
-import { escapeHTML } from '../src/js/util.js';
 import { renderRecipe } from '../src/js/render_recipe.js';
 
 
@@ -27,7 +26,7 @@ describe('renderRecipe', () => {
         recipe['original'] = {foo: '</script foo>'};
 
         let rendered = renderRecipe(recipe);
-        assert.equal(rendered.includes('<&>'), false);
-        assert.equal(rendered.includes('</script foo>'), false);
+        assert.equal(rendered.innerHTML.includes('<&>'), false);
+        assert.equal(rendered.innerHTML.includes('</script foo>'), false);
     });
 });
