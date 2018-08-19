@@ -3,37 +3,37 @@
  */
 
 export default {
-    storage: {
-        getLocal: (key, _default=null) => {
-            return browser.storage.local
-                .get({[key]: _default})
-                .then(obj => obj[key]);
-        },
-
-        setLocal: (key, val) => browser.storage.local.set({[key]: val}),
+  storage: {
+    getLocal: (key, _default=null) => {
+      return browser.storage.local
+        .get({[key]: _default})
+        .then(obj => obj[key]);
     },
 
-    runtime: {
-        sendMessage: (msg) => browser.runtime.sendMessage(msg),
+    setLocal: (key, val) => browser.storage.local.set({[key]: val}),
+  },
 
-        onInstalled: (cb) => browser.runtime.onInstalled.addListener(cb),
-        onMessage: (cb) => browser.runtime.onMessage.addListener(cb),
+  runtime: {
+    sendMessage: (msg) => browser.runtime.sendMessage(msg),
+
+    onInstalled: (cb) => browser.runtime.onInstalled.addListener(cb),
+    onMessage: (cb) => browser.runtime.onMessage.addListener(cb),
+  },
+
+  tabs: {
+    create: (url) => browser.tabs.create({url}),
+    update: (url) => browser.tabs.update({url}),
+
+    onRemoved: (cb) => browser.tabs.onRemoved.addListener(cb),
+  },
+
+  pageAction: {
+    show: (tabId) => {
+      // Some weird bug in chrome...
+      const target = typeof chrome === 'undefined' ? browser : chrome;
+      return target.pageAction.show(tabId);
     },
 
-    tabs: {
-        create: (url) => browser.tabs.create({url}),
-        update: (url) => browser.tabs.update({url}),
-
-        onRemoved: (cb) => browser.tabs.onRemoved.addListener(cb),
-    },
-
-    pageAction: {
-        show: (tabId) => {
-            // Some weird bug in chrome...
-            const target = typeof chrome === 'undefined' ? browser : chrome;
-            return target.pageAction.show(tabId);
-        },
-
-        onClicked: (cb) => browser.pageAction.onClicked.addListener(cb),
-    },
+    onClicked: (cb) => browser.pageAction.onClicked.addListener(cb),
+  },
 };
