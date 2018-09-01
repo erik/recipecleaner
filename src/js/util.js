@@ -8,23 +8,24 @@ export function addClickHandlers (handlers) {
   }
 }
 
-
 export function createNode (tag, props, children) {
   const ns = props.xmlns || 'http://www.w3.org/1999/xhtml';
   const node = document.createElementNS(ns, tag);
 
-  Object.entries(props).forEach(([k, v]) => {
-    switch (k) {
+  for (const key in props) {
+    const val = props[key];
+
+    switch (key) {
     case 'className':
-      node.classList.add(...v.split(' '));
+      node.classList.add(...val.split(' '));
       break;
     case 'onClick':
-      node.addEventListener('click', v);
+      node.addEventListener('click', val);
       break;
     default:
-      node.setAttribute(k, v);
+      node.setAttribute(key, val);
     }
-  });
+  }
 
   children = children || [];
   (Array.isArray(children) ? children : [children])
