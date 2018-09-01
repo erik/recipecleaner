@@ -5,49 +5,49 @@ import microdata from '../src/js/microdata.js';
 
 // Helper function to convert from arbitrary markup in string to DOM tree.
 function stringToNode (string) {
-    const div = document.createElement('div');
-    div.innerHTML = string.trim();
-    return div.firstChild;
+  const div = document.createElement('div');
+  div.innerHTML = string.trim();
+  return div.firstChild;
 }
 
 describe('microdata', () => {
-    describe('getItemType', () => {
-        it('identifies recipe schemas', () => {
-            const node = stringToNode('<div itemtype="http://schema.org/Recipe"></div>');
+  describe('getItemType', () => {
+    it('identifies recipe schemas', () => {
+      const node = stringToNode('<div itemtype="http://schema.org/Recipe"></div>');
 
-            assert.deepEqual(microdata.getItemType(node), {
-                '@type': 'Recipe',
-                '@context': 'http://schema.org'
-            });
-        });
+      assert.deepEqual(microdata.getItemType(node), {
+        '@type': 'Recipe',
+        '@context': 'http://schema.org'
+      });
+    });
+  });
+
+  describe('getPropValue', () => {
+    it('extracts simple strings', () => {
+      const node = stringToNode('<div itemprop="name">FooBar</div>');
+      assert.deepEqual(microdata.getPropValue(node), 'FooBar');
     });
 
-    describe('getPropValue', () => {
-        it('extracts simple strings', () => {
-            const node = stringToNode('<div itemprop="name">FooBar</div>');
-            assert.deepEqual(microdata.getPropValue(node), 'FooBar');
-        });
+    it('extracts images', () => {
+      const node = stringToNode('<img itemprop="image" src="http://foo.com" />');
+      assert.equal(microdata.getPropValue(node), 'http://foo.com');
+    });
 
-        it('extracts images', () => {
-            const node = stringToNode('<img itemprop="image" src="http://foo.com" />');
-            assert.equal(microdata.getPropValue(node), 'http://foo.com');
-        });
+    it('extracts urls', () => {
+      const node = stringToNode('<a itemprop="link" href="foobar.com">something</a>');
+      assert.equal(microdata.getPropValue(node), 'foobar.com');
+    });
 
-        it('extracts urls', () => {
-            const node = stringToNode('<a itemprop="link" href="foobar.com">something</a>');
-            assert.equal(microdata.getPropValue(node), 'foobar.com');
-        });
-
-        it('works with nested tags', () => {
-            const node = stringToNode(`
+    it('works with nested tags', () => {
+      const node = stringToNode(`
 <div itemprop="name">foo <span>bar</span> <a href="...">baz</a></div>`);
-            assert.equal(microdata.getPropValue(node), 'foo bar baz');
-        });
+      assert.equal(microdata.getPropValue(node), 'foo bar baz');
     });
+  });
 
-    describe('walkDOM', () => {
-        it('ignores unassociated nested schemas', () => {
-            const node = stringToNode(`
+  describe('walkDOM', () => {
+    it('ignores unassociated nested schemas', () => {
+      const node = stringToNode(`
 <div>
     <meta itemprop="recipeCategory" content="Side Dish">
     <meta itemprop="recipeCategory" content="Vegetables">
@@ -60,25 +60,25 @@ describe('microdata', () => {
     </ol>
 </div>
 `);
-            assert.deepEqual(microdata.walkDOM(node, {}), {
-                recipeCategory: ['Side Dish', 'Vegetables']
-            });
-        });
+      assert.deepEqual(microdata.walkDOM(node, {}), {
+        recipeCategory: ['Side Dish', 'Vegetables']
+      });
+    });
+  });
+
+  describe('extractRecipe', () => {
+    it('handles blank recipe', () => {
+      const html = stringToNode('<div itemscope itemtype="http://schema.org/Recipe">...</div>');
+
+      const recipe = microdata.extractRecipe(html);
+      assert.deepEqual(recipe, {
+        '@context': 'http://schema.org',
+        '@type': 'Recipe'
+      });
     });
 
-    describe('extractRecipe', () => {
-        it('handles blank recipe', () => {
-            const html = stringToNode('<div itemscope itemtype="http://schema.org/Recipe">...</div>');
-
-            const recipe = microdata.extractRecipe(html);
-            assert.deepEqual(recipe, {
-                '@context': 'http://schema.org',
-                '@type': 'Recipe'
-            });
-        });
-
-        it('handles basic recipes', () => {
-            const node = stringToNode(`
+    it('handles basic recipes', () => {
+      const node = stringToNode(`
     <div itemscope itemtype="http://schema.org/Recipe">
       <span itemprop="name">Mom's World Famous Banana Bread</span>
       By <span itemprop="author">John Smith</span>,
@@ -104,29 +104,29 @@ describe('microdata', () => {
       <span itemprop="recipeInstructions">cook it</span>
     </div>
 `);
-            const recipe = microdata.extractRecipe(node);
-            assert.deepEqual(recipe, {
-                '@context': 'http://schema.org',
-                '@type': 'Recipe',
-                name: 'Mom\'s World Famous Banana Bread',
-                author: 'John Smith',
-                image: 'http://schema.org/favicon.ico',
-                description: 'food.',
-                prepTime: 'PT15M',
-                cookTime: 'PT1H',
-                recipeYield: '1 loaf',
-                nutrition: {
-                    calories: '240 calories',
-                    fatContent: '9 grams fat'
-                },
-                recipeIngredient: [
-                    '3 or 4 ripe bananas, smashed',
-                    '1 egg',
-                    '3/4 cup of sugar',
-                ],
-                recipeInstructions: 'cook it',
-                suitableForDiet: 'http://schema.org/LowFatDiet'
-            });
-        });
+      const recipe = microdata.extractRecipe(node);
+      assert.deepEqual(recipe, {
+        '@context': 'http://schema.org',
+        '@type': 'Recipe',
+        name: 'Mom\'s World Famous Banana Bread',
+        author: 'John Smith',
+        image: 'http://schema.org/favicon.ico',
+        description: 'food.',
+        prepTime: 'PT15M',
+        cookTime: 'PT1H',
+        recipeYield: '1 loaf',
+        nutrition: {
+          calories: '240 calories',
+          fatContent: '9 grams fat'
+        },
+        recipeIngredient: [
+          '3 or 4 ripe bananas, smashed',
+          '1 egg',
+          '3/4 cup of sugar',
+        ],
+        recipeInstructions: 'cook it',
+        suitableForDiet: 'http://schema.org/LowFatDiet'
+      });
     });
+  });
 });
