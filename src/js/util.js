@@ -8,49 +8,39 @@ export function addClickHandlers (handlers) {
   }
 }
 
-export const createNode = (function () {
-  const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  impl.div = (children=[]) =>
-    impl('div', {}, children);
+export function createNode (tag, props, children) {
+  const ns = props.xmlns || 'http://www.w3.org/1999/xhtml';
+  const node = document.createElementNS(ns, tag);
 
-  impl.p = (children=[]) =>
-    impl('p', {}, children);
+  Object.entries(props).forEach(([k, v]) => {
+    switch (k) {
+    case 'className':
+      node.classList.add(...v.split(' '));
+      break;
+    case 'onClick':
+      node.addEventListener('click', v);
+      break;
+    default:
+      node.setAttribute(k, v);
+    }
+  });
 
-  impl.span = (children=[]) =>
-    impl('span', {}, children);
+  children = children || [];
+  (Array.isArray(children) ? children : [children])
+    .map(ch => (typeof ch === 'string') ? document.createTextNode(ch) : ch)
+    .forEach(n => node.appendChild(n));
 
-  impl.svg = (props, path) =>
-    impl('svg',
-      {...props, xmlns: SVG_NS},
-      impl('path', {...path, xmlns: SVG_NS}));
+  return node;
+}
 
-  function impl (tag, props, children=[]) {
-    const ns = props.xmlns || 'http://www.w3.org/1999/xhtml';
-    const node = document.createElementNS(ns, tag);
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
-    Object.entries(props).forEach(([k, v]) => {
-      switch (k) {
-      case 'className':
-        node.classList.add(...v.split(' '));
-        break;
-      case 'onClick':
-        node.addEventListener('click', v);
-        break;
-      default:
-        node.setAttribute(k, v);
-      }
-    });
-
-    (Array.isArray(children) ? children : [children])
-      .map(ch => (typeof ch === 'string') ? document.createTextNode(ch) : ch)
-      .forEach(n => node.appendChild(n));
-
-    return node;
-  }
-
-  return impl;
-})();
+/* Convenience methods */
+createNode.div  = (children) => createNode('div', {}, children);
+createNode.p    = (children) => createNode('p', {}, children);
+createNode.span = (children) => createNode('span', {}, children);
+createNode.svg  = (props, path) => createNode('svg', {...props, xmlns: SVG_NS}, createNode('path', {...path, xmlns: SVG_NS}));
 
 export default {
   addClickHandlers,
