@@ -8,7 +8,7 @@ export function addClickHandlers (handlers) {
   }
 }
 
-export const createNode = function () {
+export const createNode = (function () {
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
   impl.div = (children=[]) =>
@@ -50,7 +50,7 @@ export const createNode = function () {
   }
 
   return impl;
-}();
+})();
 
 export default {
   addClickHandlers,
