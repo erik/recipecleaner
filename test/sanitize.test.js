@@ -125,6 +125,12 @@ describe('sanitize', () => {
         'foo&bar');
     });
 
+    it('works on even more doubly escaped HTML', () => {
+      assert.equal(
+        sanitize.string('it&amp;#8217;s incredible the internet is this bad'),
+        'it’s incredible the internet is this bad');
+    });
+
     it('is not vulnerable to XSS', () => {
       const input = '<img src="x" onerror="alert(\'xss\'); window.FAILED = true" />';
       assert.equal(sanitize.string(input), '');
@@ -177,6 +183,11 @@ describe('sanitize', () => {
       const text = 'heat oven to xyz. cook for whatever. then do this.';
       const instr = sanitize.instructions(text);
       assert.deepEqual(instr, text);
+    });
+
+    it('turns encoded <p> tags into a list', () => {
+      const instr = sanitize.instructions('&lt;p&gt;hello&lt;/p&gt;&lt;p&gt;world&lt;/p&gt;');
+      assert.deepEqual(instr, ['hello', 'world']);
     });
 
     it('handles HowToSection instructions', () => {

@@ -82,7 +82,6 @@ function saveOptions (options) {
 }
 
 function applyOptions (theme) {
-  console.log('APPLY THEME', theme);
   for (let key in theme) {
     if (theme[key] !== null) {
       document.body.style.setProperty(key, theme[key]);
@@ -167,7 +166,5 @@ getSavedOptions()
     document.body.classList.add('theme-transition');
 
     const node = document.querySelector('#options');
-    const options = renderOptions();
-    console.log('options', options);
     node.appendChild(renderOptions());
   });

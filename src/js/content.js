@@ -16,7 +16,11 @@ const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
     let json;
 
     try {
-      json = JSON.parse(node.innerText);
+      // Sometimes bad systems bake literal newlines into the JSON,
+      // breaking strings, so just join all lines.
+      const text = node.innerText.replace(/\n/g, ' ');
+
+      json = JSON.parse(text);
     } catch (e) {
       console.error('Failed to parse JSON: ', e);
       continue;

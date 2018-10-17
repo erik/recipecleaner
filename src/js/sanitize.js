@@ -181,14 +181,26 @@ function sanitizeInstructions (instructions) {
 
 // Possibly convert instructionText to a list, and otherwise clean up the data.
 function sanitizeInstructionText (instructionText) {
-  const text = sanitizeCommon(instructionText)
+  let text = instructionText;
+
+  // Some recipe microdata systems embed HTML tags into the JSON.
+  // These will be stripped by sanitizeCommon, so add a new line after
+  // </p> tags so we can tell that this should really be a list, not a single
+  // block. Yes, I know.
+  const embeddedParagraph = /(<\/p>)|(&lt;\/p&gt;)/g;
+  if (embeddedParagraph.test(text)) {
+    text = text.replace(embeddedParagraph, '$&\n');
+  }
+
+  text = sanitizeCommon(text)
     .replace(/^preparation/i, '')
     .replace(/(\w)([.!?])(\w)/g, (_match, w1, pt, w2) => `${w1}${pt}\n${w2}`);
 
-    // Sometimes the text block is actually a list in disguise.
+  // Sometimes the text block is actually a list in disguise.
   if (text.startsWith('1.')) {
     return text.split(/\d+\./);
   }
+
 
   if (text.includes('\n')) {
     return text.split(/\r?\n/);
@@ -263,6 +275,9 @@ function stripTags (input) {
 
 function sanitizeString (input) {
   let str = input;
+
+  // Sometimes, extra bad sites will double HTML escape. I don't know how.
+  str = str.replace(/&amp;/g, '&');
 
   // Sometimes HTML encoded entities end up in the text.
   if (/&[#\w]+;/.test(str)) {
