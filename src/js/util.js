@@ -38,10 +38,15 @@ export function createNode (tag, props, children) {
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /* Convenience methods */
-createNode.div  = (children) => createNode('div', {}, children);
-createNode.p    = (children) => createNode('p', {}, children);
-createNode.span = (children) => createNode('span', {}, children);
-createNode.svg  = (props, path) => createNode('svg', {...props, xmlns: SVG_NS}, createNode('path', {...path, xmlns: SVG_NS}));
+createNode.div = children => createNode('div', {}, children);
+createNode.p = children => createNode('p', {}, children);
+createNode.span = children => createNode('span', {}, children);
+createNode.svg = (props, path) =>
+  createNode(
+    'svg',
+    { ...props, xmlns: SVG_NS },
+    createNode('path', { ...path, xmlns: SVG_NS })
+  );
 
 export default {
   addClickHandlers,

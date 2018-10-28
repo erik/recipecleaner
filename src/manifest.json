@@ -17,13 +17,13 @@
         "matches": ["*://*/*"],
         "js": [
             "js/vendor.js",
-            "js/content.js"
+            "js/content_scripts/detect_recipe.js"
         ]
     }],
     "background": {
         "scripts": [
             "js/vendor.js",
-            "js/background.js"
+            "js/background/background.js"
         ]
     },
     "permissions": [

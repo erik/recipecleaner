@@ -1,4 +1,4 @@
-import { createNode as h } from './util';
+import { createNode as h } from '../../util';
 
 
 export function renderRecipe (recipe) {

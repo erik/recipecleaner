@@ -1,7 +1,7 @@
 /* Detect whether recipe is present on page */
 
-import extension from './extension.js';
-import microdata from './microdata.js';
+import extension from '../extension.js';
+import microdata from '../microdata.js';
 
 // JSON LD blocks
 const JSON_LD_SEL = 'script[type="application/ld+json"]';

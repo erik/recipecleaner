@@ -1,6 +1,6 @@
-import extension from './extension.js';
-import { addClickHandlers } from './util.js';
-import { renderRecipe, renderError } from './render_recipe.js';
+import extension from '../../extension.js';
+import { addClickHandlers } from '../../util.js';
+import { renderRecipe, renderError } from './render.js';
 
 
 // Mapping of selector => click handler
