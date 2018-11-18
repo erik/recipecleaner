@@ -5,6 +5,10 @@ import { renderRecipe, renderError } from './render_recipe.js';
 
 // Mapping of selector => click handler
 const CLICK_HANDLERS = {
+  '#recipe-image': (e) => {
+    e.currentTarget.classList.toggle('lightbox');
+    e.stopPropagation();
+  },
   '#recipe .ingredient': (e) => {
     e.target.classList.toggle('strikethrough');
   },

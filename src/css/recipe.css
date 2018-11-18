@@ -81,3 +81,30 @@ img {
 @media print {
     img { display: none; }
 }
+
+#recipe-image {
+  cursor: pointer;
+}
+
+#recipe-image.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #292929e6;
+  margin: 0;
+  line-height: 100vh;
+}
+
+#recipe-image.lightbox img {
+  width: auto;
+  height: auto;
+  max-width: 90%;
+  max-height: 90%;
+
+  transform: translate(-50%, -50%);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}

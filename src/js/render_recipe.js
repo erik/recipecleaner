@@ -20,8 +20,15 @@ export function renderRecipe (recipe) {
 
 // Image and ingredients
 function renderLeftColumn (recipe) {
+  let image;
+  if (recipe.image) {
+    image = h('figure', {'id': 'recipe-image'}, [
+      h('img', {src: recipe.image}, [])
+    ]);
+  }
+
   return h('div', {id: 'left'}, [
-    recipe.image && h('img', {src: recipe.image}, []),
+    image,
     renderIngredients(recipe)
   ]);
 }
