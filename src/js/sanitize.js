@@ -235,7 +235,7 @@ function sanitizeInstructionList (list) {
     if (typeof instruction === 'object') {
       if (instruction['@type'] === 'HowToSection') {
         instructionText = sanitizeHowToSection(instruction);
-      } else if (instruction['@type'] === 'HowToStep') {
+      } else if (instruction['@type'] === 'HowToStep' || 'text' in instruction) {
         instructionText = instruction.text || '';
       } else {
         console.warn('Unknown instruction format! Expected string ' +

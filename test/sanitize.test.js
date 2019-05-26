@@ -237,6 +237,17 @@ describe('sanitize', () => {
       const sanitized = sanitize.instructions(howToStep);
       assert.deepEqual(sanitized, ['foo']);
     });
+
+    it('handles betty crocker\'s weird formatting', () => {
+      const instructions = [
+        {"text": "A"},
+        {"text": "B"},
+        {"text": "C"}
+      ];
+
+      const sanitized = sanitize.instructions(instructions);
+      assert.deepEqual(sanitized, ['A', 'B', 'C']);
+    });
   });
 
   describe('stripTags', () => {
