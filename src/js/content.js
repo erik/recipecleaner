@@ -5,7 +5,7 @@ import microdata from './microdata.js';
 import linkedData from './linked_data.js';
 
 (() => {
-  function recipeDetected(data) {
+  function recipeDetected (data) {
     console.log('recipe detected:', data);
 
     extension.runtime.sendMessage({
@@ -16,7 +16,7 @@ import linkedData from './linked_data.js';
     return true;
   }
 
-  function detectRecipeJSON() {
+  function detectRecipeJSON () {
     // JSON LD blocks
     const JSON_LD_SEL = 'script[type="application/ld+json"]';
 
