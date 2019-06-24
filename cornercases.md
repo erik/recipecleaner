@@ -31,8 +31,13 @@ Instructions list uses HowToStep schema
 
 - https://yupitsvegan.com/vegan-shepherds-pie-lentil/
 
+Using `@graph` in JSON-LD data.
+
+- https://cookieandkate.com/spicy-vegan-black-bean-soup/
+
 ## Regression checks
 
 ### Undetected Recipe:
 
 - http://allrecipes.com/recipe/238987/paleo-cauliflower-rice/
+- https://cookieandkate.com/spicy-vegan-black-bean-soup/

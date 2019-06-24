@@ -2,60 +2,48 @@
 
 import extension from './extension.js';
 import microdata from './microdata.js';
+import linkedData from './linked_data.js';
 
-// JSON LD blocks
-const JSON_LD_SEL = 'script[type="application/ld+json"]';
+(() => {
+  function recipeDetected(data) {
+    console.log('recipe detected:', data);
 
-// Recipe microdata
-const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
+    extension.runtime.sendMessage({
+      kind: 'recipe-detected',
+      data
+    });
 
+    return true;
+  }
 
-(function detectRecipeMicrodata () {
-  // First try to pull JSON LD format, because it's cleaner / faster
-  for (const node of document.querySelectorAll(JSON_LD_SEL)) {
-    let json;
+  function detectRecipeJSON() {
+    // JSON LD blocks
+    const JSON_LD_SEL = 'script[type="application/ld+json"]';
 
-    try {
-      // Sometimes bad systems bake literal newlines into the JSON,
-      // breaking strings, so just join all lines.
-      const text = node.innerText.replace(/\n/g, ' ');
-
-      json = JSON.parse(text);
-    } catch (e) {
-      console.error('Failed to parse JSON: ', e);
-      continue;
-    }
-
-    // Generally, it's not a list, but since it can be, normalize to that.
-    if (!Array.isArray(json)) {
-      json = [json];
-    }
-
-    for (const data of json) {
-      // Right now, only take the first recipe we see.
-      if (data['@type'] === 'Recipe') {
-        console.log('recipe-detected', data);
-
-        extension.runtime.sendMessage({kind: 'recipe-detected', data});
-        return;
+    for (const node of document.querySelectorAll(JSON_LD_SEL)) {
+      const extracted = linkedData.extractRecipe(node);
+      if (extracted) {
+        return recipeDetected(extracted);
       }
     }
+
+    return false;
   }
 
-  // Then fall back to microdata if available
-  for (const node of document.querySelectorAll(MICRODATA_SEL)) {
-    console.log('HTML trying recipe!', node);
-
-    const extracted = microdata.extractRecipe(node);
-    if (extracted !== null) {
-      console.log('extracted recipe ->', extracted);
-
-      extension.runtime.sendMessage({
-        kind: 'recipe-detected',
-        data: extracted
-      });
-
-      return;
+  function detectRecipeMicrodata () {
+    // Recipe microdata
+    const MICRODATA_SEL = '*[itemtype$="/Recipe"]';
+    for (const node of document.querySelectorAll(MICRODATA_SEL)) {
+      const extracted = microdata.extractRecipe(node);
+      if (extracted) {
+        return recipeDetected(extracted);
+      }
     }
+
+    return false;
   }
+
+  // First try to pull JSON LD format, because it's cleaner / faster,
+  // then fall back to microdata if available
+  detectRecipeJSON() || detectRecipeMicrodata();
 })();
