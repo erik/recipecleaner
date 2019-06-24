@@ -15,7 +15,7 @@ function parseNode(node) {
   }
 }
 
-// The JSON-LD spec allows some flexibility in how data is
+// The JSON-LD spec allows A LOT of flexibility in how data is
 // passed. This doesn't cover every case, but should hit a pretty
 // decent chunk of what is actually used in the wild.
 //
@@ -33,6 +33,8 @@ function normalize(data) {
       continue;
     } else if ('@graph' in el) {
       normalized = normalized.concat(el['@graph']);
+    } else if (el['@type'] === 'WebPage' && el['mainEntity']) {
+      normalized.push(el['mainEntity']);
     } else {
       normalized.push(el);
     }

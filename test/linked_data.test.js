@@ -82,6 +82,20 @@ line"}`;
         ['789']
       ]);
     });
+
+    it('handles WebPage objects', () => {
+      const data = {
+        '@type': 'WebPage',
+        'mainEntity': {
+          '@type': 'Recipe',
+          foo: 'bar'
+        }
+      };
+
+      assert.deepEqual(linkedData.normalize(data), [
+        {'@type': 'Recipe', foo: 'bar'}
+      ]);
+    });
   });
 
   describe('extractRecipe', () => {
