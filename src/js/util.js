@@ -30,7 +30,7 @@ export function createNode (tag, props, children) {
   children = children || [];
   (Array.isArray(children) ? children : [children])
     .map(ch => (typeof ch === 'string') ? document.createTextNode(ch) : ch)
-    .forEach(n => node.appendChild(n));
+    .forEach(n => n && node.appendChild(n));
 
   return node;
 }
