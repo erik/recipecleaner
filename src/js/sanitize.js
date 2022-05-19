@@ -50,12 +50,15 @@ function sanitizeAuthor (author) {
     author = author.name;
   }
 
-  // Some websites have author names be URLs
-  if (author) {
-    author = author.replace('/contributors/', '');
+  // If author is an organization, use id (likely the URL) as a fallback.
+  if (author && author['@type'] === 'Organization') {
+    author = author['@id'];
   }
 
-  return author || null;
+  // Some websites embed URLs as the author
+  return (typeof author === 'string' && author !== "")
+    ? author.replace('/contributors/', '')
+    : null;
 }
 
 // PnYnMnDTnHnMnS

@@ -32,6 +32,7 @@ describe('sanitize', () => {
     it('handles undefined and null', () => {
       assert.strictEqual(sanitize.author(null), null);
       assert.strictEqual(sanitize.author(undefined), null);
+      assert.strictEqual(sanitize.author({'@type': 'unknown'}), null);
     });
 
     it('works with lists', () => {
@@ -40,6 +41,14 @@ describe('sanitize', () => {
 
     it('handles empty names', () => {
       assert.strictEqual(sanitize.author({name: ''}), null);
+    });
+
+    it('handles organization authors', () => {
+      assert.strictEqual(sanitize.author({'@type': 'Organization', '@id': 'foo-bar-baz'}), 'foo-bar-baz');
+    });
+
+    it('handles missing authors', () => {
+      assert.strictEqual(sanitize.author({'@type': 'Organization'}), null);
     });
   });
 
