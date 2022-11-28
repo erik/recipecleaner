@@ -53,7 +53,12 @@ function extractRecipe (node) {
 
   // Only take the first recipe we see.
   return data
-    .find((it) => it['@type'] === 'Recipe');
+    .find((it) => {
+      const type = it['@type'];
+      return Array.isArray(type)
+        ? type.includes('Recipe')
+        : type === 'Recipe';
+    });
 }
 
 export default {

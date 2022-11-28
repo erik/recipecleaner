@@ -113,5 +113,18 @@ line"}`;
         a: 'b'
       });
     });
+
+    it('handles array values for @type', () => {
+      const data = JSON.stringify([
+        {'@type': ['blah', 'Recipe'], a: 'b'},
+      ]);
+
+      const node = stringToScriptNode(data);
+
+      assert.deepEqual(linkedData.extractRecipe(node), {
+        '@type': ['blah', 'Recipe'],
+        a: 'b'
+      });
+    });
   });
 });
