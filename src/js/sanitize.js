@@ -56,7 +56,7 @@ function sanitizeAuthor (author) {
   }
 
   // Some websites embed URLs as the author
-  return (typeof author === 'string' && author !== "")
+  return (typeof author === 'string' && author !== '')
     ? author.replace('/contributors/', '')
     : null;
 }
