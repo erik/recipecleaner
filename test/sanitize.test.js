@@ -100,6 +100,16 @@ describe('sanitize', () => {
       });
     });
 
+    
+    it('handles decimals', () => {
+      assert.deepEqual(sanitize.ingredient('0.5 cup potato'), {
+	quantity: '0.5',
+	unit: 'cup',
+	ingredient: 'potato'
+      });
+    });
+
+
     it('handles missing units', () => {
       assert.deepEqual(sanitize.ingredient('52 grapes'), {
         quantity: '52',

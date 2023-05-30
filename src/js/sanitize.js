@@ -109,7 +109,7 @@ function sanitizeYield (yield_) {
     .toLowerCase();
 }
 
-const QUANTITIES = [
+const UNITS = [
   'ounce(?:s)?',
   'oz',
   'pound(?:s)?',
@@ -152,9 +152,9 @@ const FRACTIONS = Object.values(FRACT_MAP).join('');
 // Try to match things like "1 tablespoon sugar"
 const RECIPE_QUANTITY_RE = new RegExp([
   '^',
-  `((?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)`,
+  `((?:(?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)|(?:\\d*\.\\d+))`,
   '\\s*',
-  `(${QUANTITIES.join('|')})?\\.?`,
+  `(${UNITS.join('|')})?\\.?`,
   '\\s*',
   '(.*)',
   '$'
