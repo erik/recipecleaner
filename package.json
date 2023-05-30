@@ -4,7 +4,7 @@
     "description": "",
     "main": "rollup.config.js",
     "dependencies": {
-        "webextension-polyfill": "^0.2.1"
+        "webextension-polyfill": "^0.10.0"
     },
     "devDependencies": {
         "assert-diff": "^1.2.6",
