@@ -331,7 +331,7 @@ function sanitizeRecipe (url, recipe) {
     original: recipe,
   };
 
-    // Bug fix for single ingredient recipes.
+  // Bug fix for single ingredient recipes.
   if (!Array.isArray(clean.ingredients)) {
     clean.ingredients = [clean.ingredients];
   }
