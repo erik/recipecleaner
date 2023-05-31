@@ -21,7 +21,7 @@ extension.pageAction.onClicked((tab) => {
   const id = `${Date.now()}-${cleanName}`;
   extension.storage.setLocal(id, recipe)
     .then(() => {
-      const url = `/recipe.html?recipeId=${encodeURI(id)}`;
+      const url = `/html/recipe.html?recipeId=${encodeURI(id)}`;
       return extension.tabs.update(url);
     }).catch(e => {
       console.error('Failed to inject script:', e);
@@ -58,5 +58,5 @@ extension.runtime.onInstalled(({reason}) => {
     return;
   }
 
-  extension.tabs.create('/welcome.html');
+  extension.tabs.create('/html/welcome.html');
 });

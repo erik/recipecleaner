@@ -31,5 +31,11 @@
         "storage",
         "tabs"
     ],
+    "web_accessible_resources": [
+	"images/*.png",
+	"html/*.html",
+	"js/*.js",
+	"css/*.css"
+    ],
     "content_security_policy": "script-src 'self' 'sha256-58XC9A7vCVf4d/kGzBMGAy2dBerh5XDULiZ80gbeBP0='; object-src 'self';"
 }
