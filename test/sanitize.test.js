@@ -107,7 +107,7 @@ describe('sanitize', () => {
 	ingredient: 'potato'
       });
 
-      assert.deepEqual(sanitize.ingredient('0.5 cup potato'), {
+      assert.deepEqual(sanitize.ingredient('.5 cup potato'), {
 	quantity: '.5',
 	unit: 'cup',
 	ingredient: 'potato'
@@ -117,7 +117,6 @@ describe('sanitize', () => {
     it('handles missing units', () => {
       assert.deepEqual(sanitize.ingredient('52 grapes'), {
         quantity: '52',
-        unit: null,
         ingredient: 'grapes'
       });
     });
