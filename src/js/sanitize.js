@@ -165,7 +165,7 @@ function sanitizeIngredient (ingredient) {
 
   // only set properties for the capture groups which ended up matching.
   if (match) {
-    const ret = {}
+    const ret = {};
     match[1] && (ret.quantity = match[1]);
     match[2] && (ret.unit = match[2]);
     match[3] && (ret.ingredient = match[3]);
