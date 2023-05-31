@@ -154,7 +154,7 @@ const RECIPE_QUANTITY_RE = new RegExp([
   '^',
   `((?:\\.\\d+|\\d+(?:\\.\\d+)?)?(?:\\s*[${FRACTIONS}-])?(?:\\s*⁄\\d+)?)`,
   '\\s*',
-  `(${UNITS.join('|')})?`,
+  `(${UNITS.join('|')})?\\.?`,
   '\\s*',
   '(.*)',
   '$'

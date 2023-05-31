@@ -120,6 +120,14 @@ describe('sanitize', () => {
         ingredient: 'grapes'
       });
     });
+
+    it('handles units with a a trailing period', () => {
+      assert.deepEqual(sanitize.ingredient('6 oz. olive oil'), {
+	quantity: '6',
+	unit: 'oz',
+	ingredient: 'olive oil',
+      });
+    });
   });
 
   describe('string', () => {
