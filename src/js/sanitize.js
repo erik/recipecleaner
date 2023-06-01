@@ -109,7 +109,7 @@ function sanitizeYield (yield_) {
     .toLowerCase();
 }
 
-const QUANTITIES = [
+const UNITS = [
   'ounce(?:s)?',
   'oz',
   'pound(?:s)?',
@@ -152,9 +152,9 @@ const FRACTIONS = Object.values(FRACT_MAP).join('');
 // Try to match things like "1 tablespoon sugar"
 const RECIPE_QUANTITY_RE = new RegExp([
   '^',
-  `((?:\\d+\\s?)?[\\d${FRACTIONS}⁄-]+)`,
+  `((?:\\.\\d+|\\d+(?:\\.\\d+)?)?(?:\\s*[${FRACTIONS}-])?(?:\\s*⁄\\d+)?)`,
   '\\s*',
-  `(${QUANTITIES.join('|')})?\\.?`,
+  `(${UNITS.join('|')})?\\.?`,
   '\\s*',
   '(.*)',
   '$'
@@ -163,11 +163,17 @@ const RECIPE_QUANTITY_RE = new RegExp([
 function sanitizeIngredient (ingredient) {
   const match = ingredient.match(RECIPE_QUANTITY_RE);
 
-  if (match === null) {
-    return {ingredient};
+  // only set properties for the capture groups which ended up matching.
+  if (match) {
+    const ret = {};
+    match[1] && (ret.quantity = match[1]);
+    match[2] && (ret.unit = match[2]);
+    match[3] && (ret.ingredient = match[3]);
+    return ret;
   }
 
-  return {quantity: match[1], unit: match[2], ingredient: match[3]};
+  // if the match failed completely, don't change anything
+  return {ingredient};
 }
 
 function sanitizeInstructions (instructions) {

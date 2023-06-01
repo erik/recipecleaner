@@ -100,11 +100,32 @@ describe('sanitize', () => {
       });
     });
 
+    it('handles decimals', () => {
+      assert.deepEqual(sanitize.ingredient('0.5 cup potato'), {
+	quantity: '0.5',
+	unit: 'cup',
+	ingredient: 'potato'
+      });
+
+      assert.deepEqual(sanitize.ingredient('.5 cup potato'), {
+	quantity: '.5',
+	unit: 'cup',
+	ingredient: 'potato'
+      });      
+    });
+
     it('handles missing units', () => {
       assert.deepEqual(sanitize.ingredient('52 grapes'), {
         quantity: '52',
-        unit: null,
         ingredient: 'grapes'
+      });
+    });
+
+    it('handles units with a a trailing period', () => {
+      assert.deepEqual(sanitize.ingredient('6 oz. olive oil'), {
+	quantity: '6',
+	unit: 'oz',
+	ingredient: 'olive oil',
       });
     });
   });
