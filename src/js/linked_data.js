@@ -2,7 +2,7 @@
 
 // Clean up the weird edge cases for how JSON gets represented.
 // Return parsed JSON object, or null.
-function parseNode (node) {
+export function parseNode (node) {
   try {
     // Sometimes bad systems bake literal newlines into the JSON,
     // breaking strings, so just join all lines.
@@ -20,7 +20,7 @@ function parseNode (node) {
 // decent chunk of what is actually used in the wild.
 //
 // Return a list of objects that should at least have a `@type` key.
-function normalize (data) {
+export function normalize (data) {
   let normalized = [];
 
   // Generally, it's not a list, but since it can be, normalize to that.
@@ -43,7 +43,7 @@ function normalize (data) {
   return normalized;
 }
 
-function extractRecipe (node) {
+export function extractRecipe (node) {
   const json = parseNode(node);
   if (json === null) {
     return null;
@@ -60,9 +60,3 @@ function extractRecipe (node) {
         : type === 'Recipe';
     });
 }
-
-export default {
-  normalize,
-  extractRecipe,
-  parseNode
-};
