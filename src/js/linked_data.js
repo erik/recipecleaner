@@ -60,3 +60,5 @@ export function extractRecipe (node) {
         : type === 'Recipe';
     });
 }
+
+export default {parseNode, normalize, extractRecipe};
