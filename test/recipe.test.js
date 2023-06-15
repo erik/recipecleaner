@@ -1,8 +1,6 @@
-import assert from 'assert-diff';
+import {renderRecipe} from'/js/render_recipe.js';
 
-import { renderRecipe } from '../src/js/render_recipe.js';
-
-
+const assert = chai.assert;
 
 describe('renderRecipe', () => {
   it('escapes all HTML', () => {
