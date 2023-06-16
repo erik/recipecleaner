@@ -6,13 +6,8 @@ import sanitize  from '/js/sanitize.js';
 const EPHEMERAL_TAB_MAP = {};
 
 
-// When the user clicks on the page action icon, we redirect to the
-// cleaned up recipe.
-//
-// We delay storing the recipe until the user actually wants it.
-extension.pageAction.onClicked((tab) => {
-  const recipe = EPHEMERAL_TAB_MAP[tab.id];
-
+// save recipe to local storage
+function saveRecipe(recipe) {
   const cleanName = recipe.name
     .replace(/\s+/g, '-')
     .replace(/[^\w-]/g, '');
@@ -25,6 +20,15 @@ extension.pageAction.onClicked((tab) => {
     }).catch(e => {
       console.error('Failed to inject script:', e);
     });
+}
+
+
+// When the user clicks on the page action icon, we redirect to the
+// cleaned up recipe.
+//
+// We delay storing the recipe until the user actually wants it.
+extension.pageAction.onClicked((tab) => {
+  saveRecipe(EPHEMERAL_TAB_MAP[tab.id]);
 });
 
 
