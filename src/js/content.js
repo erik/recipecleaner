@@ -10,26 +10,22 @@ async function load(url) {
 
   function recipeDetected (data) {
     console.log('recipe detected:', data);
-
     extension.runtime.sendMessage({
       kind: 'recipe-detected',
       data
     });
-
     return true;
   }
 
   function detectRecipeJSON () {
     // JSON LD blocks
     const JSON_LD_SEL = 'script[type="application/ld+json"]';
-
     for (const node of document.querySelectorAll(JSON_LD_SEL)) {
       const extracted = linkedData.extractRecipe(node);
       if (extracted) {
         return recipeDetected(extracted);
       }
     }
-
     return false;
   }
 
@@ -42,7 +38,6 @@ async function load(url) {
         return recipeDetected(extracted);
       }
     }
-
     return false;
   }
 
