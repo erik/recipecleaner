@@ -26,7 +26,8 @@
     "permissions": [
         "*://*/*",
         "storage",
-        "tabs"
+        "tabs",
+	"downloads"
     ],
     "web_accessible_resources": [
 	"images/*.png",
