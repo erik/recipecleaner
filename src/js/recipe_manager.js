@@ -57,7 +57,7 @@ function renderRecipeList(recipes) {
 
 // Render the export button
 function renderExportButton(recipes) {
-  const ret = createNode("button", {id: "export"}, createNode.text("Export"));
+  const ret = createNode("button", {id: "export"}, createNode.text("Export..."));
   
   function save() {
     const blob = new Blob([JSON.stringify(recipes, null, 2)]);
@@ -69,10 +69,40 @@ function renderExportButton(recipes) {
   return ret;
 }
 
+function renderTools(recipes) {
+  return createNode("form", {id: "tools"}, [
+    renderExportButton(recipes),
+    createNode("label", {"for": "import"}, createNode.text("Import...")),
+    createNode("input", {id: "import", name: "import", type: "file", accept: ".json"})
+  ]);
+}
+
+function renderSearchBar(recipes) {
+  const searchOptions = createNode("div", {id: "searchOptions"}, [
+    createNode("input", {"id": "name", "type": "checkbox", "checked": true}),
+    createNode("label", {"for": "name"}, createNode.text("Name")),
+    createNode("input", {"id": "description", "type": "checkbox", "checked": true}),
+    createNode("label", {"for": "description"}, createNode.text("Description")),
+    createNode("input", {"id": "ingredient", "type": "checkbox", "checked": true}),
+    createNode("label", {"for": "ingredient"}, createNode.text("Ingredient"))
+  ]);
+
+  const searchFilter = createNode(
+    "input",
+    {id: "searchFilter", type: "text", placeholder: "Enter search terms..."}
+  );
+  
+  return createNode("form", {id: "searchbar"}, [
+    searchFilter,
+    searchOptions
+  ])
+}
+
 // Render the entire sidebar
 function render(recipes) {
   return createNode("div", {id: "root"}, [
-    renderExportButton(recipes),
+    renderTools(recipes),
+    renderSearchBar(recipes),
     renderRecipeList(recipes),
   ]);
 }
