@@ -1,18 +1,19 @@
-<!doctype html>
-
-<head>
+<!DOCTYPE html>
+<html>
+  <head>
     <title>RecipeCleaner</title>
     <meta charset="utf-8">
-
     <link rel="stylesheet" href="/css/recipe.css">
-    <link rel="stylesheet" href="/css/options.css">
-
-    <script src="/js/vendor.js"></script>
-    <script src="/js/options.js"></script>
-    <script src="/js/recipe.js"></script>
-</head>
-
-<body>
-    <div id="options"></div>
+  </head>
+  <body>
+    <button id="save">Save As...</button>
+    <select id="format" value="HTML">
+      <option>HTML</option>
+      <option>JSON</option>
+      <option>Text</option>
+    </select>
     <div id="recipe"></div>
-</body>
+    <script src="/js/vendor.js"></script>
+    <script type="module" src="/js/recipe.js"></script>
+  </body>
+</html>

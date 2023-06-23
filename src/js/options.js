@@ -1,6 +1,6 @@
-import extension from './extension.js';
+import extension from '/js/extension.js';
 
-import { createNode as h } from './util.js';
+import { createNode as h } from '/js/util.js';
 
 
 const SERIF_STACK = 'Palatino, Charter, Optima, Georgia, serif';

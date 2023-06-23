@@ -1,6 +1,5 @@
-import extension from './extension.js';
-
-import sanitize from './sanitize';
+import extension from '/js/extension.js';
+import sanitize  from '/js/sanitize.js';
 
 
 // Mapping of tab id -> recipe (not persisted to storage)
