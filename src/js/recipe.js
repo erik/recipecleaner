@@ -13,7 +13,7 @@ function getSaveData(format) {
 }
 
 // Handle user clicking the save button.
-async function onSaveClicked() {
+function onSaveClicked() {
   // create a data URL with the page content.
   const format = document.getElementById("format").value;
   const blob = new Blob([getSaveData(format)]);
