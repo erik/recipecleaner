@@ -15,7 +15,7 @@
     },
     "sidebar_action" : {
       "default_title": "RecipeCleaner",
-      "default_panel": "html/recipe.html",
+      "default_panel": "html/recipe_manager.html",
       "default_icon": "icons/icon-detected-96.png"
     },
     "content_scripts": [{
@@ -31,7 +31,8 @@
     "permissions": [
         "*://*/*",
         "storage",
-        "tabs"
+        "tabs",
+	"downloads"
     ],
     "web_accessible_resources": [
 	"images/*.png",

@@ -16,16 +16,30 @@ async function getRecipeList() {
   return ret;
 }
 
-function renderRecipeListItem({key, value}) {
+// Render a single item in the recipe list
+function renderRecipeListItem({id, value}) {
+  const url = `/html/recipe.html?recipeId=${id}`;
+  const image = createNode("img", {"src": value.image});
+  const label = createNode("p", {href: ""}, createNode.text(value.name));
+
+  image.addEventListener("click", () => {
+    extension.tabs.create(url);
+  });
+
   return createNode(
     "li",
-    {"id": key},
-    createNode.text(value.name)
+    {id},
+    [
+      createNode("input", {"type": "checkbox"}),
+      image,
+      label,
+      createNode("p", createNode.text(value.description))
+    ]
   );
 }
 
 // Render the recipe list DOM
-async function renderRecipeList(recipes) {
+function renderRecipeList(recipes) {
   if (recipes.length) {
     return createNode(
       "ul",
@@ -41,15 +55,37 @@ async function renderRecipeList(recipes) {
   }
 }
 
-(async function () {
-  // Initial Render
-  let recipes = await renderRecipeList(await getRecipeList());
-  document.body.appendChild(recipes);
+// Render the export button
+function renderExportButton(recipes) {
+  const ret = createNode("button", {id: "export"}, createNode.text("Export"));
+  
+  function save() {
+    const blob = new Blob([JSON.stringify(recipes, null, 2)]);
+    const url = URL.createObjectURL(blob);
+    browser.downloads.download({url, filename: "recipes.json", saveAs: true});
+  }
 
-  // Handle updates to DB by re-rendering recipe list
-  browser.storage.local.onChanged.addListener(async () => {
-    const updated = await renderRecipeList(await getRecipeList());
-    recipes.replaceWith(updated);
-    recipes = updated;
-  });
+  ret.addEventListener("click", save);
+  return ret;
+}
+
+// Render the entire sidebar
+function render(recipes) {
+  return createNode("div", {id: "root"}, [
+    renderExportButton(recipes),
+    renderRecipeList(recipes),
+  ]);
+}
+
+(async function () {
+  let root = document.getElementById("root");
+
+  async function update(recipes) {
+    const rendered = render(await getRecipeList());
+    root.replaceWith(rendered);
+    root = rendered;
+  }
+
+  browser.storage.local.onChanged.addListener(update);
+  update();
 })();

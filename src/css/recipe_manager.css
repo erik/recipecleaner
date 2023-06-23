@@ -1,7 +1,30 @@
 @import 'recipe.css';
-@import 'options.css';
 
 h1 {
     text-align: center;
+    margin: 1em;
+}
+
+li > img {
+    flex-shrink: 1;
+    width: 5em;
+}
+
+li > p {
+    flex-grow: 2;
+    margin: 1em;
+    vertical-align: middle;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
     margin: 1em;
 }
