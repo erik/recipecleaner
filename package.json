@@ -7,20 +7,14 @@
         "webextension-polyfill": "^0.10.0"
     },
     "devDependencies": {
-        "assert-diff": "^1.2.6",
+        "chai": "^4.3.7",
         "eslint": "^8.41.0",
         "karma": "^6.4.2",
         "karma-chrome-launcher": "^3.2.0",
         "karma-firefox-launcher": "^2.1.2",
         "karma-mocha": "^2.0.1",
         "karma-mocha-reporter": "^2.2.5",
-        "karma-rollup-preprocessor": "^7.0.8",
         "mocha": "^10.2.0",
-        "rollup": "^3.23.0",
-        "rollup-plugin-commonjs": "^10.1.0",
-        "rollup-plugin-node-builtins": "^2.0.0",
-        "rollup-plugin-node-globals": "^1.2.1",
-        "rollup-plugin-node-resolve": "^3.3.0",
         "web-ext": "^7.2.2"
     },
     "scripts": {
@@ -28,8 +22,7 @@
         "test": "karma start --single-run",
         "test:watch": "karma start",
         "lint": "eslint --fix src/",
-        "build": "npm run assets && rollup -c",
-        "build:watch": "npm run assets && rollup -c -w",
+        "build": "npm run assets",
         "release": "web-ext build -s ./addon",
         "web-ext": "web-ext run -s ./addon"
     },

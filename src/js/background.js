@@ -1,6 +1,5 @@
-import extension from './extension.js';
-
-import sanitize from './sanitize';
+import extension from '/js/extension.js';
+import sanitize  from '/js/sanitize.js';
 
 
 // Mapping of tab id -> recipe (not persisted to storage)
@@ -22,7 +21,7 @@ extension.pageAction.onClicked((tab) => {
   extension.storage.setLocal(id, recipe)
     .then(() => {
       const url = `/html/recipe.html?recipeId=${encodeURI(id)}`;
-      return extension.tabs.update(url);
+      return extension.tabs.create(url);
     }).catch(e => {
       console.error('Failed to inject script:', e);
     });

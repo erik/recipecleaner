@@ -1,7 +1,6 @@
-import assert from 'assert-diff';
+import sanitize from '/js/sanitize.js';
 
-import sanitize from '../src/js/sanitize.js';
-
+const assert = chai.assert;
 
 describe('sanitize', () => {
   describe('image', () => {
