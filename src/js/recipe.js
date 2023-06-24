@@ -43,8 +43,7 @@ extension.storage.getLocal(recipeId).then(recipe => {
 
   if (recipe) {
     document.title = `${recipe.name} :: RecipeCleaner`;
-    node.appendChild(renderRecipe(recipe));
-
+    node.replaceWith(renderRecipe(recipe));
     addClickHandlers(CLICK_HANDLERS);
   } else {
     node.appendChild(renderError());

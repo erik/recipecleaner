@@ -36,6 +36,7 @@ extension.pageAction.onClicked(async tab => {
 // Clean up after ourselves.
 extension.tabs.onRemoved((tabId) => { delete EPHEMERAL_TAB_MAP[tabId]; });
 
+// handle messages from content scripts
 extension.runtime.onMessage(async (msg, sender) => {
   if (msg.kind === 'recipe-detected') {
     console.group();
