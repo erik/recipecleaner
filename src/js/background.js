@@ -7,7 +7,7 @@ const EPHEMERAL_TAB_MAP = {};
 
 
 // save recipe to local storage
-function saveRecipe(recipe) {
+function saveRecipe (recipe) {
   const cleanName = recipe.name
     .replace(/\s+/g, '-')
     .replace(/[^\w-]/g, '');

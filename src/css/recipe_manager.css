@@ -5,6 +5,21 @@ h1 {
     margin: 1em;
 }
 
+ul {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    height: 6em;
+    margin-bottom: 1em;
+}
+
 li > input[type="checkbox"] {
     vertical-align: middle;
     height: 100%;
@@ -13,32 +28,32 @@ li > input[type="checkbox"] {
 
 li > img {
     flex-shrink: 1;
-    width: 5em;
+    width: 6em;
     height: 100%;
     object-fit: cover;
 }
 
-li > p {
-    flex-grow: 2;
-    margin: 1em;
-    vertical-align: middle;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-li {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: stretch;
-    height: 5em;
-    margin-bottom: 1em;
-}
-
-ul {
+li > div {
     display: flex;
     flex-direction: column;
-    margin: 1em;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-left: 1em;
+}
+
+li > div > h1 {
+    margin: 0;
+    font-size: 12pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+}
+
+li > div > p {
+    margin: 0;
+    font-size: 9pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #root {
