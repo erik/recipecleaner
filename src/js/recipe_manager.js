@@ -29,6 +29,7 @@ import { createNode } from '/js/util.js';
 class Actions {
   constructor(state) {
     this.state = state;
+    this.searchQueryCallback = null;
   }
 
   // private methods, don't call these.
@@ -39,6 +40,12 @@ class Actions {
 
   setSearchOption(option, value) {
     return this.setLocal("filters", {...this.state.filters, [option]: value});
+  }
+
+  // a kludges for interactive search
+
+  onSearchQueryInput(callback) {
+    this.searchQueryCallback = callback;
   }
 
   // these methods return event handler callback functions
@@ -64,10 +71,18 @@ class Actions {
     };
   }
 
-  // Change the search query to the given event target's value
-  get setSearchQuery() {
+  // Handle full update of search query, triggering MVC roundtrip.
+  get commitSearchQuery() {
     const that = this;
     return (e) => that.setSearchOption("query", e.target.value);
+  }
+
+  // Handle interactive update of search query, refresh the recipe list only.
+  get updateSearchQuery() {
+    const that = this;
+    return (e) => {
+      that.searchQueryCallback && that.searchQueryCallback(e.target.value);
+    }
   }
 
   // Save the selected recipes to a file.
@@ -186,23 +201,42 @@ const renderRecipeListItem = actions => ({id, value}) => {
 
 // Render the recipe list
 function renderRecipeList({recipes, filters}, actions) {
-  if (recipes.length) {
-    return createNode(
-      "ul",
-      {"id": "recipes"},
-      recipes.map(renderRecipeListItem(actions))
-    );
-  } else {
-    return createNode(
-      "h1",
-      {"id": "recipes"},
-      createNode.text(
-        filters.query
-          ? "No recipes match the given query."
-          : "There are no saved recipes."
-      )
-    );
+  let ret = null;
+
+  function render(recipes) {
+    if (recipes.length) {
+      return createNode(
+	"ul",
+	{"id": "recipes"},
+	recipes.map(renderRecipeListItem(actions))
+      );
+    } else {
+      return createNode(
+	"h1",
+	{"id": "recipes"},
+	createNode.text(
+          filters.query
+            ? "No recipes match the given query."
+            : "There are no saved recipes."
+	)
+      );
+    }
   }
+
+  // register callback to refresh recipe list while the user is typing a search query.
+  actions.onSearchQueryInput(async query => {
+    console.log("got here");
+    // XXX: refactor this into the state object
+    const storage = await browser.storage.local.get();
+    const recipes = getRecipeList(storage, {...filters, query});
+
+    // trigger dom replacement
+    const newDom = render(recipes);
+    ret.replaceWith(newDom);
+    ret = newDom;
+  });
+
+  return ret = render(recipes);
 }
 
 // Render the export button
@@ -257,7 +291,8 @@ function renderSearchBar(filters, actions) {
   });
 
   // update state when search query changes
-  searchFilter.addEventListener("change", actions.setSearchQuery);
+  searchFilter.addEventListener("change", actions.commitSearchQuery);
+  searchFilter.addEventListener("input", actions.updateSearchQuery);
 
   // Hack: ensure that the filter input box is focused. the timeout is
   // required so that it will fire after the dom node is attached.
