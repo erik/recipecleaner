@@ -7,19 +7,12 @@ const EPHEMERAL_TAB_MAP = {};
 
 
 // save recipe to local storage
-function saveRecipe (recipe) {
+async function saveRecipe (recipe) {
   const cleanName = recipe.name
     .replace(/\s+/g, '-')
     .replace(/[^\w-]/g, '');
-
   const id = `${Date.now()}-${cleanName}`;
-  extension.storage.setLocal(id, recipe)
-    .then(() => {
-      const url = `/html/recipe.html?recipeId=${encodeURI(id)}`;
-      return extension.tabs.create(url);
-    }).catch(e => {
-      console.error('Failed to inject script:', e);
-    });
+  await extension.storage.setLocal(id, recipe);
 }
 
 
@@ -28,14 +21,15 @@ function saveRecipe (recipe) {
 //
 // We delay storing the recipe until the user actually wants it.
 extension.pageAction.onClicked((tab) => {
-  saveRecipe(EPHEMERAL_TAB_MAP[tab.id]);
+  const url = `/html/recipe.html?recipeId=${encodeURI(id)}`;
+  return extension.tabs.create(url);
 });
 
 
 // Clean up after ourselves.
 extension.tabs.onRemoved((tabId) => { delete EPHEMERAL_TAB_MAP[tabId]; });
 
-extension.runtime.onMessage((msg, sender) => {
+extension.runtime.onMessage(async (msg, sender) => {
   if (msg.kind === 'recipe-detected') {
     console.group();
     console.log('detected recipe. original:', msg.data);
@@ -45,7 +39,8 @@ extension.runtime.onMessage((msg, sender) => {
     console.log('cleaned recipe:', recipe);
     console.groupEnd();
 
-    EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
+    EPHEMERAL_TAB_MAP[sender.tab.id] = recipe
+    await saveRecipe(recipe);
 
     extension.pageAction.show(sender.tab.id);
   } else {
