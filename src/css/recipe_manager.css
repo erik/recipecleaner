@@ -34,6 +34,11 @@ li > img {
     width: 6em;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
+}
+
+li > img:hover {
+    filter: brightness(50%);
 }
 
 li > div {
@@ -108,7 +113,6 @@ form label, form button {
     border-radius: 0.25em;
     border-opacity: 0;
 }
-
 
 #tools input[type="file"] {
     opacity: 0;
