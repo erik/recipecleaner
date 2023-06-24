@@ -22,9 +22,8 @@ import { createNode } from '/js/util.js';
 /*
  * This class handles all user input.
  *
- * We can pass a single `actions` instance down to each component
- * function, whose methods return appropriate event handlers that can
- * be bound via addEventListner.
+ * An `actions` instance is passed to each render function, along with
+ * state.
  */
 class Actions {
   constructor(state) {
@@ -32,7 +31,7 @@ class Actions {
     this.searchQueryCallback = null;
   }
 
-  // private methods, don't call these.
+  /* private methods */
 
   setLocal(property, value) {
     return browser.storage.local.set({[property]: value});
@@ -42,21 +41,23 @@ class Actions {
     return this.setLocal("filters", {...this.state.filters, [option]: value});
   }
 
-  // a kludges for interactive search
+  /* callbacks */
 
+  // kludge for interactive search filter updates
   onSearchQueryInput(callback) {
     this.searchQueryCallback = callback;
   }
 
-  // these methods return event handler callback functions
+  /* these methods return event handler callback functions */
 
   // Add the given recipe to the user selection
   selectRecipe(id) {
     const that = this;
     return (e) => {
+      e.preventDefault();
       that.setLocal("selection", {
 	...that.state.selection,
-	[id]: !!e.target.checked
+	[id]: !that.state.selection[id]
       });
     };
   }
@@ -85,7 +86,7 @@ class Actions {
     }
   }
 
-  // Save the selected recipes to a file.
+  // Export recipes DB to JSON.
   get saveRecipes() {
     const that = this;
     return () => {
@@ -180,7 +181,7 @@ async function getState() {
 }
 
 // Render a single item in the recipe list
-const renderRecipeListItem = actions => ({id, value}) => {
+const renderRecipeListItem = actions => ({id, value, selected}) => {
   const url = `/html/recipe.html?recipeId=${id}`;
   const select = createNode("input", {"type": "checkbox"});
   const image = createNode("img", {"src": value.image});
@@ -188,7 +189,7 @@ const renderRecipeListItem = actions => ({id, value}) => {
   const description = createNode.p(createNode.text(value.description));
   const label = createNode.div([name, description]);
 
-  // changing the checkbox selects the given recipe
+  if (selected) select.setAttribute("checked", true);
   select.addEventListener("change", actions.selectRecipe(id));
 
   // clicking the recipe image loads its cleaned page
