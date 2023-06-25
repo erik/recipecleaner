@@ -34,7 +34,9 @@ class Actions {
   /* private methods */
 
   setLocal(property, value) {
-    return browser.storage.local.set({[property]: value});
+    return setTimeout(() => {
+      browser.storage.local.set({[property]: value});
+    }, 0);
   }
 
   setSearchOption(option, value) {
@@ -262,16 +264,26 @@ const renderRecipeListItem = actions => ({id, value, selected, match}) => {
 };
 
 // Render the recipe list
+let scrollTop = 0;
 function renderRecipeList({storage, recipes, filters}, actions) {
   let ret = null;
 
   function render(recipes) {
     if (recipes.length) {
-      return createNode(
+      const ret = createNode(
 	"ul",
-	{"id": "recipes"},
+	{"id": "recipes", scrollTop: scrollTop},
 	recipes.map(renderRecipeListItem(actions))
       );
+
+      // capture scroll position to global whenver it changes
+      ret.addEventListener("scroll", () => {
+	scrollTop = ret.scrollTop;
+      });
+
+      // update scroll position just prior to rendering to avoid flicker
+      requestAnimationFrame(() => ret.scroll({top: scrollTop}));
+      return ret;
     } else {
       return createNode(
 	"h1",
