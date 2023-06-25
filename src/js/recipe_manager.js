@@ -108,12 +108,27 @@ class Actions {
     return this.downloadData(this.state.storage, "recipe_db.json");
   }
 
+  // Export selected recipes to JSON.
+  get saveSelectedRecipes() {
+    return this.downloadData(this.selectedRecipes, "selected_recipes.json");
+  }
+
+  // Clear the current selection set
+  get clearSelection() {
+    return async () => {
+      await browser.storage.local.set({selection: {}});
+    };
+  }
+
+  // Delete the currently-selected objects
+  get deleteSelected() {
     const that = this;
     return async () => {
-      const data = JSON.stringify(that.selectedRecipes, null, 2);
-      const blob = new Blob([data]);
-      const url = URL.createObjectURL(blob);
-      await browser.downloads.download({url, filename: "recipes.json"});
+      const selected = Object.keys(that.state.selection);
+      if (window.confirm(`Delete ${selected.length} recipes?`)) {
+	await browser.storage.local.remove(selected);
+	await that.clearSelection();
+      }
     };
   }
 }
@@ -323,12 +338,42 @@ function renderSearchBar(filters, actions) {
   ]);
 }
 
+// Render component which provides feedback about the selection
+function renderSelectionWidget(state, actions) {
+  const selected = actions.selectedRecipes;
+  if (selected.length) {
+    const label = createNode.text(`Selected: ${selected.length}`);
+    const save = createNode(
+      "button",
+      {id: "saveSelection"},
+      createNode.text("Save...")
+    );
+    const deselect = createNode(
+      "button",
+      {id: "clearSelection"},
+      createNode.text("\u2716")
+    );
+    const del = createNode(
+      "button",
+      {id: "deleteSelection"},
+      createNode.text("Delete")
+    );
+    save.addEventListener("click", actions.saveSelectedRecipes);
+    deselect.addEventListener("click", actions.clearSelection);
+    del.addEventListener("click", actions.deleteSelected);
+    return createNode("form", {id: "selection"}, [label, save, del, deselect]);
+  } else {
+    return null;
+  }
+}
+
 // Render the sidebar from the given state and actions
 function render(state, actions) {
   return createNode("div", {id: "root"}, [
     renderTools(state.recipes, actions),
     renderSearchBar(state.filters, actions),
     renderRecipeList(state, actions),
+    renderSelectionWidget(state, actions)
   ]);
 }
 

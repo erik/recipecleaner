@@ -47,6 +47,7 @@ li > div {
     justify-content: flex-start;
     align-items: stretch;
     margin-left: 1em;
+    flex-grow: 1;
 }
 
 li > div > h1 {
@@ -131,4 +132,33 @@ form label, form button {
 #searchOptions {
     display: flex;
     flex-direction: row;
+}
+
+#selection {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    background-color: #dddddd;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3em;
+    justify-content: space-between;
+    padding: 1em;
+    font-size: 9pt;
+}
+
+#clearSelection {
+    border: none;
+    background-color: unset;
+    order: 0;
+    font-size: 14pt;
+}
+
+#clearSelection:hover {
+    border: none;
+    background-color: #cccccc;
+    order: 0;
+    font-size: 14pt;
 }
