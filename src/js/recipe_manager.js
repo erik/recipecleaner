@@ -62,6 +62,14 @@ class Actions {
     };
   }
 
+  downloadData(data, filename, saveAs) {
+    return async () => {
+      const blob = new Blob([JSON.stringify(data, null, 2)]);
+      const url = URL.createObjectURL(blob);
+      await browser.downloads.download({url, filename, saveAs});
+    }
+  }
+
   // Toggle the given search option to its opposite state.
   toggleSearchOption(id) {
     const that = this;
@@ -86,14 +94,26 @@ class Actions {
     }
   }
 
-  // Export recipes DB to JSON.
-  get saveRecipes() {
+  // Get the currently-selected recipes for export
+  get selectedRecipes() {
+    const storage = this.state.storage;
+    return Object
+      .keys(this.state.selection)
+      .filter(id => !!this.state.selection[id])
+      .map(id => storage[id]);
+  }
+
+  // Export entire local storage contents to JSON.
+  get exportDatabase() {
+    return this.downloadData(this.state.storage, "recipe_db.json");
+  }
+
     const that = this;
-    return () => {
-      // XXX: only save selected items when selection is non empty
-      const blob = new Blob([JSON.stringify(that.state.recipes, null, 2)]);
+    return async () => {
+      const data = JSON.stringify(that.selectedRecipes, null, 2);
+      const blob = new Blob([data]);
       const url = URL.createObjectURL(blob);
-      browser.downloads.download({url, filename: "recipes.json", saveAs: true});
+      await browser.downloads.download({url, filename: "recipes.json"});
     };
   }
 }
@@ -174,6 +194,7 @@ async function getState() {
     query: null
   };
   return {
+    storage: storage,
     filters: filters,
     recipes: getRecipeList(storage, filters),
     selection: storage.selection || {}
@@ -201,7 +222,7 @@ const renderRecipeListItem = actions => ({id, value, selected}) => {
 };
 
 // Render the recipe list
-function renderRecipeList({recipes, filters}, actions) {
+function renderRecipeList({storage, recipes, filters}, actions) {
   let ret = null;
 
   function render(recipes) {
@@ -226,12 +247,7 @@ function renderRecipeList({recipes, filters}, actions) {
 
   // register callback to refresh recipe list while the user is typing a search query.
   actions.onSearchQueryInput(async query => {
-    console.log("got here");
-    // XXX: refactor this into the state object
-    const storage = await browser.storage.local.get();
     const recipes = getRecipeList(storage, {...filters, query});
-
-    // trigger dom replacement
     const newDom = render(recipes);
     ret.replaceWith(newDom);
     ret = newDom;
@@ -243,7 +259,7 @@ function renderRecipeList({recipes, filters}, actions) {
 // Render the export button
 function renderExportButton(recipes, actions) {
   const ret = createNode("button", {id: "export"}, createNode.text("Export..."));
-  ret.addEventListener("click", actions.saveRecipes);
+  ret.addEventListener("click", actions.exportDatabase);
   return ret;
 }
 
