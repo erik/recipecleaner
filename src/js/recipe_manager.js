@@ -57,7 +57,7 @@ class Actions {
       e.preventDefault();
       that.setLocal("selection", {
 	...that.state.selection,
-	[id]: !that.state.selection[id]
+	[id]: !!e.target.checked
       });
     };
   }
@@ -76,7 +76,7 @@ class Actions {
     return (e) => {
       e.preventDefault();
       // work around a weird issue where the local storage doesn't
-      setTimeout(() => that.setSearchOption(id, !e.target.checked), 0);
+      that.setSearchOption(id, !!e.target.checked);
     };
   }
 
