@@ -133,29 +133,40 @@ class Actions {
   }
 }
 
-// Returns true if the search query is a substring of the given string.
+// Find the portion of the string which matches the given query.
 //
 // Matching is not case sensitive.
+//
+// If the query string matches, returns an object describing the
+// match. Returns null otherwise.
 function matchQuery(string, query) {
   const lcased = string.toLowerCase();
-  if (lcased.indexOf(query) != -1) {
-    return true;
+  const index = lcased.indexOf(query);
+  if (index != -1) {
+    const matchEnd = index + query.length;
+    const head = string.substr(0, index);
+    const match = string.substr(index, query.length);
+    const tail = string.substr(matchEnd);
+    return {head, match, tail};
   }
-  return false;
+  return null;
 }
 
 // Returns true if any ingredient in the recipe matches the query.
-//
-// Matching is not case sensitive.
 function matchIngredients(ingredients, query) {
   if (ingredients) {
     for (const ingredient of ingredients) {
-      if (matchQuery(ingredient.ingredient, query)) {
-	return true;
+      const match = matchQuery(ingredient.ingredient, query);
+      if (match) {
+	return {
+	  head: `${ingredient.quantity} ${ingredient.unit} ${match.head}`,
+	  match: match.match,
+	  tail: match.tail
+	};
       }
     }
   }
-  return false;
+  return null;
 }
 
 // Returns true if the given list item matches the given filters.
@@ -163,15 +174,13 @@ function matchIngredients(ingredients, query) {
 // This is a case-insensitive comparison across any subset of name,
 // description, or ingredients.
 function matches(value, {name, description, ingredients, query}) {
-  if (query) {
-    return (
-      (name        && matchQuery(value.name,              query)) ||
-      (description && matchQuery(value.description,       query)) ||
-      (ingredients && matchIngredients(value.ingredients, query))
-    );
-  } else {
-    return true;
-  }
+  const normalized = query.trim().toLowerCase();
+  const ret = (
+    (name        && matchQuery(value.name,              normalized)) ||
+    (description && matchQuery(value.description,       normalized)) ||
+    (ingredients && matchIngredients(value.ingredients, normalized))
+  );
+  return ret;
 }
 
 // Extract and filter the recipes from local storage
@@ -185,9 +194,13 @@ function getRecipeList(storage, filters) {
     // skip the special keys used for sidebar state
     if (!skip[id]) {
       const value = storage[id];
-      // keep values matching the current search query
-      if (value.name && matches(value, filters)) {
-	const selected = !!selection[id]
+      const selected = !!selection[id]
+      if (filters.query) {
+	const match = matches(value, filters);
+	if (value.name && match) {
+	  ret.push({id, value, selected, match});
+	}
+      } else {
 	ret.push({id, value, selected});
       }
     }
@@ -216,14 +229,26 @@ async function getState() {
   };
 }
 
+// render the recipe's label
+function renderRecipeDetails({value, match}) {
+  if (match) {
+    return createNode.p([
+      createNode.text(match.head),
+      createNode("b", {}, createNode.text(match.match)),
+      createNode.text(match.tail)
+    ]);
+  } else {
+    return createNode.p(createNode.text(value.description));
+  }
+}
+
 // Render a single item in the recipe list
-const renderRecipeListItem = actions => ({id, value, selected}) => {
+const renderRecipeListItem = actions => ({id, value, selected, match}) => {
   const url = `/html/recipe.html?recipeId=${id}`;
   const select = createNode("input", {"type": "checkbox"});
   const image = createNode("img", {"src": value.image});
   const name = createNode("h1", {}, createNode.text(value.name));
-  const description = createNode.p(createNode.text(value.description));
-  const label = createNode.div([name, description]);
+  const label = createNode.div([name, renderRecipeDetails({value,match})]);
 
   if (selected) select.setAttribute("checked", true);
   select.addEventListener("change", actions.selectRecipe(id));
