@@ -1,6 +1,6 @@
-<!doctype html>
-
-<head>
+<!DOCTYPE html>
+<html>
+  <head>
     <title>Welcome to RecipeCleaner</title>
 
     <meta charset="utf-8">
@@ -9,61 +9,62 @@
     <link rel="stylesheet" href="/css/options.css">
 
     <script src="/js/vendor.js"></script>
-    <script src="/js/options.js"></script>
-</head>
+    <script src="/js/options.js" type="module"></script>
+  </head>
 
 
-<body>
+  <body>
     <div id="options"></div>
 
     <main>
-        <h1>Thanks for trying RecipeCleaner</h1>
+      <h1>Thanks for trying RecipeCleaner</h1>
 
-        <p>Any time you see the icon, click to view the recipe directly!</p>
+      <p>Any time you see the icon, click to view the recipe directly!</p>
 
-        <img id="firefox" src="/images/FirefoxUI.png" alt="Firefox UI"/>
-        <img id="chrome" src="/images/ChromeUI.png" alt="Chrome UI"/>
+      <img id="firefox" src="/images/FirefoxUI.png" alt="Firefox UI"/>
+      <img id="chrome" src="/images/ChromeUI.png" alt="Chrome UI"/>
 
-        <p>Now go try it out! Here's some recipes to get you started</p>
+      <p>Now go try it out! Here's some recipes to get you started</p>
 
-        <ul>
-            <li>
-                Minimalist Baker ::
-                <a href="https://minimalistbaker.com/moroccan-lentil-stuffed-eggplant/">
-                    Moroccan Lentil Stuffed Eggplant
-                </a>
-            </li>
+      <ul>
+        <li>
+          Minimalist Baker ::
+          <a href="https://minimalistbaker.com/moroccan-lentil-stuffed-eggplant/">
+            Moroccan Lentil Stuffed Eggplant
+          </a>
+        </li>
 
-            <li>
-                Serious Eats Budget Bytes ::
-                <a href="https://www.seriouseats.com/mushrooms-tofu-chinese-mustard-greens-recipe">
-                  Mushrooms and Tofu With Chinese Mustard Greens
-                </a>
-            </li>
+        <li>
+          Serious Eats Budget Bytes ::
+          <a href="https://www.seriouseats.com/mushrooms-tofu-chinese-mustard-greens-recipe">
+            Mushrooms and Tofu With Chinese Mustard Greens
+          </a>
+        </li>
 
-            <li>
-                Pinch of Yum ::
-                <a href="https://pinchofyum.com/buffalo-cauliflower-tacos-avocado-crema">
-                    Buffalo Cauliflower Tacos w/ Avocado Crema
-                </a>
-            </li>
-        </ul>
+        <li>
+          Pinch of Yum ::
+          <a href="https://pinchofyum.com/buffalo-cauliflower-tacos-avocado-crema">
+            Buffalo Cauliflower Tacos w/ Avocado Crema
+          </a>
+        </li>
+      </ul>
 
-        <footer>
-            This extension is <a href="https://github.com/erik/RecipeCleaner">open source!</a>
-            &lt;3
-        </footer>
+      <footer>
+        This extension is <a href="https://github.com/erik/RecipeCleaner">open source!</a>
+        &lt;3
+      </footer>
 
     </main>
 
     <script type="text/javascript">
-     // Show the correct screenshot for the current browser.
-     const visible = 'display: block;';
+      // Show the correct screenshot for the current browser.
+      const visible = 'display: block;';
 
-     if (/firefox/i.test(navigator.userAgent)) {
-         document.querySelector('#firefox').style = visible;
-     } else {
-         document.querySelector('#chrome').style = visible;
-     }
+      if (/firefox/i.test(navigator.userAgent)) {
+        document.querySelector('#firefox').style = visible;
+      } else {
+        document.querySelector('#chrome').style = visible;
+      }
     </script>
-</body>
+  </body>
+</html>

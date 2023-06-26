@@ -1,0 +1,166 @@
+@import 'recipe.css';
+
+h1 {
+    text-align: center;
+    margin: 1em;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    overflow-y: scroll;
+    flex-grow: 1;
+    height: auto;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    height: 6em;
+    margin-bottom: 1em;
+}
+
+li > input[type="checkbox"] {
+    vertical-align: middle;
+    height: 100%;
+    margin-right: 1em;
+}
+
+li > img {
+    flex-shrink: 1;
+    max-width: 6em;
+    width: 6em;
+    min-width: 6em;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+li > img:hover {
+    filter: brightness(50%);
+}
+
+li > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-left: 1em;
+    flex-grow: 1;
+}
+
+li > div > h1 {
+    margin: 0;
+    font-size: 10pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    line-height: normal;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #cccccc;
+}
+
+li > div > p {
+    margin: 0;
+    font-size: 9pt;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: normal;
+    height: 50%;
+}
+
+#root {
+    margin: 0.25em;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+form label, form button {
+    font-family: sans;
+    font-size: 0.8rem;
+    height: auto;
+}
+
+#tools {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+#tools label, #tools button {
+    color: black;
+    background-color: #cccccc;
+    border: 1px solid #dddddd;
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    margin-right: 0.25em;
+}
+
+#tools label:hover, #tools button:hover {
+    background-color: #eeeeee;
+    border-radius: 0.25em;
+    border-opacity: 0;
+}
+
+#tools label:active, #tools button:active {
+    background-color: black;
+    color: white;
+    border-radius: 0.25em;
+    border-opacity: 0;
+}
+
+#tools input[type="file"] {
+    opacity: 0;
+}
+
+#search {
+    display: flex;
+    flex-direction: column;
+}
+
+#searchFilter {
+    margin-top: 0.25em;
+    width: 100%;
+}
+
+#searchOptions {
+    display: flex;
+    flex-direction: row;
+}
+
+#selection {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    background-color: #dddddd;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3em;
+    justify-content: space-between;
+    padding: 1em;
+    font-size: 9pt;
+}
+
+#clearSelection {
+    border: none;
+    background-color: unset;
+    order: 0;
+    font-size: 14pt;
+}
+
+#clearSelection:hover {
+    border: none;
+    background-color: #cccccc;
+    order: 0;
+    font-size: 14pt;
+}

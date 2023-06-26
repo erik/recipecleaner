@@ -42,6 +42,7 @@ createNode.div  = (children) => createNode('div', {}, children);
 createNode.p    = (children) => createNode('p', {}, children);
 createNode.span = (children) => createNode('span', {}, children);
 createNode.svg  = (props, path) => createNode('svg', {...props, xmlns: SVG_NS}, createNode('path', {...path, xmlns: SVG_NS}));
+createNode.text = (text) => document.createTextNode(text);
 
 export default {
   addClickHandlers,

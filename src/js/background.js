@@ -1,38 +1,43 @@
-import extension from './extension.js';
-
-import sanitize from './sanitize';
+import extension from '/js/extension.js';
+import sanitize  from '/js/sanitize.js';
 
 
 // Mapping of tab id -> recipe (not persisted to storage)
 const EPHEMERAL_TAB_MAP = {};
+const encoder = new TextEncoder();
 
+// create a sha256 hash of the given string, returned as a hex string
+async function hash(string) {
+  const data = encoder.encode(string);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  const bytes = Array.from(new Uint8Array(digest));
+  return bytes
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
-// When the user clicks on the page action icon, we redirect to the
-// cleaned up recipe.
+// save recipe to local storage
 //
-// We delay storing the recipe until the user actually wants it.
-extension.pageAction.onClicked((tab) => {
-  const recipe = EPHEMERAL_TAB_MAP[tab.id];
+// recipes are identified by the sha256 hash of their url. this
+// ensures that a given recipe is only stored once in the database.
+async function saveRecipe (recipe) {
+  await extension.storage.setLocal(await hash(recipe.url), recipe);
+}
 
-  const cleanName = recipe.name
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]/g, '');
 
-  const id = `${Date.now()}-${cleanName}`;
-  extension.storage.setLocal(id, recipe)
-    .then(() => {
-      const url = `/html/recipe.html?recipeId=${encodeURI(id)}`;
-      return extension.tabs.update(url);
-    }).catch(e => {
-      console.error('Failed to inject script:', e);
-    });
+// Show the cleaned recipe when the user clicks on the page action.
+extension.pageAction.onClicked(async tab => {
+  const id = await hash(EPHEMERAL_TAB_MAP[tab.id].url);
+  const url = `/html/recipe.html?recipeId=${id}`;
+  return extension.tabs.create(url);
 });
 
 
 // Clean up after ourselves.
 extension.tabs.onRemoved((tabId) => { delete EPHEMERAL_TAB_MAP[tabId]; });
 
-extension.runtime.onMessage((msg, sender) => {
+// handle messages from content scripts
+extension.runtime.onMessage(async (msg, sender) => {
   if (msg.kind === 'recipe-detected') {
     console.group();
     console.log('detected recipe. original:', msg.data);
@@ -42,7 +47,8 @@ extension.runtime.onMessage((msg, sender) => {
     console.log('cleaned recipe:', recipe);
     console.groupEnd();
 
-    EPHEMERAL_TAB_MAP[sender.tab.id] = recipe;
+    EPHEMERAL_TAB_MAP[sender.tab.id] = recipe
+    await saveRecipe(recipe);
 
     extension.pageAction.show(sender.tab.id);
   } else {

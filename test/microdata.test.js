@@ -1,7 +1,6 @@
-import assert from 'assert-diff';
+import microdata from '/js/microdata.js';
 
-import microdata from '../src/js/microdata.js';
-
+const assert = chai.assert;
 
 // Helper function to convert from arbitrary markup in string to DOM tree.
 function stringToNode (string) {

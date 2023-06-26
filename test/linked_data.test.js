@@ -1,6 +1,6 @@
-import assert from 'assert-diff';
+import linkedData from '/js/linked_data.js';
 
-import linkedData from '../src/js/linked_data.js';
+const assert = chai.assert;
 
 // Helper function to convert from arbitrary markup in string to DOM tree.
 // TODO: Dedupe, used in microdata.test.js as well.

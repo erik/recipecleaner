@@ -1,5 +1,6 @@
-import assert from 'assert-diff';
+import {createNode} from '/js/util.js';
 
+const assert = chai.assert;
 
 describe('utils', () => {
   describe('createNode', () => {
