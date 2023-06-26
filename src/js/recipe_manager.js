@@ -64,6 +64,7 @@ class Actions {
     };
   }
 
+  // Save the given data to the user's downloads folder with the given filename.
   downloadData(data, filename, saveAs) {
     return async () => {
       const blob = new Blob([JSON.stringify(data, null, 2)]);
@@ -77,7 +78,6 @@ class Actions {
     const that = this;
     return (e) => {
       e.preventDefault();
-      // work around a weird issue where the local storage doesn't
       that.setSearchOption(id, !!e.target.checked);
     };
   }
@@ -324,8 +324,7 @@ function renderTools(recipes, actions) {
   ]);
 }
 
-// Renders a checkbox that controls which recipes fields are searched.
-//
+// Render a checkbox that controls which recipes fields are searched.
 // Returns a tuple of [checkbox, label]
 function renderSearchOption(id, text, filters, actions) {
   const checked = !!filters[id];
@@ -363,11 +362,8 @@ function renderSearchBar(filters, actions) {
   searchFilter.addEventListener("change", actions.commitSearchQuery);
   searchFilter.addEventListener("input", actions.updateSearchQuery);
 
-  // Hack: ensure that the filter input box is focused. the timeout is
-  // required so that it will fire after the dom node is attached.
-  // this is a consequence of replacing the entire dom subtree on each
-  // update.
-  setTimeout(() => searchFilter.focus(), 0);
+  // Hack: ensure that the filter input box is focused.
+  requestAnimationFrame(() => searchFilter.focus());
 
   return createNode("form", {id: "searchbar"}, [
     searchFilter,
