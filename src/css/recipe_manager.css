@@ -31,7 +31,9 @@ li > input[type="checkbox"] {
 
 li > img {
     flex-shrink: 1;
+    max-width: 6em;
     width: 6em;
+    min-width: 6em;
     height: 100%;
     object-fit: cover;
     cursor: pointer;
