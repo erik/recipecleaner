@@ -1,5 +1,5 @@
 /* Detect whether recipe is present on page */
-async function load(url) {
+async function load (url) {
   return await import(browser.runtime.getURL(url));
 }
 
