@@ -8,7 +8,7 @@ SRC_DIR=./src/
 BUILD_DIR=./addon/
 JS_VENDOR_FILE="${BUILD_DIR}/js/vendor.js"
 VENDORED_JS="webextension-polyfill/dist/browser-polyfill.min.js"
-ASSETS="css icons images html manifest.json"
+ASSETS="css icons images html js manifest.json"
 
 mkdir -p "${BUILD_DIR}"
 
